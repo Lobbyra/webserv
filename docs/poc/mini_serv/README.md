@@ -15,13 +15,14 @@ Hello World !
 
 ## Notions
 
-*These are the notions to study, in order, to code this program*
+*These are the notions to study, in order, to code this program.*
 
 - Reference video : [Video](https://www.youtube.com/watch?v=esXw4bdaZkc&list=PL9IEJIKnBJjH_zM5LnovnoaKlXML5qh17&index=2)
 - Send Recv ressources : [Link](https://bousk.developpez.com/cours/reseau-c++/TCP/05-envoi-reception-serveur/)
 
 - All client notions.
-- bind() (man 2 bind). Assign a socket to an IP and a Port to listen to it.
+- bind() (man 2 bind).
+  - Assign a socket to an IP and a Port to listen to it.
 - listen() (man 2 listen).
   - Turn the socket in listen mode.
 - accept() (man 2 accept).
@@ -44,4 +45,4 @@ Else, it will display on STDOUT the FULL response in ASCII that you recieved.
 
 If a Content-length is specified, i think you will have to use it to read nicely the request.
 
-You'll have to create your program in ./login/\*.
+Code is to put in ./login/*.

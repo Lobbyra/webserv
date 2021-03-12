@@ -13,7 +13,7 @@ nslookup www.google.com | grep Address | tail -n +2 | cut -d ':' -f 2 | cut -c2-
 
 ## Notions
 
-*These are the notions to study, in order, to code this program*
+*These are the notions to study, in order, to code this program.*
 
 - Reference video : [Video](https://www.youtube.com/watch?v=bdIiTxtMaKA&list=PL9IEJIKnBJjH_zM5LnovnoaKlXML5qh17&index=2)
 - Send Recv ressources : [Link](https://bousk.developpez.com/cours/reseau-c++/TCP/05-envoi-reception-serveur/)
@@ -42,4 +42,4 @@ Else, it will display on STDOUT the FULL response in ASCII that he recieved.
 
 You have to include a body with whatever message you want and the [Content-length](https://developer.mozilla.org/fr/docs/Web/HTTP/Headers/Content-Length) header.
 
-Code is to put in ./login/\* cause everybody have to do this POC.
+Code is to put in ./login/\*.
