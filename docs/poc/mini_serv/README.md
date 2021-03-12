@@ -1,4 +1,4 @@
-# Notes about mini\_client
+# Notes about mini\_serv
 
 ## Purpose
 
