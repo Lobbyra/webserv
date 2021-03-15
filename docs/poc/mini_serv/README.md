@@ -43,6 +43,4 @@ If a syscall fail, it will print the syscall involved and exit the program.
 
 Else, it will display on STDOUT the FULL response in ASCII that you recieved.
 
-If a Content-length is specified, i think you will have to use it to read nicely the request.
-
 Code is to put in ./login/*.

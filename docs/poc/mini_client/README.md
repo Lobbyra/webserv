@@ -40,6 +40,4 @@ If a syscall fail, it will print the syscall involved and exit the program.
 
 Else, it will display on STDOUT the FULL response in ASCII that he recieved.
 
-You have to include a body with whatever message you want and the [Content-length](https://developer.mozilla.org/fr/docs/Web/HTTP/Headers/Content-Length) header.
-
 Code is to put in ./login/\*.
