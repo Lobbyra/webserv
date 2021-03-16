@@ -44,16 +44,17 @@ Code is to put in ./login/\*.
 
 ## Example
 
-This request : `GET / HTTP/1.1\nHost: example.com\r\n\r\n`
-
-⚠️ I added a trashy Host header cause some web servers throw error 400 without header
-
-On example.com respond something like this :
-
 ⚠️ What is important here is that your program write datas and not stay stuck on
 reading.
 
 ⚠️ You can use GNL but you must replace read() by the good function.
+
+⚠️ I added a trashy Host header cause some web servers throw error 400 without header
+
+This request : `GET / HTTP/1.1\nHost: blahblah\r\n\r\n`
+
+On example.com respond something like this :
+
 
 ```text
 HTTP/1.1 200 OK
