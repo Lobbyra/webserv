@@ -10,7 +10,7 @@ void    mini_client(net_dest server)
      *  INIT
      */
     if ((sockfd = socket(PF_INET, SOCK_STREAM, 0)) == -1) {
-        std::cout << "error: socket creation : " << strerror(errno) \
+        std::cerr << "error: socket creation : " << strerror(errno) \
         << std::endl;
         return;
     }
@@ -23,7 +23,7 @@ void    mini_client(net_dest server)
      *  CONNECT
      */
     if ((connect(sockfd, (struct sockaddr*) &s_addr, sizeof(s_addr))) == -1) {
-        std::cout << "error: connect call : " << strerror(errno) \
+        std::cerr << "error: connect call : " << strerror(errno) \
         << std::endl;
         return;
     }
@@ -33,12 +33,11 @@ void    mini_client(net_dest server)
      */
     char request[] = "GET / HTTP/1.1\nHost: example.com\r\n\r\n";
 
-    std::cerr << "// SEND" << std::endl;
     /*
      *  SEND
      */
     if ((send(sockfd, request, ft_strlen(request), 0)) == -1) {
-        std::cout << "error: send call : " << strerror(errno) \
+        std::cerr << "error: send call : " << strerror(errno) \
         << std::endl;
         return;
     }
@@ -54,7 +53,7 @@ void    mini_client(net_dest server)
         response.push_back(buf);
     }
     if (status == -1) {
-        std::cout << "error: recv headers call : " << strerror(errno) \
+        std::cerr << "error: recv headers call : " << strerror(errno) \
         << std::endl;
         return;
     }
@@ -72,7 +71,7 @@ void    mini_client(net_dest server)
     // body reading
     char    buf_2[content_len];
     if ((recv(sockfd, &buf_2, content_len, 0)) == -1) {
-        std::cout << "error: recv call : " << strerror(errno) \
+        std::cerr << "error: recv call : " << strerror(errno) \
         << std::endl;
         return;
     }

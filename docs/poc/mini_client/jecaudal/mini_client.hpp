@@ -11,9 +11,6 @@ struct  net_dest {
     int    port;
 };
 
-# define IP_LEN_MIN 7
-# define IP_LEN_MAX 15
-
 void    mini_client(net_dest);
 
 #endif
