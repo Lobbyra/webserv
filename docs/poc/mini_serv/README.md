@@ -4,15 +4,6 @@
 
 The goal of this program is to create a program that wait for a request on a port and response always the same message.
 
-Your server will always response by this message :
-
-```txt
-HTTP/1.1 200 OK
-Content-lenght: 13
-
-Hello World !
-```
-
 ## Notions
 
 *These are the notions to study, in order, to code this program.*
@@ -42,5 +33,9 @@ Hello World !
 If a syscall fail, it will print the syscall involved and exit the program.
 
 Else, it will display on STDOUT the FULL response in ASCII that you recieved.
+
+Your server must response correctly to `localhost:[PORT]` by printing `Hello World !`
+
+Your server must not leak file descriptor.
 
 Code is to put in ./login/*.
