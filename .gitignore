@@ -30,3 +30,6 @@
 *.exe
 *.out
 *.app
+docs/poc/mini_client/jecaudal/mini_client
+docs/poc/mini_serv/jecaudal/mini_serv
+docs/poc/mini_serv/jecaudal/mini_server
