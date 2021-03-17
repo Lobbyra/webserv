@@ -3,6 +3,7 @@
 
 # include <arpa/inet.h>
 # include <sys/socket.h>
+# include <signal.h>
 # include "get_next_line.h"
 
 typedef char t_bool;
