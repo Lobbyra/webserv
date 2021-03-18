@@ -19,7 +19,7 @@ clean () {
     echo "Cleaning done !"
 }
 
-if [[ $1 == "-clean" ]];
+if [[ $1 == "--clean" ]];
 then
     clean
 else
