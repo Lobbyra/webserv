@@ -131,8 +131,8 @@ void        mini_serv(int port) {
          */
         std::string response;
         response += "HTTP/1.1 200 OK\n";
-        response += "Content-Length: 13\r\n\r\n";
-        response += "Hello World !";
+        response += "Content-Length: 13\n\n";
+        response += "Hello World !\r\n\r\n";
 
         if ((send(client_fd, response.c_str(), response.length(), 0)) == -1) {
             std::cerr << "error: send call : " << strerror(errno) \
