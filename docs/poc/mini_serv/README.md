@@ -39,3 +39,16 @@ Your server must response correctly to `localhost:[PORT]` by printing `Hello Wor
 Your server must not leak file descriptor.
 
 Code is to put in ./login/*.
+
+## Example
+
+Here a screenshot of a working mini_serv :
+
+- Curl example
+![img](https://i.imgur.com/xdPtPdp.jpg)
+
+- Chrome example
+  - Request
+![img](https://i.imgur.com/mqgYSya.jpg)
+  - Server log
+![img](https://i.imgur.com/Qw9Gohu.jpg)
