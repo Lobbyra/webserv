@@ -2,7 +2,7 @@
 
 ## Purpose
 
-The goal of this Proof Of Concept is to reach the goal and the power of asynchronous programming.
+The goal of this Proof Of Concept is to reach the pros of asynchronous programming.
 Select will give the power to check if a socket is ready to read in it.
 
 In our project we will use non-blocking FD by changing it with fcntl(fd, F_SETFL, O_NONBLOCK).
@@ -32,7 +32,12 @@ https://notes.shichao.io/unp/ch6/#chapter-6-io-multiplexing-the-select-and-poll-
 
 ## Usage
 
+./select [PORT]
+    [PORT] : The port to listen TCP connection
+
 ## Expected behavior
 
-## Example
+Like a server, your program will be an infinite loop with a signal handler on ctrl+c.
+
+Rest is explained if subject part.
 
