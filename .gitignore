@@ -36,3 +36,5 @@ docs/poc/mini_serv/jecaudal/mini_server
 docs/poc/directories/ft_mkdir
 docs/poc/directories/ft_opendir
 docs/poc/directories/ft_rmdir
+docs/poc/strtime/strtime
+.vscode
