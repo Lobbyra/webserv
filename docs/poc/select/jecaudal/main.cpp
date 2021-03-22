@@ -52,15 +52,15 @@ void        ft_select(int port) {
     /*
      * INIT FD SET
      */
-    instant_timeout.tv_sec = 5;
+    instant_timeout.tv_sec = 1;
     instant_timeout.tv_usec = 0;
 
     FD_ZERO(&select_set);
-    FD_SET(listen_fd, &select_set);
     int status = 0;
     while (1) {
         errno = 0;
 
+        FD_SET(listen_fd, &select_set);
         // CHECK IF A CLIENT ACCEPTED
         status = select(listen_fd + 1,
                         &select_set, NULL, NULL,
@@ -78,14 +78,12 @@ void        ft_select(int port) {
             std::cerr << "select error" << std::endl;
             return;
         } else {
-            sleep(1);
-            std::cout << "Nobody here" << std::endl;
+            std::cout << "*silence*" << std::endl;
         }
 
         // CLOSE CLIENT CONNECTION IF THERE WAS ONE
         if (client_fd > 0) {
-            send(client_fd, "coucou", 6, 0);
-            std::cout << "close client" << std::endl;
+            send(client_fd, "Who is it ?!\n", 13, 0);
             close(client_fd);
             client_fd = 0;
         }
