@@ -15,7 +15,7 @@ To resume, select save us the time between a new connection and the full recepti
 
 ## Subject
 
-This is simple, a program that print "Hello !" every seconds.
+This is simple, a program that print "*silence*" every seconds.
 
 Buuuuuuuuuuut when a client is trying to connect to your program, it print "\*Toc toc\*" on stdout.
 
@@ -41,3 +41,7 @@ Like a server, your program will be an infinite loop with a signal handler on ct
 
 Rest is explained if subject part.
 
+⚠️ The *every seconds* have to be delayed by the selec timeout and not a sleep.
+⚠️ Don't forget to FD_SET before each select.
+⚠️ Call select before call accept.
+⚠️ Look at EWOULDBLOCK return of accept.
