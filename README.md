@@ -9,7 +9,7 @@ See /docs/webserv.pdf
 
 ## Details
 
-Mandatory language is to code in C++98 (Yes that's shit but :man_shrugging:).
+Mandatory language is to code in C++98 (Yes that's shit but :man_shrugging: ).
 
 More details on documentation, how we work in group [here](https://docs.google.com/document/d/1EjlUZITNCIwvusAyVSZqPTGKYWnJlEGoLdAdgaEYKFY/edit?usp=sharing).
 
