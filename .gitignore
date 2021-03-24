@@ -30,12 +30,15 @@
 *.exe
 *.out
 *.app
-docs/poc/mini_client/jecaudal/mini_client
-docs/poc/mini_serv/jecaudal/mini_serv
-docs/poc/mini_serv/jecaudal/mini_server
-docs/poc/directories/ft_mkdir
-docs/poc/directories/ft_opendir
-docs/poc/directories/ft_rmdir
-docs/poc/strtime/strtime
+
 .vscode
-docs/poc/select/jecaudal/select
+# Webserv-specific executables
+docs/poc/directories/ft_mkdir
+docs/poc/directories/ft_rmdir
+docs/poc/directories/ft_opendir
+
+docs/poc/mini_client/*/mini_client
+docs/poc/mini_serv/*/mini_serv
+docs/poc/mini_serv/*/mini_server
+docs/poc/select/*/select
+docs/poc/strtime/strtime
