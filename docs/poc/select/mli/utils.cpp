@@ -6,7 +6,7 @@
 /*   By: mli <mli@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 14:37:57 by mli               #+#    #+#             */
-/*   Updated: 2021/03/27 15:02:11 by mli              ###   ########.fr       */
+/*   Updated: 2021/03/29 14:57:03 by mli              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,16 @@ void	ft_error(std::string const fct_name) {
 }
 
 void	ft_sigint(int sig) {
+	int fd;
+	int opt = 1;
+
 	(void)sig;
 	while (g_sockets.size() != 0) {
-		close(g_sockets.front());
+		fd = g_sockets.front();
+
+		if (setsockopt(fd, SOL_SOCKET, SO_REUSEPORT, &opt, sizeof(opt)))
+			ft_error("setsockopt");
+		close(fd);
 		g_sockets.pop_front();
 	}
 	std::cout << "\r[SIGINT] All sockets are closed." << std::endl;
