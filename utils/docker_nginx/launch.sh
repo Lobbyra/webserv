@@ -80,7 +80,12 @@ fi
 echo $NGINX_CONFIG_PATH
 cat $NGINX_CONFIG_PATH
 
-exit
+# ============================================================================ #
+#                    Cleaning possibly running nginx container                 #
+# ============================================================================ #
+
+docker stop fresh-nginx &> /dev/null
+docker rm fresh-nginx &> /dev/null
 
 # ============================================================================ #
 #                                   BUILD                                      #
@@ -88,7 +93,11 @@ exit
 
 echo "Building Nginx container...\n"
 
+cp $NGINX_CONFIG_PATH temp.conf
+
 docker build . -t fresh-nginx > /dev/null
+
+rm temp.conf
 
 # ============================================================================ #
 #                                   RUN                                        #
