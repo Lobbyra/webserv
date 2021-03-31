@@ -1,7 +1,5 @@
 FROM nginx
 
-RUN mkdir /www
+COPY ./www /www
 
-ADD ./www /www
-
-ADD temp.conf /etc/nginx/nginx.conf
+COPY temp.conf /etc/nginx/conf.d/nginx.conf

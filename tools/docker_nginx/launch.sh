@@ -1,4 +1,19 @@
-#!/bin/bash
+#!/usr/bin/env zsh
+
+# ============================================================================ #
+#                             Global variables                                 #
+# ============================================================================ #
+
+EOC="\033[0m"
+BOLD="\033[1m"
+RED="\033[91m"
+GREEN="\033[92m"
+YELLOW="\033[93m"
+DBLUE="\033[94m"
+PURPLE="\033[95m"
+CYAN="\033[96m"
+
+NGINX_IMG="fresh-nginx"
 
 # ============================================================================ #
 #                       Default file and Directory managment                   #
@@ -33,18 +48,16 @@ function is_port_in_use () {
     fi
 }
 
-PORT=($RANDOM % 60000)
-while is_port_in_use $PORT
-do
-    PORT=($RANDOM % 60000)
+PORT=$(($RANDOM % 60000))
+while is_port_in_use $PORT; do
+    PORT=$(($RANDOM % 60000))
 done
 
 #
 # --- Check if docker cli is installed
 #
 docker -v &> /dev/null
-if [[ "$?" == "127" ]]
-then
+if [[ "$?" == "127" ]]; then
     echo "Docker CLI isn't installed on your computer."
     exit 1
 fi
@@ -53,8 +66,7 @@ fi
 # --- Check if docker daemon is up
 #
 docker ps &> /dev/null
-if [[ $? != 0 ]]
-then
+if [[ $? != 0 ]]; then
     echo "Docker daemon isn't ready, containers cannot be run."
     exit 1
 fi
@@ -63,39 +75,38 @@ fi
 #                         SET CONFIG FILE PATH                                 #
 # ============================================================================ #
 
-NGINX_CONFIG_PATH="./config_files/basic.conf"
-
-if [ $# -ne 0 ]
-then
-    if [ -f $1 ]
-    then
-        NGINX_CONFIG_PATH=$1
-        NGINX_CONFIG_PATH=$(pwd)/$1
-    else
-        echo "$1 does not exist !"
-        exit 1
-    fi
+if [ -z "$1" ]; then
+    1="./config_files/basic.conf"
 fi
 
-echo $NGINX_CONFIG_PATH
-cat $NGINX_CONFIG_PATH
+if [ -f $1 ]; then
+    NGINX_CONFIG_PATH=$(pwd)/$1
+else
+    echo "$1 does not exist !"
+    exit 1
+fi
+
+echo "Using: ${YELLOW}${1}${EOC}. Which contains:"
+echo "___________________________________________"
+cat  $NGINX_CONFIG_PATH
+echo "___________________________________________"
 
 # ============================================================================ #
 #                    Cleaning possibly running nginx container                 #
 # ============================================================================ #
 
-docker stop fresh-nginx &> /dev/null
-docker rm fresh-nginx &> /dev/null
+docker stop $NGINX_IMG &> /dev/null
+docker rm $NGINX_IMG &> /dev/null
 
 # ============================================================================ #
 #                                   BUILD                                      #
 # ============================================================================ #
 
-echo "Building Nginx container...\n"
+echo "Building Nginx container..."
 
 cp $NGINX_CONFIG_PATH temp.conf
 
-docker build . -t fresh-nginx > /dev/null
+docker build . -t $NGINX_IMG > /dev/null
 
 rm temp.conf
 
@@ -103,6 +114,6 @@ rm temp.conf
 #                                   RUN                                        #
 # ============================================================================ #
 
-docker run --name fresh-nginx -d -p $PORT:80 fresh-nginx
+docker run --name $NGINX_IMG -d -p $PORT:80 $NGINX_IMG
 
-echo "Container launched and listening at port $PORT"
+echo "Container launched and listening at port $GREEN$PORT$EOC"
