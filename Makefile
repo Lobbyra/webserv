@@ -6,7 +6,7 @@
 #    By: mli <mli@student.42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/03/30 11:54:38 by mli               #+#    #+#              #
-#    Updated: 2021/04/01 11:43:05 by mli              ###   ########.fr        #
+#    Updated: 2021/04/01 12:18:45 by mli              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -40,7 +40,7 @@ GNL_FILES = get_next_line.cpp gnl_utils.cpp
 GNL_HEADER = get_next_line.h
 
 GETCONF_PATH = ./getconf/
-GETCONF_FILES = getconf.cpp getstrconf.cpp
+GETCONF_FILES = getconf.cpp getstrconf.cpp utils.cpp
 GETCONF_HEADER = getconf.hpp
 
 SRCS_FILES = ${ROOT_FILES} \

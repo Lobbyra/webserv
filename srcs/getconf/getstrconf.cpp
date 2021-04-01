@@ -6,7 +6,7 @@
 /*   By: mli <mli@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/30 14:49:45 by mli               #+#    #+#             */
-/*   Updated: 2021/04/01 11:34:30 by mli              ###   ########.fr       */
+/*   Updated: 2021/04/01 12:27:51 by mli              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,10 @@ int		main(int argc, char **argv)
 		std::cerr << "Usage: " << argv[0] << " <nginx.conf>" << std::endl;
 		return (1);
 	}
-	std::cout << get_str_conf(argv[1]) << std::endl;
+	std::string conf = get_str_conf(argv[1]);
+
+	std::cout << conf << std::endl;
+	// check_curly_braces(conf);
 	return (0);
 }
 */

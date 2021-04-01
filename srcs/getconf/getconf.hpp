@@ -6,7 +6,7 @@
 /*   By: mli <mli@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/30 14:49:14 by mli               #+#    #+#             */
-/*   Updated: 2021/04/01 11:43:24 by mli              ###   ########.fr       */
+/*   Updated: 2021/04/01 12:21:32 by mli              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,5 +14,7 @@
 # define GETCONF_HPP
 
 # include "../webserv.hpp"
+
+void    check_curly_braces(const std::string &conf);
 
 #endif // *************************************************** GETCONF_HPP end //
