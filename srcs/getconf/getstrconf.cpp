@@ -6,7 +6,7 @@
 /*   By: mli <mli@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/30 14:49:45 by mli               #+#    #+#             */
-/*   Updated: 2021/03/31 16:57:44 by mli              ###   ########.fr       */
+/*   Updated: 2021/04/01 11:34:30 by mli              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,11 @@ static void	add_content_to_str(std::string &res, const char *line) {
 	while (*line) {
 		if (!res.empty() && *(--res.end()) != ' ')
 			res.push_back(' ');
-		while (*line && whitespaces.find(*line) == std::string::npos)
+		while (*line && whitespaces.find(*line) == std::string::npos) {
+			if (*line == '#')
+				return ;
 			res.push_back(*line++);
+		}
 		while (*line && whitespaces.find(*line) != std::string::npos)
 			++line;
 	}
@@ -46,3 +49,15 @@ std::string	get_str_conf(const char *const path) {
 	close(fd);
 	return (res);
 }
+
+/*
+int		main(int argc, char **argv)
+{
+	if (argc != 2) {
+		std::cerr << "Usage: " << argv[0] << " <nginx.conf>" << std::endl;
+		return (1);
+	}
+	std::cout << get_str_conf(argv[1]) << std::endl;
+	return (0);
+}
+*/
