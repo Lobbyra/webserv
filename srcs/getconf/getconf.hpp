@@ -6,13 +6,13 @@
 /*   By: mli <mli@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/30 14:49:14 by mli               #+#    #+#             */
-/*   Updated: 2021/03/30 14:49:34 by mli              ###   ########.fr       */
+/*   Updated: 2021/04/01 11:43:24 by mli              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef GETCONF_HPP
 # define GETCONF_HPP
 
-# include "../main.hpp"
+# include "../webserv.hpp"
 
 #endif // *************************************************** GETCONF_HPP end //

@@ -6,7 +6,7 @@
 #    By: mli <mli@student.42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/03/30 11:54:38 by mli               #+#    #+#              #
-#    Updated: 2021/03/30 18:29:51 by mli              ###   ########.fr        #
+#    Updated: 2021/04/01 11:43:05 by mli              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,7 +33,7 @@ endif
 SRCS_PATH = ./srcs/
 
 ROOT_FILES = main.cpp
-ROOT_HEADER = main.hpp
+ROOT_HEADER = webserv.hpp
 
 GNL_PATH = ./GNL/
 GNL_FILES = get_next_line.cpp gnl_utils.cpp
