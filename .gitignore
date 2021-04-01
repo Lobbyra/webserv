@@ -33,6 +33,8 @@
 
 .vscode
 # Webserv-specific executables
+webserv
+
 docs/poc/directories/ft_mkdir
 docs/poc/directories/ft_rmdir
 docs/poc/directories/ft_opendir
