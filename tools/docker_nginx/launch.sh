@@ -76,7 +76,7 @@ fi
 # ============================================================================ #
 
 if [ -z "$1" ]; then
-    1="./config_files/basic.conf"
+    1="./config_files/ok_basic.conf"
 fi
 
 if [ -f $1 ]; then
@@ -89,7 +89,7 @@ fi
 echo "Using: ${YELLOW}${1}${EOC}. Which contains:"
 echo "___________________________________________"
 cat  $NGINX_CONFIG_PATH
-echo "___________________________________________"
+echo "___________________________________________\n"
 
 # ============================================================================ #
 #                    Cleaning possibly running nginx container                 #
@@ -102,7 +102,7 @@ docker rm $NGINX_IMG &> /dev/null
 #                                   BUILD                                      #
 # ============================================================================ #
 
-echo "Building Nginx container..."
+echo "${BOLD}Building Nginx container...${EOC}\n"
 
 cp $NGINX_CONFIG_PATH temp.conf
 
@@ -114,6 +114,36 @@ rm temp.conf
 #                                   RUN                                        #
 # ============================================================================ #
 
-docker run --name $NGINX_IMG -d -p $PORT:80 $NGINX_IMG
+echo "${BOLD}Container starting...${EOC}\n"
 
-echo "Container launched and listening at port $GREEN$PORT$EOC"
+docker run --name $NGINX_IMG -d -p $PORT:80 $NGINX_IMG > /dev/null
+sleep 1.25
+
+echo "Container launched and listening at port $GREEN$PORT$EOC\n"
+
+# ============================================================================ #
+#                                   INSPECT                                    #
+# ============================================================================ #
+
+#
+# --- Print startup logs
+#
+echo "${BOLD}==== NGINX STARTUP LOGS ====${EOC}"
+docker logs $NGINX_IMG
+echo "${BOLD}==== ------------------ ====${EOC}\n"
+
+#
+# --- Check if container is running
+#
+if [[ "$( docker container inspect -f '{{.State.Running}}' ${NGINX_IMG} )" == "false" ]]
+then
+    echo "❌ : Nginx crashed at startup."
+    exit 1
+fi
+
+echo "✅ : Container running ! stdout are linked to your terminal...\n"
+
+#
+# --- Display live logs
+#
+docker attach $NGINX_IMG
