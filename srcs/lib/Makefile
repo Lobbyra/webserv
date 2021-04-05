@@ -5,8 +5,8 @@
 #                                                     +:+ +:+         +:+      #
 #    By: mli <mli@student.42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2021/03/30 11:54:38 by mli               #+#    #+#              #
-#    Updated: 2021/04/05 16:57:17 by mli              ###   ########.fr        #
+#    Created: 2021/04/01 14:41:08 by mli               #+#    #+#              #
+#    Updated: 2021/04/05 16:50:33 by mli              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,77 +21,69 @@ CYAN = \033[96m
 
 # ############################################################################ #
 
-NAME = webserv
+NAME = lib.a
 
 CC = clang++
 CFLAGS = -Wall -Wextra -Werror -std=c++98
-
-LIB_A = lib.a
-LIB_PATH = ./srcs/lib/
-LIB_HEADER = lib.hpp
-
-LIBS = ${addprefix ${LIB_PATH}, ${LIB_A}}
 
 ifeq ($(f), f)
 	CFLAGS += -fsanitize=address -g3
 endif
 
-SRCS_PATH = ./srcs/
+ROOT_FILES = parser.cpp
+ROOT_HEADER = lib.hpp
 
-ROOT_FILES = main.cpp
-ROOT_HEADER = webserv.hpp data_structures.hpp
+LIBFT_PATH = ./libft/
+LIBFT_FILES = ft_memset.cpp ft_bzero.cpp ft_strlen.cpp ft_toupper.cpp ft_tolower.cpp \
+			  ft_strchr.cpp ft_strrchr.cpp ft_strncmp.cpp ft_strlcpy.cpp ft_strlcat.cpp \
+			  ft_strnstr.cpp ft_atoi.cpp ft_isalpha.cpp ft_isdigit.cpp ft_isalnum.cpp \
+			  ft_isascii.cpp ft_isprint.cpp ft_memcpy.cpp ft_memccpy.cpp ft_memmove.cpp \
+			  ft_memchr.cpp ft_memcmp.cpp ft_calloc.cpp ft_substr.cpp \
+			  ft_strtrim.cpp ft_strjoin.cpp ft_split.cpp ft_itoa.cpp ft_strmapi.cpp \
+			  ft_strcmp.cpp ft_memalloc.cpp ft_free.cpp ft_atoi_ptr.cpp ft_nbrlen.cpp \
+			  ft_abs.cpp ft_itoa_lbase.cpp
+LIBFT_HEADER = libft.h
 
-GETCONF_PATH = ./getconf/
-GETCONF_FILES = getconf.cpp getstrconf.cpp utils.cpp parse_serv_value.cpp
-GETCONF_HEADER = getconf.hpp
+GNL_PATH = ./GNL/
+GNL_FILES = get_next_line.cpp gnl_utils.cpp
+GNL_HEADER = get_next_line.h
 
 SRCS_FILES = ${ROOT_FILES} \
-			 ${addprefix ${GETCONF_PATH}, ${GETCONF_FILES}}
+			 ${addprefix ${LIBFT_PATH}, ${LIBFT_FILES}} \
+			 ${addprefix ${GNL_PATH}, ${GNL_FILES}}
 
 HEADER_FILES = ${ROOT_HEADER} \
-			   ${addprefix ${GETCONF_PATH}, ${GETCONF_HEADER}}
-
-HEADER_FULL = ${addprefix ${SRCS_PATH}, ${HEADER_FILES}} \
-			  ${addprefix ${LIB_PATH}, ${LIB_HEADER}}
+			   ${addprefix ${LIBFT_PATH}, ${LIBFT_HEADER}} \
+			   ${addprefix ${GNL_PATH}, ${GNL_HEADER}}
 
 OBJS_PATH = ./obj/
 OBJS_PATHS = ${OBJS_PATH} \
-			 ${OBJS_PATH}/${GETCONF_PATH}
+			 ${OBJS_PATH}/${LIBFT_PATH} \
+			 ${OBJS_PATH}/${GNL_PATH}
 OBJS = ${addprefix ${OBJS_PATH}, ${SRCS_FILES:.cpp=.o}}
 
-all: ${LIBS}
+all:
 	@printf "$(BOLD)Make $(RED)$(NAME)$(EOC)"
 	@echo " $(BOLD)with$(EOC) $(GREEN)$(CC)$(EOC) $(CYAN)$(CFLAGS)$(EOC): "
 	@make ${NAME} -j
 
-$(NAME): ${LIBS} ${OBJS_PATHS} ${OBJS} ${HEADER_FULL}
+$(NAME): ${OBJS_PATHS} ${OBJS} ${HEADER_FILES}
 	@echo ""
-	@${CC} ${CFLAGS} -o ${NAME} ${OBJS} ${LIBS}
-
-test: ${LIBS} ${OBJS_PATHS} ${OBJS} ${HEADER_FULL}
-	@echo ""
-	@printf "$(BOLD)Make $(RED)$@$(EOC)"
-	@echo " $(BOLD)with$(EOC) $(GREEN)$(CC)$(EOC) $(CYAN)$(CFLAGS)$(EOC): "
-	@$(eval TMP := $(shell ls ${OBJS} | grep -v "main.o"))
-	@${CC} ${CFLAGS} -o $@ ${TMP} ${LIBS}
+	@ar rcs ${NAME} ${OBJS}
 
 ${OBJS_PATHS}:
 	@mkdir -p $@
 
-${OBJS_PATH}%.o: ${SRCS_PATH}%.cpp ${HEADER_FULL}
+${OBJS_PATH}%.o: %.cpp ${HEADER_FILES}
 	@${CC} ${CFLAGS} -c $< -o $@
 	@printf "$(YELLOW)▓$(EOC)"
 
-${LIB_PATH}${LIB_A}:
-	@make -C ${LIB_PATH}
-
 clean:
-	@make -C ${LIB_PATH} fclean
-	@echo "$(BOLD)$(YELLOW)Remove objs.... |$(GREEN)| done$(EOC)"
+	@echo "$(BOLD)$(YELLOW)Remove objs lib|$(GREEN)| done$(EOC)"
 	@rm -rf ${OBJS_PATH}
 
 fclean: clean
-	@echo "$(BOLD)$(YELLOW)Remove all..... |$(GREEN)| done$(EOC)"
+	@echo "$(BOLD)$(YELLOW)Remove all lib |$(GREEN)| done$(EOC)"
 	@rm -rf $(NAME)
 
 re: fclean all

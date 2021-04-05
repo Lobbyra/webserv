@@ -6,11 +6,12 @@
 /*   By: mli <mli@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/02 11:04:15 by mli               #+#    #+#             */
-/*   Updated: 2021/04/05 14:58:15 by mli              ###   ########.fr       */
+/*   Updated: 2021/04/05 16:15:19 by mli              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "getconf.hpp"
+#include "../data_structures.hpp"
 
 void    parse_client_max_body_size(std::string::const_iterator it, void *ptr) {
     int i = 0;
