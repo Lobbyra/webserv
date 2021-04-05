@@ -7,25 +7,34 @@
 # include <string>
 # include <iostream>
 
-struct              s_ipport {
+typedef std::list<std::string> t_strlst;
+typedef std::map<int, std::string> t_error_page;
+typedef std::map<std::string, std::string> t_cgi_param;
+
+struct  s_ipport {
     int             port;
     std::string     ip;
-}
+};
 
 struct  s_location {
-    int                         client_max_body_size;
-    std::string                 root;
-    std::string                 autoindex;
-    std::list<std::string>      index;
-    std::map<int, std::string>  error_page;
-}
-
-struct              s_server {
     int             client_max_body_size;
     std::string     root;
-    s_ipport          listen;
-    std::string
-    std::styrin
-}
+    std::string     autoindex;
+    t_strlst        index;
+    t_error_page    error_page;
+    t_cgi_param     fastcgi_param;
+};
+
+struct  s_server {
+    int             client_max_body_size;
+    std::string     root;
+    s_ipport        listen;
+    std::string     autoindex;
+    s_location      location;
+    t_strlst        index;
+    t_strlst        server_name;
+    t_error_page    error_page;
+    t_cgi_param     fastcgi_param;
+};
 
 #endif

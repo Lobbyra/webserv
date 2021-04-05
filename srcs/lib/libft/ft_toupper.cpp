@@ -1,20 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   getconf.hpp                                        :+:      :+:    :+:   */
+/*   ft_toupper.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mli <mli@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: mli <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/03/30 14:49:14 by mli               #+#    #+#             */
-/*   Updated: 2021/04/05 16:55:14 by mli              ###   ########.fr       */
+/*   Created: 2019/10/07 15:11:54 by mli               #+#    #+#             */
+/*   Updated: 2019/10/07 15:13:47 by mli              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GETCONF_HPP
-# define GETCONF_HPP
-
-# include "../webserv.hpp"
-
-void        check_curly_braces(const std::string &conf);
-
-#endif // *************************************************** GETCONF_HPP end //
+int	ft_toupper(int c)
+{
+	if (c >= 'a' && c <= 'z')
+		c -= 32;
+	return (c);
+}

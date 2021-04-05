@@ -1,20 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   getconf.hpp                                        :+:      :+:    :+:   */
+/*   ft_memalloc.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mli <mli@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/03/30 14:49:14 by mli               #+#    #+#             */
-/*   Updated: 2021/04/05 16:55:14 by mli              ###   ########.fr       */
+/*   Created: 2019/12/10 12:00:03 by mli               #+#    #+#             */
+/*   Updated: 2020/01/01 23:28:38 by mli              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GETCONF_HPP
-# define GETCONF_HPP
+#include "libft.h"
 
-# include "../webserv.hpp"
+void	*ft_memalloc(size_t size)
+{
+	void *result;
 
-void        check_curly_braces(const std::string &conf);
-
-#endif // *************************************************** GETCONF_HPP end //
+	if (!(result = malloc(size)))
+		return (NULL);
+	ft_memset(result, 0, size);
+	return (result);
+}

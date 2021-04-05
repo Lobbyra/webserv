@@ -1,20 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   getconf.hpp                                        :+:      :+:    :+:   */
+/*   ft_itoa.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mli <mli@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/03/30 14:49:14 by mli               #+#    #+#             */
-/*   Updated: 2021/04/05 16:55:14 by mli              ###   ########.fr       */
+/*   Created: 2020/05/13 17:19:55 by mli               #+#    #+#             */
+/*   Updated: 2020/05/13 17:22:23 by mli              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GETCONF_HPP
-# define GETCONF_HPP
+#include "libft.h"
 
-# include "../webserv.hpp"
-
-void        check_curly_braces(const std::string &conf);
-
-#endif // *************************************************** GETCONF_HPP end //
+char	*ft_itoa(int n)
+{
+	return (ft_itoa_lbase("0123456789", n));
+}

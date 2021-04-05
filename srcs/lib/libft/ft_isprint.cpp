@@ -1,20 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   getconf.hpp                                        :+:      :+:    :+:   */
+/*   ft_isprint.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mli <mli@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: mli <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/03/30 14:49:14 by mli               #+#    #+#             */
-/*   Updated: 2021/04/05 16:55:14 by mli              ###   ########.fr       */
+/*   Created: 2019/10/09 16:10:19 by mli               #+#    #+#             */
+/*   Updated: 2019/10/09 16:12:03 by mli              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GETCONF_HPP
-# define GETCONF_HPP
-
-# include "../webserv.hpp"
-
-void        check_curly_braces(const std::string &conf);
-
-#endif // *************************************************** GETCONF_HPP end //
+int		ft_isprint(int c)
+{
+	if (c >= ' ' && c <= '~')
+		return (1);
+	return (0);
+}

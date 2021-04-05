@@ -6,7 +6,7 @@
 /*   By: mli <mli@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/30 14:04:54 by mli               #+#    #+#             */
-/*   Updated: 2021/04/01 11:43:45 by mli              ###   ########.fr       */
+/*   Updated: 2021/04/05 16:56:11 by mli              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 # include <exception>
 # include <fcntl.h>
 
-# include "./GNL/get_next_line.h"
+# include "./lib/lib.hpp"
 
 std::string get_str_conf(const char *const path);
 

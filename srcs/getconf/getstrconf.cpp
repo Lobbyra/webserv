@@ -6,13 +6,11 @@
 /*   By: mli <mli@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/30 14:49:45 by mli               #+#    #+#             */
-/*   Updated: 2021/04/01 12:27:51 by mli              ###   ########.fr       */
+/*   Updated: 2021/04/02 11:53:39 by mli              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "getconf.hpp"
-
-static const std::string whitespaces("\t\n\v\f\r ");
 
 static void	add_content_to_str(std::string &res, const char *line) {
 	while (*line) {

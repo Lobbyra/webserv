@@ -1,20 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   getconf.hpp                                        :+:      :+:    :+:   */
+/*   ft_nbrlen.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mli <mli@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/03/30 14:49:14 by mli               #+#    #+#             */
-/*   Updated: 2021/04/05 16:55:14 by mli              ###   ########.fr       */
+/*   Created: 2020/03/14 14:45:12 by mli               #+#    #+#             */
+/*   Updated: 2020/03/14 16:04:46 by mli              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GETCONF_HPP
-# define GETCONF_HPP
+int		ft_nbrlen_base(long int nb, int base_len)
+{
+	int size;
 
-# include "../webserv.hpp"
+	size = 0;
+	if (nb <= 0)
+		size++;
+	while (nb != 0)
+	{
+		nb /= base_len;
+		size++;
+	}
+	return (size);
+}
 
-void        check_curly_braces(const std::string &conf);
-
-#endif // *************************************************** GETCONF_HPP end //
+int		ft_nbrlen(long int nb)
+{
+	return (ft_nbrlen_base(nb, 10));
+}
