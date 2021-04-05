@@ -34,6 +34,7 @@
 .vscode
 # Webserv-specific executables
 webserv
+test
 
 docs/poc/directories/ft_mkdir
 docs/poc/directories/ft_rmdir

@@ -1,26 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   webserv.hpp                                        :+:      :+:    :+:   */
+/*   ft_abs.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mli <mli@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/03/30 14:04:54 by mli               #+#    #+#             */
-/*   Updated: 2021/04/01 15:19:42 by mli              ###   ########.fr       */
+/*   Created: 2020/03/17 16:54:27 by mli               #+#    #+#             */
+/*   Updated: 2020/03/17 16:57:01 by mli              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MAIN_HPP
-# define MAIN_HPP
+double		ft_abs_lf(double nbr)
+{
+	return ((nbr >= 0 ? nbr : -nbr));
+}
 
-# include <iostream>
-# include <string>
-# include <exception>
-# include <fcntl.h>
-
-# include "./libft/libft.h"
-# include "./GNL/get_next_line.h"
-
-std::string get_str_conf(const char *const path);
-
-#endif // ****************************************************** MAIN_HPP end //
+long int	ft_abs_ld(long int nb)
+{
+	return ((nb >= 0 ? nb : -nb));
+}

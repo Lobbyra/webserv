@@ -1,26 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   webserv.hpp                                        :+:      :+:    :+:   */
+/*   ft_nbrlen.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mli <mli@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/03/30 14:04:54 by mli               #+#    #+#             */
-/*   Updated: 2021/04/01 15:19:42 by mli              ###   ########.fr       */
+/*   Created: 2020/03/14 14:45:12 by mli               #+#    #+#             */
+/*   Updated: 2020/03/14 16:04:46 by mli              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MAIN_HPP
-# define MAIN_HPP
+int		ft_nbrlen_base(long int nb, int base_len)
+{
+	int size;
 
-# include <iostream>
-# include <string>
-# include <exception>
-# include <fcntl.h>
+	size = 0;
+	if (nb <= 0)
+		size++;
+	while (nb != 0)
+	{
+		nb /= base_len;
+		size++;
+	}
+	return (size);
+}
 
-# include "./libft/libft.h"
-# include "./GNL/get_next_line.h"
-
-std::string get_str_conf(const char *const path);
-
-#endif // ****************************************************** MAIN_HPP end //
+int		ft_nbrlen(long int nb)
+{
+	return (ft_nbrlen_base(nb, 10));
+}

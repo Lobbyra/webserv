@@ -1,26 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   webserv.hpp                                        :+:      :+:    :+:   */
+/*   ft_itoa.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mli <mli@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/03/30 14:04:54 by mli               #+#    #+#             */
-/*   Updated: 2021/04/01 15:19:42 by mli              ###   ########.fr       */
+/*   Created: 2020/05/13 17:19:55 by mli               #+#    #+#             */
+/*   Updated: 2020/05/13 17:22:23 by mli              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MAIN_HPP
-# define MAIN_HPP
+#include "libft.h"
 
-# include <iostream>
-# include <string>
-# include <exception>
-# include <fcntl.h>
-
-# include "./libft/libft.h"
-# include "./GNL/get_next_line.h"
-
-std::string get_str_conf(const char *const path);
-
-#endif // ****************************************************** MAIN_HPP end //
+char	*ft_itoa(int n)
+{
+	return (ft_itoa_lbase("0123456789", n));
+}

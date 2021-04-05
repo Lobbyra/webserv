@@ -1,26 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   webserv.hpp                                        :+:      :+:    :+:   */
+/*   ft_memalloc.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mli <mli@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/03/30 14:04:54 by mli               #+#    #+#             */
-/*   Updated: 2021/04/01 15:19:42 by mli              ###   ########.fr       */
+/*   Created: 2019/12/10 12:00:03 by mli               #+#    #+#             */
+/*   Updated: 2020/01/01 23:28:38 by mli              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MAIN_HPP
-# define MAIN_HPP
+#include "libft.h"
 
-# include <iostream>
-# include <string>
-# include <exception>
-# include <fcntl.h>
+void	*ft_memalloc(size_t size)
+{
+	void *result;
 
-# include "./libft/libft.h"
-# include "./GNL/get_next_line.h"
-
-std::string get_str_conf(const char *const path);
-
-#endif // ****************************************************** MAIN_HPP end //
+	if (!(result = malloc(size)))
+		return (NULL);
+	ft_memset(result, 0, size);
+	return (result);
+}
