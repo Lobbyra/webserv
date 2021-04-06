@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   getstrconf.cpp                                     :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: jecaudal <jecaudal@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/03/30 14:49:45 by mli               #+#    #+#             */
-/*   Updated: 2021/04/06 14:41:45 by jecaudal         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "getconf.hpp"
 
 static void    add_content_to_str(std::string &res, const char *line) {
@@ -22,6 +10,8 @@ static void    add_content_to_str(std::string &res, const char *line) {
             if (is_special_c(*line)) {
                 if (*(--(res.end())) != ' ' && *line != ';')
                     res.push_back(' ');
+                if (*(--(res.end())) == ' ' && *line == ';')
+                    res.erase(--(res.end()));
                 res.push_back(*line++);
                 res.push_back(' ');
             }
