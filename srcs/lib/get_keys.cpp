@@ -1,11 +1,5 @@
-#include "parse_conf.hpp"
-
-bool    is_space(char c) {
-    if (c == '\t' || c == '\n' || c == '\v' ||
-        c == '\f' || c == '\r' || c == ' ')
-        return (true);
-    return (false);
-}
+#include <list>
+#include <string>
 
 std::list<std::string>  get_keys(void) {
     std::list<std::string>  keys;
@@ -21,5 +15,3 @@ std::list<std::string>  get_keys(void) {
     keys.push_back("client_max_body_size");
     return (keys);
 }
-
-
