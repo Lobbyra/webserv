@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: mli <mli@student.42.fr>                    +#+  +:+       +#+         #
+#    By: jecaudal <jecaudal@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/04/01 14:41:08 by mli               #+#    #+#              #
-#    Updated: 2021/04/05 16:50:33 by mli              ###   ########.fr        #
+#    Updated: 2021/04/06 14:27:52 by jecaudal         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,7 +30,7 @@ ifeq ($(f), f)
 	CFLAGS += -fsanitize=address -g3
 endif
 
-ROOT_FILES = parser.cpp
+ROOT_FILES = get_keys.cpp is_space.cpp get_word_it.cpp is_special_c.cpp
 ROOT_HEADER = lib.hpp
 
 LIBFT_PATH = ./libft/
