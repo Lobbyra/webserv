@@ -6,7 +6,7 @@
 /*   By: jecaudal <jecaudal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/05 16:51:45 by mli               #+#    #+#             */
-/*   Updated: 2021/04/07 14:09:43 by jecaudal         ###   ########.fr       */
+/*   Updated: 2021/04/07 15:03:44 by jecaudal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,12 +33,5 @@ std::list<std::string> get_keys(void);
 
 void    skip_it(std::string::const_iterator &it,
                 const std::string sep = whitespaces);
-
-template <typename it, typename T>
-it  ft_find(it start, it end, T const &val) {
-    while (start != end && *start != val)
-        start++;
-    return (start);
-}
 
 #endif // ******************************************************* LIB_HPP end //
