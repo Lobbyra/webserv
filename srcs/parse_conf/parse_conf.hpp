@@ -4,6 +4,7 @@
 # include <list>
 # include <string>
 # include <iostream>
+# include "lib.hpp"
 
 void    skip_param(std::string::iterator &it);
 void    skip_location(std::string::iterator &it);
