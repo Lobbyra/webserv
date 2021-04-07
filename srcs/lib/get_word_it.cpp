@@ -6,7 +6,7 @@
 /*   By: jecaudal <jecaudal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/05 16:54:25 by mli               #+#    #+#             */
-/*   Updated: 2021/04/06 10:16:06 by jecaudal         ###   ########.fr       */
+/*   Updated: 2021/04/07 13:52:06 by jecaudal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,7 @@
 std::string get_word_it(std::string::const_iterator it, const std::string sep) {
     std::string::const_iterator ite = it;
 
-    while (sep.find(*ite) == std::string::npos)
-        ++ite;
+    skip_it(ite, sep);
     return (std::string(it, ite));
 }
 
