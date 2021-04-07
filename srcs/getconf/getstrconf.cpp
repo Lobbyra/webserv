@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   getstrconf.cpp                                     :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: jecaudal <jecaudal@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/03/30 14:49:45 by mli               #+#    #+#             */
-/*   Updated: 2021/04/07 14:34:54 by jecaudal         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "getconf.hpp"
 
 static bool    is_separator(char c) {
@@ -40,10 +28,10 @@ static void    add_content_to_str(std::string &res, const char *line) {
 }
 
 std::string    get_str_conf(const char *const path) {
-    int            n;
-    int            fd;
-    char        *line;
-    std::string    res;
+    int             n;
+    int             fd;
+    char            *line;
+    std::string     res;
 
     if ((fd = open(path, O_RDONLY)) < 0)
         throw std::logic_error("Cannot open config file");

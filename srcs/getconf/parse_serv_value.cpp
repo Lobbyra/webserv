@@ -1,26 +1,22 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   parse_serv_value.cpp                               :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: mli <mli@student.42.fr>                    +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/04/02 11:04:15 by mli               #+#    #+#             */
-/*   Updated: 2021/04/05 16:15:19 by mli              ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "getconf.hpp"
 #include "../data_structures.hpp"
 
+static std::string skip_k_get_value(const std::string &key,
+        std::string::const_iterator &it, std::string const &sep) {
+    it += key.size();
+    if (*it == ';')
+        throw std::logic_error("Empty value for key: " + key);
+    return (get_word_it(++it, sep));
+}
+
 void    parse_client_max_body_size(std::string::const_iterator it, void *ptr) {
-    int i = 0;
     int *const data = reinterpret_cast<int *>(ptr);
-    const char *str = get_word_it(++it).c_str();
+    const char *str = skip_k_get_value("client_max_body_size", it, ";").c_str();
+    int i = 0;
 
     if (!ft_isdigit(str[i]))
         throw std::logic_error("Invalid client_max_body_size");
-    *data = ft_atoi_ptr(str, &i, 0);
+    *data = ft_atoi_ptr(str, &i, false, false);
     if (str[i] == 'k')
         *data *= 1000;
     else if (str[i] == 'm')
@@ -28,7 +24,7 @@ void    parse_client_max_body_size(std::string::const_iterator it, void *ptr) {
     else
         --i;
     ++i;
-    if (str[i] != ';')
+    if (str[i] != '\0')
         throw std::logic_error("Invalid client_max_body_size");
 }
 
@@ -36,11 +32,20 @@ void    parse_client_max_body_size(std::string::const_iterator it, void *ptr) {
 int		main(void)
 {
     int res;
-    std::string str = " 20m;";
-    //str = " m;";
+    std::string str = "client_max_body_size 20m;";
+    //str = "client_max_body_size m;";
+    //str = "client_max_body_size;";
+    //str = "client_max_body_size 2048;";
+    //str = "client_max_body_size 2048t;";
 
-    parse_client_max_body_size(str.begin(), &res);
-    std::cout << "res is: " << res << std::endl;
+    try {
+        parse_client_max_body_size(str.begin(), &res);
+        std::cout << "client_max_body_size : |" << res << "|" << std::endl;
+    }
+    catch(const std::exception &e) {
+        std::cerr << "CATCH EXCEPTION: " << e.what() << std::endl;
+    }
+    std::cout << "Tried to parse: " << str << std::endl;
     return (0);
 }
 */
@@ -48,29 +53,143 @@ int		main(void)
 void    parse_root(std::string::const_iterator it, void *ptr) {
     std::string *const data = reinterpret_cast<std::string *>(ptr);
 
-    *data = get_word_it(++it).c_str();
-    if (data->size() <= 1 || data->back() != ';')
+    *data = skip_k_get_value("root", it, ";");
+    if (ft_isin(' ', data->c_str()))
         throw std::logic_error("Invalid root");
-    data->erase(--data->end());
 }
 
 /*
 int		main(void)
 {
     std::string res;
-    std::string str = " path/to/file; other_key other_value;";
+    std::string str = "root path/to/file; other_key other_value;";
 
-    //str = " path/to/file ; other_key other_value;";
-    //str = " path/to/file other_key other_value;";
-    //str = " ;";
+    //str = "root path/to/file other_key other_value;";
+    //str = "root;";
 
     try {
         parse_root(str.begin(), &res);
+        std::cout << "root : |" << res << "|" << std::endl;
     }
     catch(const std::exception &e) {
-        std::cerr << "CATCH EXCEPTION: " << e.what() << '\n';
-        res = "empty";
+        std::cerr << "CATCH EXCEPTION: " << e.what() << std::endl;
     }
-    std::cout << "res is: |" << res << "|" << std::endl;
+    std::cout << "Tried to parse: " << str << std::endl;
+}
+*/
+
+/* Expect "listen IP:PORT;"
+ * Attached, no space allowed
+ */
+
+void    parse_listen(std::string::const_iterator it, void *ptr) {
+    s_ipport *const data = reinterpret_cast<s_ipport *>(ptr);
+    const char *str = skip_k_get_value("listen", it, ";").c_str();
+    size_t colon;
+    int i = 0;
+
+    if (ft_isin(' ', str) ||
+       (colon = std::string(str).find(':')) == std::string::npos)
+        throw std::logic_error("Invalid listen");
+    data->ip = std::string(str, str + colon);
+    str += colon + 1;
+    data->port = ft_atoi_ptr(str, &i, false, false);
+
+    if (i == 0 || str[i] != '\0' || data->ip.empty())
+        throw std::logic_error("Invalid listen");
+}
+
+/*
+int		main(void)
+{
+    s_ipport    res;
+    std::string str = "listen 127.0.0.1:80; other_key other_value;";
+
+    //str = "listen 127.0.0.1:80;";
+    //str = "listen 127.0.0.1:80 other_key other_value;";
+    //str = "listen;";
+    //str = "listen 127.0.0.1:;";
+    //str = "listen 127.0.0.1;";
+    //str = "listen :80;";
+    //str = "listen 80;";
+    //str = "listen 127.0.0.1 :80;";
+    //str = "listen 127.0.0.1: 80;";
+
+    try {
+        parse_listen(str.begin(), &res);
+        std::cout << "IP: " << res.ip << " | PORT: " << res.port << std::endl;
+    }
+    catch(const std::exception &e) {
+        std::cerr << "CATCH EXCEPTION: " << e.what() << std::endl;
+    }
+    std::cout << "Tried to parse: " << str << std::endl;
+}
+*/
+
+void    parse_autoindex(std::string::const_iterator it, void *ptr) {
+    std::string *const data = reinterpret_cast<std::string *>(ptr);
+
+    *data = skip_k_get_value("autoindex", it, ";");
+    if (data->compare("off") && data->compare("on"))
+        throw std::logic_error("Invalid autoindex");
+}
+
+/*
+int		main(void)
+{
+    std::string res;
+    std::string str = "autoindex on;";
+
+    //str = "autoindex on; other_key other_value;";
+    //str = "autoindex on other_key other_value;";
+    //str = "autoindex;";
+    //str = "autoindex off;";
+    //str = "autoindex offe;";
+    //str = "autoindex om;";
+
+    try {
+        parse_autoindex(str.begin(), &res);
+        std::cout << "autoindex : |" << res << "|" << std::endl;
+    }
+    catch(const std::exception &e) {
+        std::cerr << "CATCH EXCEPTION: " << e.what() << std::endl;
+    }
+    std::cout << "Tried to parse: " << str << std::endl;
+}
+*/
+
+void    parse_server_names(std::string::const_iterator it, void *ptr) {
+    t_strlst *const data = reinterpret_cast<t_strlst *>(ptr);
+    std::string str = skip_k_get_value("server_name", it, ";");
+    size_t pos = 0, next_space;
+
+    while ((next_space = str.find(' ', pos)) != std::string::npos) {
+        data->push_back(str.substr(pos, next_space - pos));
+        pos = next_space + 1;
+    }
+    data->push_back(str.substr(pos, std::string::npos));
+}
+
+/*
+int		main(void)
+{
+    t_strlst res;
+    std::string str = "server_name example.xd www.example.org; other_key other_value;";
+
+    //str = "server_name example.lol; other_key other_value;";
+    //str = "server_name example.org other_key other_value;";
+    //str = "server_name;";
+    //str = "server_name example.org google.fr website.lmao heyho.com;";
+
+    try {
+        parse_server_names(str.begin(), &res);
+        t_strlst::const_iterator it = res.begin(), ite = res.end();
+        for (; it != ite; ++it)
+            std::cout << "server_name : |" << *it << "|" << std::endl;
+    }
+    catch(const std::exception &e) {
+        std::cerr << "CATCH EXCEPTION: " << e.what() << std::endl;
+    }
+    std::cout << "Tried to parse: " << str << std::endl;
 }
 */

@@ -1,15 +1,3 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: jecaudal <jecaudal@student.42.fr>          +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2021/04/01 14:41:08 by mli               #+#    #+#              #
-#    Updated: 2021/04/07 14:24:18 by jecaudal         ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
-
 EOC = \033[0m
 BOLD = \033[1m
 RED = \033[91m
@@ -30,8 +18,8 @@ ifeq ($(f), f)
 	CFLAGS += -fsanitize=address -g3
 endif
 
-ROOT_FILES = get_keys.cpp is_space.cpp get_word_it.cpp skip_it.cpp				\
-			 is_str_num.cpp
+ROOT_FILES = get_keys.cpp is_space.cpp get_word_it.cpp skip_it.cpp			\
+			 is_str_num.cpp ft_isin.cpp
 ROOT_HEADER = lib.hpp
 
 LIBFT_PATH = ./libft/

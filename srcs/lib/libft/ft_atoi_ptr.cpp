@@ -6,21 +6,28 @@
 /*   By: mli <mli@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/08 16:14:46 by mli               #+#    #+#             */
-/*   Updated: 2021/04/02 13:43:06 by mli              ###   ########.fr       */
+/*   Updated: 2021/04/06 12:06:25 by mli              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-int		ft_atoi_ptr(const char *str, int *i, bool handle_sign = true)
-{
-	int signe;
-	int result;
+/* ft_atoi_ptr:
+ *
+ * str: string to be parsed
+ * i: address of the index to be incremented
+ * h_sign = true: bool to handle sign or not
+ * h_space = true: bool to handle whitespaces or not
+ */
 
-	signe = 1;
-	result = 0;
-	while (str[*i] == '\t' || str[*i] == '\n' || str[*i] == '\v' ||
-			str[*i] == '\f' || str[*i] == '\r' || str[*i] == ' ')
-		(*i)++;
-	if (handle_sign) {
+int		ft_atoi_ptr(const char *str, int *i, bool h_sign, bool h_space)
+{
+	int signe = 1;
+	int result = 0;
+
+	if (h_space)
+		while (str[*i] == '\t' || str[*i] == '\n' || str[*i] == '\v' ||
+				str[*i] == '\f' || str[*i] == '\r' || str[*i] == ' ')
+			(*i)++;
+	if (h_sign) {
 		if (str[*i] == '+')
 			(*i)++;
 		else if (str[*i] == '-')

@@ -24,13 +24,10 @@
  */
 
 void    skip_param(std::string::iterator &it) {
-    while (*it != ';') {
+    while (*it != ';' && *it != '}')
         ++it;
-    }
-    ++it;
-    while (is_space(*it)) {
-        ++it;
-    }
+    if (*it == ';') // skip "; "
+        it += 2;
 }
 
 /*
