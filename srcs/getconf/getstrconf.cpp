@@ -1,5 +1,9 @@
 #include "getconf.hpp"
 
+static bool    is_separator(char c) {
+    return ((c == '{' || c == '}' || c == ';'));
+}
+
 static void    add_content_to_str(std::string &res, const char *line) {
     while (*line) {
         if (!res.empty() && *(--res.end()) != ' ')
@@ -7,7 +11,7 @@ static void    add_content_to_str(std::string &res, const char *line) {
         while (*line && whitespaces.find(*line) == std::string::npos) {
             if (*line == '#')
                 return ;
-            if (is_special_c(*line)) {
+            if (is_separator(*line)) {
                 if (*(--(res.end())) != ' ' && *line != ';')
                     res.push_back(' ');
                 if (*(--(res.end())) == ' ' && *line == ';')
