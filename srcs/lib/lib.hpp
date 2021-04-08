@@ -14,6 +14,7 @@ const std::string whitespaces("\t\n\v\f\r ");
 std::string get_word_it(std::string::const_iterator it,
                         const std::string sep = whitespaces);
 
+bool    ft_isin(const char &c, const char *str);
 bool    is_space(char c);
 bool    is_str_num(std::string str);
 

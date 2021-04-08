@@ -28,10 +28,10 @@ static void    add_content_to_str(std::string &res, const char *line) {
 }
 
 std::string    get_str_conf(const char *const path) {
-    int            n;
-    int            fd;
-    char        *line;
-    std::string    res;
+    int             n;
+    int             fd;
+    char            *line;
+    std::string     res;
 
     if ((fd = open(path, O_RDONLY)) < 0)
         throw std::logic_error("Cannot open config file");
