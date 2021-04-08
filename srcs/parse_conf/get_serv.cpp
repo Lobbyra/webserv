@@ -2,10 +2,10 @@
 
 /*
  * This function take a iterator on first letter of a server block. It will
- * create a server structure (s_server -> srcs/data_structures.hpp).
+ * create a server structure (c_server -> srcs/data_structures.hpp).
  * 
  * If a key word is not recognised, it will throw an error.
- * Same if a mandatory variable of the s_server isn't set by the context.
+ * Same if a mandatory variable of the c_server isn't set by the context.
  */
 
 void    get_serv(std::string::iterator it_conf) {
