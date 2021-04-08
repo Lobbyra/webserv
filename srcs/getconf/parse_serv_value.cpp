@@ -11,7 +11,8 @@ static std::string skip_k_get_value(const std::string &key,
 
 void    parse_client_max_body_size(std::string::const_iterator it, void *ptr) {
     int *const data = reinterpret_cast<int *>(ptr);
-    const char *str = skip_k_get_value("client_max_body_size", it, ";").c_str();
+    std::string tmp = skip_k_get_value("client_max_body_size", it, ";");
+    const char *str = tmp.c_str();
     int i = 0;
 
     if (!ft_isdigit(str[i]))
@@ -54,7 +55,7 @@ void    parse_root(std::string::const_iterator it, void *ptr) {
     std::string *const data = reinterpret_cast<std::string *>(ptr);
 
     *data = skip_k_get_value("root", it, ";");
-    if (ft_isin(' ', data->c_str()))
+    if (ft_isin(' ', *data))
         throw std::logic_error("Invalid root");
 }
 
@@ -84,12 +85,13 @@ int		main(void)
 
 void    parse_listen(std::string::const_iterator it, void *ptr) {
     s_ipport *const data = reinterpret_cast<s_ipport *>(ptr);
-    const char *str = skip_k_get_value("listen", it, ";").c_str();
+    std::string tmp = skip_k_get_value("listen", it, ";");
+    const char *str = tmp.c_str();
     size_t colon;
     int i = 0;
 
-    if (ft_isin(' ', str) ||
-       (colon = std::string(str).find(':')) == std::string::npos)
+    if (ft_isin(' ', tmp) ||
+       (colon = tmp.find(':')) == std::string::npos)
         throw std::logic_error("Invalid listen");
     data->ip = std::string(str, str + colon);
     str += colon + 1;
