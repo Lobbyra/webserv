@@ -6,21 +6,17 @@
 /*   By: jereligi <jereligi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/07 15:03:56 by jereligi          #+#    #+#             */
-/*   Updated: 2021/04/07 17:36:38 by jereligi         ###   ########.fr       */
+/*   Updated: 2021/04/08 11:57:35 by jereligi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <iostream>
-#include <sys/socket.h>
-#include <arpa/inet.h>
-#include <string.h>
-#include <unistd.h>
+#include "mini_client.hpp"
 
 /*
 1 - init socket
 2 - connect socket
 3 - send header
-4 - receive anwser
+4 - listen
 */
 
 /*
@@ -76,20 +72,24 @@ int		main(int ac, char **av)
 	// create request
 	// char request[4096] = "GET HTTP/1.1\r\n\r\n";
 	char request[4096] = "GET https://example.com/ HTTP/1.1\r\n\r\n";
-	// char request[4096] = "GET / HTTP/1.1\nHost: example.com\r\n\r\n";
 
 	// send
-    if (write(sock, request, strlen(request)) != (long)strlen(request))
+    // if (write(sock, request, strlen(request)) != (long)strlen(request))
+	if (send(sock , request , strlen(request) , 0 ) == -1)
 	{
         std::cerr << "error: Socket send request" << std::endl;
         return -1;
     }
-
+	
+	// listen
+	char	*line;
 	int		n;
-	char	recvline[4096];
-	while ((n = read(sock, recvline, 4095)) > 0)
+	while ((n = get_next_line(sock, &line)) == 1)
 	{
-		printf("%s", recvline);
+		std::cout << line << std::endl;
+		free(line);
 	}
+	if (n == 0)
+		free(line);
     return 0;
 }
