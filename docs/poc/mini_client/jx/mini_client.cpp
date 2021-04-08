@@ -6,7 +6,7 @@
 /*   By: jereligi <jereligi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/07 15:03:56 by jereligi          #+#    #+#             */
-/*   Updated: 2021/04/08 11:57:35 by jereligi         ###   ########.fr       */
+/*   Updated: 2021/04/08 14:47:08 by jereligi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ int		main(int ac, char **av)
 		return -1;
 	}
 
-	serv_addr.sin_port = htons(80);
+	serv_addr.sin_port = htons(18000);
 	serv_addr.sin_family = AF_INET;
 
 	// connect socket
