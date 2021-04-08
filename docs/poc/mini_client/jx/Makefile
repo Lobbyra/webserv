@@ -6,7 +6,7 @@
 #    By: jereligi <jereligi@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/04/07 15:03:53 by jereligi          #+#    #+#              #
-#    Updated: 2021/04/08 11:49:30 by jereligi         ###   ########.fr        #
+#    Updated: 2021/04/08 15:11:49 by jereligi         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,9 +32,9 @@ SRC = 	mini_client.cpp			\
 
 OBJ = $(SRC:.cpp=.o)
 
-CC = clang++
+CXX = clang++
 
-CPPFLAGS = -Wall -Wextra -Werror -std=c++98
+CXXFLAGS = -Wall -Wextra -Werror -std=c++98
 
 all : 
 			@printf "$(BOLD)Make $(RED)$(NAME)$(EOC)"
@@ -42,7 +42,7 @@ all :
 			@make $(NAME)
 
 $(NAME) :	$(OBJ)
-			$(CC) $(CFLAGS) -o $(NAME) $(OBJ)
+			$(CXX) $(CXXFLAGS) -o $(NAME) $(OBJ)
 			
 clean :
 			rm -rf $(OBJ)
