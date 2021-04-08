@@ -6,7 +6,7 @@
 #    By: jereligi <jereligi@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/04/07 15:03:53 by jereligi          #+#    #+#              #
-#    Updated: 2021/04/08 15:11:49 by jereligi         ###   ########.fr        #
+#    Updated: 2021/04/08 15:12:16 by jereligi         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,9 +24,9 @@ CYAN = \033[96m
 # ############################################################################ #
 
 
-NAME = mini_client
+NAME = mini_serv
 
-SRC = 	mini_client.cpp			\
+SRC = 	mini_serv.cpp			\
 		./GNL/get_next_line.cpp \
 		./GNL/gnl_utils.cpp
 

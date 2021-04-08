@@ -8,6 +8,6 @@ static int	print_usage(char *prog_name) {
 int		main(int argc, char **argv) {
 	if (argc != 2)
 		return (print_usage(argv[0]));
-	std::cout << get_str_conf(argv[1]) << std::endl;
+	std::cout << get_conf(argv[1]) << std::endl;
 	return (0);
 }
