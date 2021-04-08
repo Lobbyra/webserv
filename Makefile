@@ -6,7 +6,7 @@
 #    By: mli <mli@student.42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/03/30 11:54:38 by mli               #+#    #+#              #
-#    Updated: 2021/04/05 16:57:17 by mli              ###   ########.fr        #
+#    Updated: 2021/04/08 16:14:22 by mli              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,7 +28,6 @@ CFLAGS = -Wall -Wextra -Werror -std=c++98
 
 LIB_A = lib.a
 LIB_PATH = ./srcs/lib/
-LIB_HEADER = lib.hpp
 
 LIBS = ${addprefix ${LIB_PATH}, ${LIB_A}}
 
@@ -41,22 +40,29 @@ SRCS_PATH = ./srcs/
 ROOT_FILES = main.cpp
 ROOT_HEADER = webserv.hpp data_structures.hpp
 
-GETCONF_PATH = ./getconf/
-GETCONF_FILES = getconf.cpp getstrconf.cpp utils.cpp parse_serv_value.cpp
-GETCONF_HEADER = getconf.hpp
+PARSE_CONF_PATH = ./parse_conf/
+PARSE_CONF_FILES = getconf.cpp parse_serv_value.cpp
+PARSE_CONF_HEADER = parse_conf.hpp
+
+UTILS_PATH = ./utils/
+UTILS_FILES = get_keys.cpp is_space.cpp get_word_it.cpp skip_it.cpp			\
+			  is_str_num.cpp ft_isin.cpp
+UTILS_HEADER = utils.hpp insert_stream_cont.hpp
 
 SRCS_FILES = ${ROOT_FILES} \
-			 ${addprefix ${GETCONF_PATH}, ${GETCONF_FILES}}
+			 ${addprefix ${PARSE_CONF_PATH}, ${PARSE_CONF_FILES}} \
+			 ${addprefix ${UTILS_PATH}, ${UTILS_FILES}}
 
 HEADER_FILES = ${ROOT_HEADER} \
-			   ${addprefix ${GETCONF_PATH}, ${GETCONF_HEADER}}
+			   ${addprefix ${PARSE_CONF_PATH}, ${PARSE_CONF_HEADER}} \
+			   ${addprefix ${UTILS_PATH}, ${UTILS_HEADER}}
 
-HEADER_FULL = ${addprefix ${SRCS_PATH}, ${HEADER_FILES}} \
-			  ${addprefix ${LIB_PATH}, ${LIB_HEADER}}
+HEADER_FULL = ${addprefix ${SRCS_PATH}, ${HEADER_FILES}}
 
 OBJS_PATH = ./obj/
 OBJS_PATHS = ${OBJS_PATH} \
-			 ${OBJS_PATH}/${GETCONF_PATH}
+			 ${OBJS_PATH}/${PARSE_CONF_PATH} \
+			 ${OBJS_PATH}/${UTILS_PATH}
 OBJS = ${addprefix ${OBJS_PATH}, ${SRCS_FILES:.cpp=.o}}
 
 all: ${LIBS}

@@ -1,4 +1,4 @@
-#include "getconf.hpp"
+#include "../webserv.hpp"
 #include "../data_structures.hpp"
 
 static std::string skip_k_get_value(const std::string &key,

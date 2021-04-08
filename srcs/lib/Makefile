@@ -18,10 +18,6 @@ ifeq ($(f), f)
 	CFLAGS += -fsanitize=address -g3
 endif
 
-ROOT_FILES = get_keys.cpp is_space.cpp get_word_it.cpp skip_it.cpp			\
-			 is_str_num.cpp ft_isin.cpp
-ROOT_HEADER = lib.hpp
-
 LIBFT_PATH = ./libft/
 LIBFT_FILES = ft_memset.cpp ft_bzero.cpp ft_strlen.cpp ft_toupper.cpp		\
 			  ft_tolower.cpp ft_strchr.cpp ft_strrchr.cpp ft_strncmp.cpp	\
@@ -38,13 +34,12 @@ GNL_PATH = ./GNL/
 GNL_FILES = get_next_line.cpp gnl_utils.cpp
 GNL_HEADER = get_next_line.h
 
-SRCS_FILES = ${ROOT_FILES} \
-			 ${addprefix ${LIBFT_PATH}, ${LIBFT_FILES}} \
+SRCS_FILES = ${addprefix ${LIBFT_PATH}, ${LIBFT_FILES}} \
 			 ${addprefix ${GNL_PATH}, ${GNL_FILES}}
 
-HEADER_FILES = ${ROOT_HEADER} \
-			   ${addprefix ${LIBFT_PATH}, ${LIBFT_HEADER}} \
-			   ${addprefix ${GNL_PATH}, ${GNL_HEADER}}
+HEADER_FILES = ${addprefix ${LIBFT_PATH}, ${LIBFT_HEADER}} \
+			   ${addprefix ${GNL_PATH}, ${GNL_HEADER}} \
+			   lib.hpp
 
 OBJS_PATH = ./obj/
 OBJS_PATHS = ${OBJS_PATH} \
