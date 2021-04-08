@@ -8,23 +8,23 @@
  * Same if a mandatory variable of the c_server isn't set by the context.
  */
 
-void    get_serv(std::string::iterator it_conf) {
+c_server    get_serv(t_strit it_conf) {
     std::string key;
 
     it_conf += ft_strlen("server { ");
-
     while (*it_conf != '}') {
         key = get_word_it(it_conf);
+        check_key(key);
         std::cout << "key = " << key << std::endl;
         skip_param(it_conf);
     }
 }
 
-int         main(int argc, char **argv) {
-    if (argc == 2) {
-        std::string arg = argv[1];
+// int         main(int argc, char **argv) {
+//     if (argc == 2) {
+//         std::string arg = argv[1];
 
-        get_serv(arg.begin());
-    }
-    return (0);
-}
+//         get_serv(arg.begin());
+//     }
+//     return (0);
+// }
