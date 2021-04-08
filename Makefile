@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: mli <mli@student.42.fr>                    +#+  +:+       +#+         #
+#    By: jecaudal <jecaudal@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/03/30 11:54:38 by mli               #+#    #+#              #
-#    Updated: 2021/04/05 16:57:17 by mli              ###   ########.fr        #
+#    Updated: 2021/04/08 15:08:18 by jecaudal         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -39,7 +39,7 @@ endif
 SRCS_PATH = ./srcs/
 
 ROOT_FILES = main.cpp
-ROOT_HEADER = webserv.hpp data_structures.hpp
+ROOT_HEADER = webserv.hpp
 
 GETCONF_PATH = ./getconf/
 GETCONF_FILES = getconf.cpp getstrconf.cpp utils.cpp parse_serv_value.cpp

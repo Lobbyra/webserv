@@ -20,9 +20,7 @@
 
 // Get route from informations between location key word and the first {.
 static std::string  get_route(std::string::iterator it) {
-    std::string key_location = "location ";
-
-    it += key_location.size(); // skip location key
+    it += ft_strlen("location ");
     // extension case
     if (*it == '~' && *(it + 1) == ' ') {
         it += 2; // skip "~ "
@@ -37,6 +35,8 @@ static std::string  get_route(std::string::iterator it) {
 
     // path case
     std::string::iterator check_path = it;
+    if (*check_path == '{')
+        throw std::logic_error("location : arguments missing");
     while (is_space(*check_path) == false)
         ++check_path;
     ++check_path;
@@ -48,15 +48,39 @@ static std::string  get_route(std::string::iterator it) {
     return (get_word_it(it)); 
 }
 
-// void    get_location(std::string::iterator it) {
-// }
+// skip the part "location (~) [URI] { ". Start a 'l' of "location"
+static void skip_uri(t_strit &it) {
+    while (*it != '{')
+        ++it;
+    it += 2; // skip the "{ "
+}
+
+c_location  get_location(t_strit it) {
+    c_location                      loc;
+    std::string                     key;
+    std::map<std::string, void*>    loc_ptr_select;
+    std::map<std::string, f_parser> parse_select;
+
+    parse_select = init_parsing_select();
+    loc_ptr_select = init_loc_ptr_select(&loc);
+    loc.route = get_route(it);
+    skip_uri(it);
+    while (*it != '}') {
+        key = get_word_it(it, whitespaces + ";");
+        check_key(key);
+        parse_select[key](it, loc_ptr_select[key]);
+        skip_param(it);
+    }
+    return (loc);
+}
 
 int         main(int argc, char **argv) {
     if (argc == 2) {
         std::string location = argv[1];
 
         try {
-            std::cout << get_route(location.begin()) << std::endl;
+            c_location loc = get_location(location.begin());
+            std::cout << loc;
         } catch (std::exception &e) {
             std::cerr << e.what() << std::endl;
         }

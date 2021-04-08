@@ -29,7 +29,7 @@ static std::map<int, std::string>   gen_map(std::list<int> codes,
     return (error_pages);
 }
 
-static std::list<int>   get_codes(std::string::iterator &it) {
+static std::list<int>   get_codes(std::string::const_iterator &it) {
     std::string     tmp_word;
     std::list<int>  codes;
 
@@ -47,7 +47,7 @@ static std::list<int>   get_codes(std::string::iterator &it) {
     return (codes);
 }
 
-void    parse_err_page(std::string::iterator it, void *index_ptr) {
+void    parse_error_page(std::string::const_iterator it, void *ptr) {
     std::string                 path;
     std::list<int>              codes;
     std::map<int, std::string>  *map_ptr;
@@ -58,7 +58,7 @@ void    parse_err_page(std::string::iterator it, void *index_ptr) {
     else
         ++it;
 
-    map_ptr = (std::map<int, std::string>*)index_ptr;
+    map_ptr = (std::map<int, std::string>*)ptr;
     codes = get_codes(it);
     path = get_word_it(it, whitespaces + ";");
     if (path.empty())

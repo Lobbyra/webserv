@@ -1,5 +1,5 @@
 #include "getconf.hpp"
-#include "../data_structures.hpp"
+#include "../webserv.hpp"
 
 static std::string skip_k_get_value(const std::string &key,
         std::string::const_iterator &it, std::string const &sep) {
