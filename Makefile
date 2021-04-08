@@ -6,7 +6,7 @@
 #    By: mli <mli@student.42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/03/30 11:54:38 by mli               #+#    #+#              #
-#    Updated: 2021/04/08 16:14:22 by mli              ###   ########.fr        #
+#    Updated: 2021/04/08 16:40:22 by mli              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -41,7 +41,15 @@ ROOT_FILES = main.cpp
 ROOT_HEADER = webserv.hpp data_structures.hpp
 
 PARSE_CONF_PATH = ./parse_conf/
-PARSE_CONF_FILES = getconf.cpp parse_serv_value.cpp
+PARSE_FUNS_PATH = ./parse_funs/
+PARSE_FUNS_FILES = parse_autoindex.cpp            parse_listen.cpp			\
+				   parse_client_max_body_size.cpp parse_root.cpp			\
+				   parse_fastcgi_param.cpp        skip_k_get_value.cpp		\
+				   parse_server_names.cpp
+				   # parse_index.cpp parse_err_page.cpp
+
+PARSE_CONF_FILES = ${addprefix ${PARSE_FUNS_PATH}, ${PARSE_FUNS_FILES}}		\
+				   getconf.cpp
 PARSE_CONF_HEADER = parse_conf.hpp
 
 UTILS_PATH = ./utils/
@@ -62,6 +70,7 @@ HEADER_FULL = ${addprefix ${SRCS_PATH}, ${HEADER_FILES}}
 OBJS_PATH = ./obj/
 OBJS_PATHS = ${OBJS_PATH} \
 			 ${OBJS_PATH}/${PARSE_CONF_PATH} \
+			 ${OBJS_PATH}/${PARSE_CONF_PATH}/${PARSE_FUNS_PATH} \
 			 ${OBJS_PATH}/${UTILS_PATH}
 OBJS = ${addprefix ${OBJS_PATH}, ${SRCS_FILES:.cpp=.o}}
 
