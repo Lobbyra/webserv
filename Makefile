@@ -6,9 +6,10 @@
 #    By: jecaudal <jecaudal@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/03/30 11:54:38 by mli               #+#    #+#              #
-#    Updated: 2021/04/08 15:08:18 by jecaudal         ###   ########.fr        #
+#    Updated: 2021/04/08 16:57:44 by jecaudal         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
+
 
 EOC = \033[0m
 BOLD = \033[1m
@@ -28,7 +29,6 @@ CFLAGS = -Wall -Wextra -Werror -std=c++98
 
 LIB_A = lib.a
 LIB_PATH = ./srcs/lib/
-LIB_HEADER = lib.hpp
 
 LIBS = ${addprefix ${LIB_PATH}, ${LIB_A}}
 
@@ -41,22 +41,38 @@ SRCS_PATH = ./srcs/
 ROOT_FILES = main.cpp
 ROOT_HEADER = webserv.hpp
 
-GETCONF_PATH = ./getconf/
-GETCONF_FILES = getconf.cpp getstrconf.cpp utils.cpp parse_serv_value.cpp
-GETCONF_HEADER = getconf.hpp
+PARSE_CONF_PATH = ./parse_conf/
+PARSE_FUNS_PATH = ./parse_funs/
+PARSE_FUNS_FILES = parse_autoindex.cpp            parse_listen.cpp			\
+				   parse_client_max_body_size.cpp parse_root.cpp			\
+				   parse_fastcgi_param.cpp        skip_k_get_value.cpp		\
+				   parse_server_names.cpp
+				   # parse_index.cpp parse_err_page.cpp
+
+PARSE_CONF_FILES = ${addprefix ${PARSE_FUNS_PATH}, ${PARSE_FUNS_FILES}}		\
+				   getconf.cpp
+PARSE_CONF_HEADER = parse_conf.hpp
+
+UTILS_PATH = ./utils/
+UTILS_FILES = get_keys.cpp is_space.cpp get_word_it.cpp skip_it.cpp			\
+			  is_str_num.cpp ft_isin.cpp
+UTILS_HEADER = utils.hpp insert_stream_cont.hpp
 
 SRCS_FILES = ${ROOT_FILES} \
-			 ${addprefix ${GETCONF_PATH}, ${GETCONF_FILES}}
+			 ${addprefix ${PARSE_CONF_PATH}, ${PARSE_CONF_FILES}} \
+			 ${addprefix ${UTILS_PATH}, ${UTILS_FILES}}
 
 HEADER_FILES = ${ROOT_HEADER} \
-			   ${addprefix ${GETCONF_PATH}, ${GETCONF_HEADER}}
+			   ${addprefix ${PARSE_CONF_PATH}, ${PARSE_CONF_HEADER}} \
+			   ${addprefix ${UTILS_PATH}, ${UTILS_HEADER}}
 
-HEADER_FULL = ${addprefix ${SRCS_PATH}, ${HEADER_FILES}} \
-			  ${addprefix ${LIB_PATH}, ${LIB_HEADER}}
+HEADER_FULL = ${addprefix ${SRCS_PATH}, ${HEADER_FILES}}
 
 OBJS_PATH = ./obj/
 OBJS_PATHS = ${OBJS_PATH} \
-			 ${OBJS_PATH}/${GETCONF_PATH}
+			 ${OBJS_PATH}/${PARSE_CONF_PATH} \
+			 ${OBJS_PATH}/${PARSE_CONF_PATH}/${PARSE_FUNS_PATH} \
+			 ${OBJS_PATH}/${UTILS_PATH}
 OBJS = ${addprefix ${OBJS_PATH}, ${SRCS_FILES:.cpp=.o}}
 
 all: ${LIBS}

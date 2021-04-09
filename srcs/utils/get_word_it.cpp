@@ -1,8 +1,8 @@
-#include "lib.hpp"
+#include "utils.hpp"
 
 /*
  * This function return the word from it to the next char in the sep string.
- * 
+ *
  * sep = whitespace -> default
  */
 

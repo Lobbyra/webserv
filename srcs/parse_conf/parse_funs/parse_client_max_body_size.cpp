@@ -1,13 +1,14 @@
-#include "parse_conf.hpp"
+#include "../parse_conf.hpp"
 
 void    parse_client_max_body_size(std::string::const_iterator it, void *ptr) {
-    int         *data = (int *)ptr;
-    std::string str = skip_k_get_value("client_max_body_size", it, ";");
+    int *const data = reinterpret_cast<int *>(ptr);
+    std::string tmp = skip_k_get_value("client_max_body_size", it, ";");
+    const char *str = tmp.c_str();
     int i = 0;
 
     if (!ft_isdigit(str[i]))
         throw std::logic_error("Invalid client_max_body_size");
-    *data = ft_atoi_ptr(str.c_str(), &i, false, false);
+    *data = ft_atoi_ptr(str, &i, false, false);
     if (str[i] == 'k')
         *data *= 1000;
     else if (str[i] == 'm')

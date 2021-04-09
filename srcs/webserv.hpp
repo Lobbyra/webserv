@@ -7,6 +7,7 @@
 # include <fcntl.h>
 
 # include "./lib/lib.hpp"
+# include "./utils/utils.hpp"
 
 struct  s_ipport {
     int             port;
@@ -21,7 +22,8 @@ typedef std::map<std::string, std::string>  t_cgi_param;
 
 # include "c_location.hpp"
 # include "c_server.hpp"
+# include "./parse_conf/parse_conf.hpp"
 
-std::string get_str_conf(const char *const path);
+std::string    get_conf(const char *const path);
 
 #endif // ****************************************************** MAIN_HPP end //

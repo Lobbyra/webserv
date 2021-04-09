@@ -33,6 +33,4 @@ std::map<std::string, f_parser> init_parsing_select(void);
 std::map<std::string, void*>    init_srv_ptr_select(c_server *srv);
 std::map<std::string, void*>    init_loc_ptr_select(c_location *loc);
 
-std::ostream    &operator<<(std::ostream &o, c_location const &i);
-
 #endif

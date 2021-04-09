@@ -1,7 +1,21 @@
-#include "getconf.hpp"
+#include "../webserv.hpp"
 
 static bool    is_separator(char c) {
     return ((c == '{' || c == '}' || c == ';'));
+}
+
+void    check_curly_braces(const std::string &conf) {
+    unsigned int lbrace = 0, rbrace = 0;
+    std::string::const_iterator it = conf.begin(), ite = conf.end();
+
+    for (; it != ite; ++it) {
+        if (*it == '{')
+            ++lbrace;
+        else if (*it == '}')
+            ++rbrace;
+    }
+    if (lbrace != rbrace)
+        throw std::logic_error("GetConfig: Braces does not match");
 }
 
 static void    add_content_to_str(std::string &res, const char *line) {
@@ -27,7 +41,7 @@ static void    add_content_to_str(std::string &res, const char *line) {
     }
 }
 
-std::string    get_str_conf(const char *const path) {
+std::string    get_conf(const char *const path) {
     int             n;
     int             fd;
     char            *line;
@@ -57,7 +71,7 @@ int        main(int argc, char **argv)
         std::cerr << "Usage: " << argv[0] << " <nginx.conf>" << std::endl;
         return (1);
     }
-    std::string conf = get_str_conf(argv[1]);
+    std::string conf = get_conf(argv[1]);
 
     std::cout << conf << std::endl;
     // check_curly_braces(conf);

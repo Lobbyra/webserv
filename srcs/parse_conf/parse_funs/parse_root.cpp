@@ -1,10 +1,10 @@
-#include "parse_conf.hpp"
+#include "../parse_conf.hpp"
 
 void    parse_root(std::string::const_iterator it, void *ptr) {
     std::string *const data = reinterpret_cast<std::string *>(ptr);
 
     *data = skip_k_get_value("root", it, ";");
-    if (ft_isin(' ', data->c_str()))
+    if (ft_isin(' ', *data))
         throw std::logic_error("Invalid root");
 }
 

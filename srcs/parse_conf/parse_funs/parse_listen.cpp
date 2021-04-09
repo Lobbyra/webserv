@@ -1,13 +1,18 @@
-#include "parse_conf.hpp"
+#include "../parse_conf.hpp"
+
+/* Expect "listen IP:PORT;"
+ * Attached, no space allowed
+ */
 
 void    parse_listen(std::string::const_iterator it, void *ptr) {
     s_ipport *const data = reinterpret_cast<s_ipport *>(ptr);
-    const char *str = skip_k_get_value("listen", it, ";").c_str();
+    std::string tmp = skip_k_get_value("listen", it, ";");
+    const char *str = tmp.c_str();
     size_t colon;
     int i = 0;
 
-    if (ft_isin(' ', str) ||
-       (colon = std::string(str).find(':')) == std::string::npos)
+    if (ft_isin(' ', tmp) ||
+       (colon = tmp.find(':')) == std::string::npos)
         throw std::logic_error("Invalid listen");
     data->ip = std::string(str, str + colon);
     str += colon + 1;
