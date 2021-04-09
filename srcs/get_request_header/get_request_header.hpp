@@ -1,14 +1,14 @@
-#ifndef PARSE_CLIENT_HPP
-# define PARSE_CLIENT_HPP
+#ifndef PARSE_HEADER_HPP
+# define PARSE_HEADER_HPP
 
 #include "../webserv.hpp"
 
 #include <unistd.h>
 #include <list>
 
-typedef void (*f_request_client)(char *line);
+typedef void (*f_request_header)(char *line);
 
-class c_request_client {
+class c_request_header {
     public :
 
         std::string                 method;
