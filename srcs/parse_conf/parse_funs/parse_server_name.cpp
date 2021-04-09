@@ -1,4 +1,4 @@
-#include "parse_conf.hpp"
+#include "../parse_conf.hpp"
 
 void    parse_server_name(std::string::const_iterator it, void *ptr) {
     t_strlst *const data = reinterpret_cast<t_strlst *>(ptr);

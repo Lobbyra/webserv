@@ -3,7 +3,7 @@
 
 #include "webserv.hpp"
 
-class   c_location;
+class   c_server;
 
 class    c_location {
  public:

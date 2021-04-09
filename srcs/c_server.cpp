@@ -23,10 +23,12 @@ c_server::~c_server() {
 **    /// OPERATOR OVERLOADS PART \\
 */
 c_server   &c_server::operator=(c_server const &src) {
+    (void)src;
     return (*this);
 }
 
 std::ostream    &operator<<(std::ostream &o, c_server const &i) {
+    (void)i;
     o /*<< DATA*/ << std::endl;
     return (o);
 }

@@ -1,4 +1,4 @@
-#include "parse_conf.hpp"
+#include "../parse_conf.hpp"
 
 /*
  * This function will parse an error_page line.
@@ -51,6 +51,7 @@ void    parse_error_page(std::string::const_iterator it, void *ptr) {
     std::string                 path;
     std::list<int>              codes;
     std::map<int, std::string>  *map_ptr;
+    std::map<int, std::string>  tmp_map;
 
     it += ft_strlen("error_page");
     if (*it == ';')
@@ -63,7 +64,8 @@ void    parse_error_page(std::string::const_iterator it, void *ptr) {
     path = get_word_it(it, whitespaces + ";");
     if (path.empty())
         throw std::logic_error("error_page : no page path found");
-    *map_ptr = gen_map(codes, path);
+    tmp_map = gen_map(codes, path);
+    map_ptr->insert(tmp_map.begin(), tmp_map.end());
 }
 
 /*

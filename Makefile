@@ -1,16 +1,3 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: jecaudal <jecaudal@student.42.fr>          +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2021/03/30 11:54:38 by mli               #+#    #+#              #
-#    Updated: 2021/04/08 16:57:44 by jecaudal         ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
-
-
 EOC = \033[0m
 BOLD = \033[1m
 RED = \033[91m
@@ -38,7 +25,7 @@ endif
 
 SRCS_PATH = ./srcs/
 
-ROOT_FILES = main.cpp
+ROOT_FILES = main.cpp c_server.cpp c_location.cpp
 ROOT_HEADER = webserv.hpp
 
 PARSE_CONF_PATH = ./parse_conf/
@@ -46,11 +33,11 @@ PARSE_FUNS_PATH = ./parse_funs/
 PARSE_FUNS_FILES = parse_autoindex.cpp            parse_listen.cpp			\
 				   parse_client_max_body_size.cpp parse_root.cpp			\
 				   parse_fastcgi_param.cpp        skip_k_get_value.cpp		\
-				   parse_server_names.cpp
-				   # parse_index.cpp parse_err_page.cpp
+				   parse_server_name.cpp parse_index.cpp parse_error_page.cpp
 
-PARSE_CONF_FILES = ${addprefix ${PARSE_FUNS_PATH}, ${PARSE_FUNS_FILES}}		\
-				   getconf.cpp
+PARSE_CONF_FILES = ${addprefix ${PARSE_FUNS_PATH}, ${PARSE_FUNS_FILES}}		 \
+				   getconf.cpp get_location.cpp skip_param.cpp init_maps.cpp \
+				   check_key.cpp
 PARSE_CONF_HEADER = parse_conf.hpp
 
 UTILS_PATH = ./utils/

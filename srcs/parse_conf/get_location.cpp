@@ -23,7 +23,7 @@
  */
 #define LOC_EXT_MISS "location : extension missing"
 #define LOC_NOT_W_FORMAT "location : extension not well formated"
-#define LOC_ARG_MISS "location : route missing missing"
+#define LOC_ARG_MISS "location : route missing"
 #define LOC_ARG_TOO_MANY "location : too many arguments"
 #define LOC_KEY_NOT_CONTEXT "location : key " + key + " not valid in location"
 
@@ -85,6 +85,7 @@ c_location  get_location(t_strit it) {
     return (loc);
 }
 
+/*
 int         main(int argc, char **argv) {
     if (argc == 2) {
         std::string location = argv[1];
@@ -98,3 +99,4 @@ int         main(int argc, char **argv) {
     }
     return (0);
 }
+*/

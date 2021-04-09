@@ -4,7 +4,6 @@
 # include <list>
 # include <string>
 # include <iostream>
-# include "../lib/lib.hpp"
 # include "../webserv.hpp"
 
 typedef void (*f_parser)(t_strcit, void*);

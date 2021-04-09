@@ -37,9 +37,13 @@ template < class T >
 inline std::ostream& operator<<(std::ostream& os, const std::list<T>& v) 
 {
     os << "{";
-    for (typename std::list<T>::const_iterator ii = v.begin(); ii != v.end(); ++ii)
-        os << " " << *ii;
-    os << " }";
+    for (typename std::list<T>::const_iterator it = v.begin(); it != v.end(); ++it) {
+        if (it == v.begin())
+            os << *it;
+        else
+            os << ", " << *it;
+    }
+    os << "}";
     return os;
 }
 
