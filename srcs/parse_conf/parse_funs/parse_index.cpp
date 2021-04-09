@@ -8,7 +8,7 @@
 void    parse_index(std::string::const_iterator it, void *ptr) {
     std::list<std::string> *index = (std::list<std::string>*)ptr;
 
-    it += ft_strlen("index");
+    it += ft_strlen("index ");
     if (*it == ';')
         throw std::logic_error("Empty value for key: index");
     while (*it != ';') {
