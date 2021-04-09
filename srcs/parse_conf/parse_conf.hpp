@@ -4,28 +4,33 @@
 # include <list>
 # include <string>
 # include <iostream>
-# include "../lib/lib.hpp"
-# include "../utils/utils.hpp"
-# include "../data_structures.hpp"
+# include "../webserv.hpp"
 
-void            check_curly_braces(const std::string &conf);
+typedef void (*f_parser)(t_strcit, void*);
+
+c_server    get_serv(t_strcit it_conf);
 std::string     get_conf(const char *const path);
 
+// IT FORWARDING FUNCTIONS
+void    skip_param(t_strcit &it);
+
+void    check_key(std::string const &key);
+
+// PARSING FUNCTIONS
 std::string skip_k_get_value(const std::string &key,
-        std::string::const_iterator &it, std::string const &sep);
+                             std::string::const_iterator &it,
+                             std::string const &sep);
+void    parse_root(t_strcit it, void *ptr);
+void    parse_index(t_strcit it, void *ptr);
+void    parse_listen(t_strcit it, void *ptr);
+void    parse_location(t_strcit it, void *ptr);
+void    parse_autoindex(t_strcit it, void *ptr);
+void    parse_error_page(t_strcit it, void *ptr);
+void    parse_server_name(t_strcit it, void *ptr);
+void    parse_client_max_body_size(t_strcit it, void *ptr);
 
-void    parse_client_max_body_size(std::string::const_iterator it, void *ptr);
-void    parse_root(std::string::const_iterator it, void *ptr);
-void    parse_listen(std::string::const_iterator it, void *ptr);
-void    parse_autoindex(std::string::const_iterator it, void *ptr);
-void    parse_server_names(std::string::const_iterator it, void *ptr);
-void    parse_fastcgi_param(std::string::const_iterator it, void *ptr);
-
-void    skip_param(std::string::iterator &it);
-void    skip_location(std::string::iterator &it);
-void    skip_server(std::string::iterator &it,
-                    std::string::iterator const &end);
-
-// LIB FUNCTIONS FROM ./lib.cpp
+std::map<std::string, f_parser> init_parsing_select(void);
+std::map<std::string, void*>    init_srv_ptr_select(c_server *srv);
+std::map<std::string, void*>    init_loc_ptr_select(c_location *loc);
 
 #endif

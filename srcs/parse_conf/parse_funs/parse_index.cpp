@@ -5,12 +5,12 @@
  * there isn't value between "index" and ';'.
  */
 
-void    parse_index(std::string::iterator it, void *index_ptr) {
-    std::list<std::string> *index = (std::list<std::string>*)index_ptr;
+void    parse_index(std::string::const_iterator it, void *ptr) {
+    std::list<std::string> *index = (std::list<std::string>*)ptr;
 
-    it += ft_strlen("index");
+    it += ft_strlen("index ");
     if (*it == ';')
-        throw std::logic_error("index arguments missing");
+        throw std::logic_error("Empty value for key: index");
     while (*it != ';') {
         index->push_back(get_word_it(it, whitespaces + ";"));
         while (*it != ' ' && *it != ';')

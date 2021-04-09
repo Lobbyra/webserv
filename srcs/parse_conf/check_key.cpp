@@ -5,18 +5,17 @@
  * key-word.
  */
 
-bool    is_key_known(std::string const &key) {
+void    check_key(std::string const &key) {
     std::list<std::string> keys = get_keys();
 
     if (ft_find(keys.begin(), keys.end(), key) == keys.end())
-        return (false);
-    return (true);
+        throw std::logic_error(key + " key not known");
 }
 
 /*
 int         main(int argc, char **argv) {
     std::cout << \
-    std::boolalpha << is_key_known(argv[1]) << \
+    std::boolalpha << check_key(argv[1]) << \
     std::endl;
     return (0);
 }
