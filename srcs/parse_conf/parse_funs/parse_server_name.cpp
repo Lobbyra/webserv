@@ -1,6 +1,6 @@
 #include "../parse_conf.hpp"
 
-void    parse_server_names(std::string::const_iterator it, void *ptr) {
+void    parse_server_name(std::string::const_iterator it, void *ptr) {
     t_strlst *const data = reinterpret_cast<t_strlst *>(ptr);
     std::string str = skip_k_get_value("server_name", it, ";");
     size_t pos = 0, next_space;
@@ -13,7 +13,7 @@ void    parse_server_names(std::string::const_iterator it, void *ptr) {
 }
 
 /*
-int		main(void)
+int        main(void)
 {
     t_strlst res;
     std::string str = "server_name example.xd www.example.org; other_key other_value;";
@@ -24,7 +24,7 @@ int		main(void)
     //str = "server_name example.org google.fr website.lmao heyho.com;";
 
     try {
-        parse_server_names(str.begin(), &res);
+        parse_server_name(str.begin(), &res);
         t_strlst::const_iterator it = res.begin(), ite = res.end();
         for (; it != ite; ++it)
             std::cout << "server_name : |" << *it << "|" << std::endl;

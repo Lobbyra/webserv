@@ -9,7 +9,7 @@ void    parse_root(std::string::const_iterator it, void *ptr) {
 }
 
 /*
-int		main(void)
+int        main(void)
 {
     std::string res;
     std::string str = "root path/to/file; other_key other_value;";

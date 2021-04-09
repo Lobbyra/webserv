@@ -1,15 +1,3 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: mli <mli@student.42.fr>                    +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2021/03/30 11:54:38 by mli               #+#    #+#              #
-#    Updated: 2021/04/08 16:40:22 by mli              ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
-
 EOC = \033[0m
 BOLD = \033[1m
 RED = \033[91m
@@ -24,7 +12,7 @@ CYAN = \033[96m
 NAME = webserv
 
 CC = clang++
-CFLAGS = -Wall -Wextra -Werror -std=c++98
+CFLAGS = -Wall -Wextra -Werror -std=c++98 -fsanitize=address
 
 LIB_A = lib.a
 LIB_PATH = ./srcs/lib/
@@ -37,19 +25,20 @@ endif
 
 SRCS_PATH = ./srcs/
 
-ROOT_FILES = main.cpp
-ROOT_HEADER = webserv.hpp data_structures.hpp
+ROOT_FILES = main.cpp c_server.cpp c_location.cpp
+ROOT_HEADER = webserv.hpp
 
 PARSE_CONF_PATH = ./parse_conf/
 PARSE_FUNS_PATH = ./parse_funs/
-PARSE_FUNS_FILES = parse_autoindex.cpp            parse_listen.cpp			\
-				   parse_client_max_body_size.cpp parse_root.cpp			\
-				   parse_fastcgi_param.cpp        skip_k_get_value.cpp		\
-				   parse_server_names.cpp
-				   # parse_index.cpp parse_err_page.cpp
+PARSE_FUNS_FILES = parse_autoindex.cpp            parse_listen.cpp			  \
+				   parse_client_max_body_size.cpp parse_root.cpp			  \
+				   parse_fastcgi_param.cpp        skip_k_get_value.cpp		  \
+				   parse_server_name.cpp parse_index.cpp parse_error_page.cpp \
+				   parse_location.cpp
 
-PARSE_CONF_FILES = ${addprefix ${PARSE_FUNS_PATH}, ${PARSE_FUNS_FILES}}		\
-				   getconf.cpp
+PARSE_CONF_FILES = ${addprefix ${PARSE_FUNS_PATH}, ${PARSE_FUNS_FILES}}	\
+				   get_conf.cpp skip_param.cpp init_maps.cpp			\
+				   check_key.cpp get_serv.cpp parse_conf.cpp
 PARSE_CONF_HEADER = parse_conf.hpp
 
 UTILS_PATH = ./utils/
@@ -88,7 +77,7 @@ test: ${LIBS} ${OBJS_PATHS} ${OBJS} ${HEADER_FULL}
 	@printf "$(BOLD)Make $(RED)$@$(EOC)"
 	@echo " $(BOLD)with$(EOC) $(GREEN)$(CC)$(EOC) $(CYAN)$(CFLAGS)$(EOC): "
 	@$(eval TMP := $(shell ls ${OBJS} | grep -v "main.o"))
-	@${CC} ${CFLAGS} -o $@ ${TMP} ${LIBS}
+	@${CC} ${CFLAGS} -fsanitize=address -o $@ ${TMP} ${LIBS}
 
 ${OBJS_PATHS}:
 	@mkdir -p $@

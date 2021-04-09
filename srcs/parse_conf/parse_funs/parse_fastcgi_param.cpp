@@ -17,7 +17,7 @@ void    parse_fastcgi_param(std::string::const_iterator it, void *ptr) {
 }
 
 /*
-int		main(void)
+int        main(void)
 {
     t_cgi_param res;
     std::string str = "fastcgi_param example.xd test;";

@@ -14,7 +14,7 @@ std::string get_word_it(std::string::const_iterator it, const std::string sep) {
 }
 
 /*
-int		main(void)
+int        main(void)
 {
     std::string str = "lol mdrxd qweqwe";
     std::string::iterator it;

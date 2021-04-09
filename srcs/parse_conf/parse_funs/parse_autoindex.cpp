@@ -9,7 +9,7 @@ void    parse_autoindex(std::string::const_iterator it, void *ptr) {
 }
 
 /*
-int		main(void)
+int        main(void)
 {
     std::string res;
     std::string str = "autoindex on;";

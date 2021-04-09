@@ -23,7 +23,7 @@ void    parse_listen(std::string::const_iterator it, void *ptr) {
 }
 
 /*
-int		main(void)
+int        main(void)
 {
     s_ipport    res;
     std::string str = "listen 127.0.0.1:80; other_key other_value;";
