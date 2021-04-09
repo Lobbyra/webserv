@@ -13,7 +13,7 @@ void    parse_server_name(std::string::const_iterator it, void *ptr) {
 }
 
 /*
-int		main(void)
+int        main(void)
 {
     t_strlst res;
     std::string str = "server_name example.xd www.example.org; other_key other_value;";
