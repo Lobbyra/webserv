@@ -23,7 +23,19 @@
  *            |
  */
 
-void    skip_param(std::string::iterator &it) {
+static void    skip_location(t_strcit &it) {
+    while (*it != '}')
+        ++it;
+    ++it;
+    while (is_space(*it))
+        ++it;
+}
+
+void    skip_param(t_strcit &it) {
+    if (get_word_it(it) == "location") {
+        skip_location(it);
+        return ;
+    }
     while (*it != ';' && *it != '}')
         ++it;
     if (*it == ';') // skip "; "

@@ -8,11 +8,11 @@
 
 typedef void (*f_parser)(t_strcit, void*);
 
+c_server    get_serv(t_strcit it_conf);
+std::string     get_conf(const char *const path);
+
 // IT FORWARDING FUNCTIONS
-void    skip_param(std::string::iterator &it);
-void    skip_location(std::string::iterator &it);
-void    skip_server(std::string::iterator &it,
-                    std::string::iterator const &end);
+void    skip_param(t_strcit &it);
 
 void    check_key(std::string const &key);
 
@@ -23,8 +23,9 @@ std::string skip_k_get_value(const std::string &key,
 void    parse_root(t_strcit it, void *ptr);
 void    parse_index(t_strcit it, void *ptr);
 void    parse_listen(t_strcit it, void *ptr);
-void    parse_error_page(t_strcit it, void *ptr);
+void    parse_location(t_strcit it, void *ptr);
 void    parse_autoindex(t_strcit it, void *ptr);
+void    parse_error_page(t_strcit it, void *ptr);
 void    parse_server_name(t_strcit it, void *ptr);
 void    parse_client_max_body_size(t_strcit it, void *ptr);
 

@@ -24,6 +24,6 @@ typedef std::map<std::string, std::string>  t_cgi_param;
 # include "c_server.hpp"
 # include "./parse_conf/parse_conf.hpp"
 
-std::string    get_conf(const char *const path);
+std::list<c_server>     parse_conf(std::string path);
 
 #endif // ****************************************************** MAIN_HPP end //

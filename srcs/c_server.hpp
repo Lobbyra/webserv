@@ -14,6 +14,7 @@ public:
     virtual ~c_server();
 
     int                     client_max_body_size;
+    int                     srv_id;
     t_strlst                index;
     s_ipport                listen;
     t_strlst                server_name;
@@ -26,5 +27,6 @@ public:
 };
 
 std::ostream    &operator<<(std::ostream &o, c_server const &i);
+std::ostream    &operator<<(std::ostream &o, s_ipport const &i);
 
 #endif

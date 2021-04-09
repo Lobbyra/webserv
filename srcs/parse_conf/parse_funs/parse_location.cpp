@@ -1,4 +1,4 @@
-#include "parse_conf.hpp"
+#include "../parse_conf.hpp"
 
 /*
  * This function will take an iterator to the first letter of a location block
@@ -28,7 +28,7 @@
 #define LOC_KEY_NOT_CONTEXT "location : key " + key + " not valid in location"
 
 // Get route from informations between location key word and the first {.
-static std::string  get_route(std::string::iterator it) {
+static std::string  get_route(t_strcit it) {
     it += ft_strlen("location ");
     // extension case
     if (*it == '~' && *(it + 1) == ' ') {
@@ -43,7 +43,7 @@ static std::string  get_route(std::string::iterator it) {
     }
 
     // path case
-    std::string::iterator check_path = it;
+    t_strcit check_path = it;
     if (*check_path == '{')
         throw std::logic_error(LOC_ARG_MISS);
     while (is_space(*check_path) == false)
@@ -58,13 +58,13 @@ static std::string  get_route(std::string::iterator it) {
 }
 
 // skip the part "location (~) [URI] { ". Start a 'l' of "location"
-static void skip_uri(t_strit &it) {
+static void skip_uri(t_strcit &it) {
     while (*it != '{')
         ++it;
     it += 2; // skip the "{ "
 }
 
-c_location  get_location(t_strit it) {
+void  parse_location(t_strcit it, void *ptr) {
     c_location                      loc;
     std::string                     key;
     std::map<std::string, void*>    loc_ptr_select;
@@ -82,7 +82,7 @@ c_location  get_location(t_strit it) {
         parse_select[key](it, loc_ptr_select[key]);
         skip_param(it);
     }
-    return (loc);
+    ((std::list<c_location>*)ptr)->push_back(loc);
 }
 
 /*
@@ -91,8 +91,9 @@ int         main(int argc, char **argv) {
         std::string location = argv[1];
 
         try {
-            c_location loc = get_location(location.begin());
-            std::cout << loc;
+            std::list<c_location> locations;
+            parse_location(location.begin(), &locations);
+            std::cout << locations << std::endl;
         } catch (std::exception &e) {
             std::cerr << e.what() << std::endl;
         }

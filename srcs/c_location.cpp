@@ -33,8 +33,7 @@ c_location   &c_location::operator=(c_location const &src) {
     return (*this);
 }
 
-std::ostream    &operator<<(std::ostream &o, c_location const &i)
-{
+std::ostream    &operator<<(std::ostream &o, c_location const &i) {
     o << \
     "location with route [" << i.route << "] :" << std::endl;
 

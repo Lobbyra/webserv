@@ -6,6 +6,7 @@ std::map<std::string, f_parser> init_parsing_select(void) {
     m["root"] = &parse_root;
     m["index"] = &parse_index;
     m["listen"] = &parse_listen;
+    m["location"] = &parse_location;
     m["autoindex"] = &parse_autoindex;
     m["error_page"] = &parse_error_page;
     m["server_name"] = &parse_server_name;
@@ -22,6 +23,7 @@ std::map<std::string, void*>    init_srv_ptr_select(c_server *srv) {
     m["autoindex"] = &(srv->autoindex);
     m["error_page"] = &(srv->error_page);
     m["server_name"] = &(srv->server_name);
+    m["location"] = &(srv->location);
     m["client_max_body_size"] = &(srv->client_max_body_size);
     return (m);
 }
