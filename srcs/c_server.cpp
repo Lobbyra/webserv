@@ -49,9 +49,11 @@ std::ostream    &operator<<(std::ostream &o, c_server const &i) {
     if (i.autoindex.empty() == false)
         o << "    autoindex = [" << i.autoindex << "]" << std::endl;
     if (i.error_page.empty() == false)
-        o << "    error_page = [" << i.error_page << "]" << std::endl;
+        o << "    error_page = [\n" << i.error_page << "]" << std::endl;
     if (i.client_max_body_size > 0)
         o << "    client_max_body_size = [" << i.client_max_body_size << "]" << std::endl;
+    if (i.fastcgi_param.empty() == false)
+        o << "    fastcgi_param = [\n" << i.fastcgi_param << "]" << std::endl;
     if (i.location.empty() == false)
         o << "    " << i.location << std::endl;
     return (o);
