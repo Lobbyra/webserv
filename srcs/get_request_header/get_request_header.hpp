@@ -5,8 +5,11 @@
 
 #include <unistd.h>
 #include <list>
+#include <map>
+#include <ostream>
 
-typedef void (*f_request_header)(char *line);
+typedef void (*f_request_header)(std::string line, 
+                                 std::map<std::string, void *> request_header);
 
 class c_request_header {
     public :
@@ -25,5 +28,23 @@ class c_request_header {
         std::list<std::string>      user_agent;
 };
 
+// Prototype
+
+
+// init_maps.cpp
+std::list<std::string>           init_prefix_method(void);
+std::map<std::string, void*>     init_request_header(c_request_header* request);
+std::map<std::string, f_request_header>     init_parser_request(void);
+
+void            parse_method(std::string line, 
+                             std::map<std::string, void *> request_header);
+void            parse_path(std::string line, 
+                           std::map<std::string, void *> request_header);
+void            parse_protocol(std::string line, 
+                               std::map<std::string, void *> request_header);
+
+void    parse_request_header(std::string line, 
+                             std::map<std::string, void *> request_header);
+// void    parse_protocol(char *line);
 
 #endif
