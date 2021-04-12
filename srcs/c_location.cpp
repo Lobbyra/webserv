@@ -1,5 +1,7 @@
 #include "c_location.hpp"
 
+int indent_lvl = 1;
+
 /*
 **    /// CONSTRUCTORS & DESTRUCTORS PART \\
 */
@@ -34,6 +36,7 @@ c_location   &c_location::operator=(c_location const &src) {
 }
 
 std::ostream    &operator<<(std::ostream &o, c_location const &i) {
+    indent_lvl++;
     o << \
     "location with route [" << i.route << "] :" << std::endl;
 
@@ -44,8 +47,14 @@ std::ostream    &operator<<(std::ostream &o, c_location const &i) {
     if (i.autoindex.empty() == false)
         o << "    autoindex = [" << i.autoindex << "]" << std::endl;
     if (i.error_page.empty() == false)
-        o << "    error_page = [" << i.error_page << "]" << std::endl;
-    if (i.client_max_body_size > 0)
-        o << "    client_max_body_size = [" << i.client_max_body_size << "]" << std::endl;
+        o << "    error_page = [\n" << i.error_page << "]" << std::endl;
+    if (i.client_max_body_size > 0) {
+        o << \
+        "    client_max_body_size = [" << i.client_max_body_size << "]" << \
+        std::endl;
+    }
+    if (i.fastcgi_param.empty() == false)
+        o << "    fastcgi_param = [\n" << i.fastcgi_param << "]" << std::endl;
+    indent_lvl--;
     return (o);
 };
