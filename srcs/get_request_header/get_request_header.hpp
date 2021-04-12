@@ -28,6 +28,8 @@ class c_request_header {
         std::list<std::string>      user_agent;
 };
 
+std::ostream& operator<<(std::ostream& os, c_request_header const &src);
+
 // Prototype
 
 

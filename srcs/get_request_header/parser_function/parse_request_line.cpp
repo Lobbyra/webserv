@@ -30,7 +30,6 @@ void    parse_path(std::string line,
     path =  get_word_it(line.begin() + found, sep);
     std::string * ptr = static_cast<std::string *>(request_header["Path"]);
     *ptr = path;
-    std::cout << "PATH : " << *(static_cast<std::string *>(request_header["Path"])) << std::endl;
 }
 
 void    parse_protocol(std::string line, 
@@ -41,5 +40,4 @@ void    parse_protocol(std::string line,
     std::string     protocol(it, line.end());
     std::string * ptr = static_cast<std::string *>(request_header["Protocol"]);
     *ptr = protocol;
-    std::cout  << std::endl << "PROTOCOL : " << protocol << std::endl;
 }

@@ -1,5 +1,14 @@
 #include "get_request_header.hpp"
 
+std::ostream& operator<<(std::ostream& os, c_request_header const &src)
+{
+    os << "Method: " << src.method << std::endl  \
+    << "Path: " << src.path << std::endl         \
+    << "Protocol: " << src.protocol << std::endl;
+
+    return os;
+};
+
 c_request_header    read_request_header(void)
 {
     int                                         i;
@@ -24,6 +33,7 @@ c_request_header    read_request_header(void)
     }
     if (status == 0)
         free(line);
+    std::cout << request << std::endl;
     return (request);
 }
 
