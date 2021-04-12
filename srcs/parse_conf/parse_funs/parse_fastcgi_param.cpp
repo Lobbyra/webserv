@@ -1,6 +1,6 @@
 #include "../parse_conf.hpp"
 
-void    parse_fastcgi_param(std::string::const_iterator it, void *ptr) {
+void    parse_fastcgi_param(t_strcit it, void *ptr) {
     t_cgi_param *const data = reinterpret_cast<t_cgi_param *>(ptr);
     std::string str = skip_k_get_value("fastcgi_param", it, ";");
     std::string key, value;
