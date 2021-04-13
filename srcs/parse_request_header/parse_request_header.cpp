@@ -38,8 +38,8 @@ c_request_header    read_request_header(void)
     return (request);
 }
 
-int         main(void)
-{
-    read_request_header();
-    return (0);
-}
+// int         main(void)
+// {
+//     read_request_header();
+//     return (0);
+// }
