@@ -28,4 +28,7 @@ it  ft_find(it start, it end, T const &val) {
     return (start);
 }
 
+void    ft_error(std::string const &src,
+                 std::string const &err = strerror(errno));
+
 #endif // ***************************************************** UTILS_HPP end //

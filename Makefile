@@ -25,11 +25,12 @@ endif
 
 SRCS_PATH = ./srcs/
 
-ROOT_FILES = main.cpp c_server.cpp c_location.cpp
-ROOT_HEADER = webserv.hpp
+ROOT_FILES = main.cpp c_server.cpp c_location.cpp webserv.cpp init_listen.cpp \
+			 ft_select.cpp
+ROOT_HEADER = webserv.hpp c_location.hpp c_server.hpp
 
-PARSE_CONF_PATH = ./parse_conf/
-PARSE_FUNS_PATH = ./parse_funs/
+PARSE_CONF_PATH = parse_conf/
+PARSE_FUNS_PATH = parse_funs/
 PARSE_FUNS_FILES = parse_autoindex.cpp            parse_listen.cpp			  \
 				   parse_client_max_body_size.cpp parse_root.cpp			  \
 				   parse_fastcgi_param.cpp        skip_k_get_value.cpp		  \
@@ -41,9 +42,9 @@ PARSE_CONF_FILES = ${addprefix ${PARSE_FUNS_PATH}, ${PARSE_FUNS_FILES}}	\
 				   check_key.cpp get_serv.cpp parse_conf.cpp
 PARSE_CONF_HEADER = parse_conf.hpp
 
-UTILS_PATH = ./utils/
+UTILS_PATH = utils/
 UTILS_FILES = get_keys.cpp is_space.cpp get_word_it.cpp skip_it.cpp			\
-			  is_str_num.cpp ft_isin.cpp
+			  is_str_num.cpp ft_isin.cpp ft_error.cpp
 UTILS_HEADER = utils.hpp insert_stream_cont.hpp
 
 SRCS_FILES = ${ROOT_FILES} \
