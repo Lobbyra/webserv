@@ -22,6 +22,7 @@ std::ostream    &operator<<(std::ostream &o, std::pair<Tkey, Tvalue> const &i)
 template <typename Tkey, typename Tvalue>
 std::ostream    &operator<<(std::ostream &o, std::map<Tkey, Tvalue> const &i)
 {
+    std::string indent(4 * indent_lvl, ' ');
     if (i.size() == 0)
     {
         o << "{}";
@@ -30,7 +31,7 @@ std::ostream    &operator<<(std::ostream &o, std::map<Tkey, Tvalue> const &i)
     for (typename std::map<Tkey, Tvalue>::const_iterator it = i.begin();
          it != i.end();
          it++)
-        o << *it << std::endl;
+        o << indent << *it << std::endl;
     return (o);
 };
 
