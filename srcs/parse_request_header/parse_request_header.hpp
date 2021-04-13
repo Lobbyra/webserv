@@ -31,9 +31,6 @@ class c_request_header {
 
 std::ostream& operator<<(std::ostream& os, c_request_header const &src);
 
-// Prototype
-
-
 // init_maps.cpp
 std::list<std::string>           init_prefix_method(void);
 std::map<std::string, void*>     init_request_header(c_request_header* request);
@@ -44,10 +41,5 @@ void            parse_method(std::string line,
 
 void    parse_request_header(std::string line, 
                              std::map<std::string, void *> request_header);
-
-std::string get_word(std::string const &src, std::string::const_iterator it,
-                     std::string sep);
-
-// void    parse_protocol(char *line);
 
 #endif
