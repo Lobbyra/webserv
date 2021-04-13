@@ -1,10 +1,12 @@
-#ifndef MAIN_HPP
-# define MAIN_HPP
+#ifndef WEBSERV_HPP
+# define WEBSERV_HPP
 
 # include <iostream>
 # include <string>
 # include <exception>
 # include <fcntl.h>
+
+extern int indent_lvl;
 
 # include "./lib/lib.hpp"
 # include "./utils/utils.hpp"
@@ -26,4 +28,4 @@ typedef std::map<std::string, std::string>  t_cgi_param;
 
 std::list<c_server>     parse_conf(std::string path);
 
-#endif // ****************************************************** MAIN_HPP end //
+#endif // ****************************************************** WEBSERV_HPP end //

@@ -8,7 +8,7 @@
 
 typedef void (*f_parser)(t_strcit, void*);
 
-c_server    get_serv(t_strcit it_conf);
+c_server        get_serv(t_strcit it_conf);
 std::string     get_conf(const char *const path);
 
 // IT FORWARDING FUNCTIONS
@@ -27,6 +27,7 @@ void    parse_location(t_strcit it, void *ptr);
 void    parse_autoindex(t_strcit it, void *ptr);
 void    parse_error_page(t_strcit it, void *ptr);
 void    parse_server_name(t_strcit it, void *ptr);
+void    parse_fastcgi_param(t_strcit it, void *ptr);
 void    parse_client_max_body_size(t_strcit it, void *ptr);
 
 std::map<std::string, f_parser> init_parsing_select(void);

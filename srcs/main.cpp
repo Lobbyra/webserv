@@ -11,7 +11,8 @@ int     main(int argc, char **argv) {
 
     try {
         std::cout << parse_conf(argv[1]) << std::endl;
-    } catch (std::exception &e) {
+    }
+    catch (std::exception &e) {
         std::cerr << "Error config : " << e.what() << std::endl;
     }
     return (0);
