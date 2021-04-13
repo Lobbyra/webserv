@@ -2,9 +2,10 @@
 
 std::ostream& operator<<(std::ostream& os, c_request_header const &src)
 {
-    os << "Method: " << src.method << std::endl  \
-    << "Path: " << src.path << std::endl         \
-    << "Protocol: " << src.protocol << std::endl;
+    os << "Method: " << src.method << "." << std::endl  \
+    << "Path: " << src.path << "." << std::endl         \
+    << "Protocol: " << src.protocol << "." << std::endl
+    << "Error: " << src.error << "." << std::endl;
 
     return os;
 };
@@ -20,7 +21,7 @@ c_request_header    read_request_header(void)
     std::map<std::string, f_request_header>     parser_request;
 
     request_header = init_request_header(&request);
-    parser_request = init_parser_request();
+    // parser_request = init_parser_request();
     i = 0;
     while ((status = get_next_line(0, &line)) == 1) {
         buf = (std::string)line;

@@ -26,6 +26,7 @@ class c_request_header {
         size_t                      port;
         std::string                 referer;
         std::list<std::string>      user_agent;
+        size_t                      error;
 };
 
 std::ostream& operator<<(std::ostream& os, c_request_header const &src);
@@ -40,13 +41,13 @@ std::map<std::string, f_request_header>     init_parser_request(void);
 
 void            parse_method(std::string line, 
                              std::map<std::string, void *> request_header);
-void            parse_path(std::string line, 
-                           std::map<std::string, void *> request_header);
-void            parse_protocol(std::string line, 
-                               std::map<std::string, void *> request_header);
 
 void    parse_request_header(std::string line, 
                              std::map<std::string, void *> request_header);
+
+std::string get_word(std::string const &src, std::string::const_iterator it,
+                     std::string sep);
+
 // void    parse_protocol(char *line);
 
 #endif

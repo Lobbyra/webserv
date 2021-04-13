@@ -31,6 +31,7 @@ std::map<std::string, void*>     init_request_header(c_request_header *request) 
     map["Port"] = &(request->port);
     map["Referer"] = &(request->referer);
     map["User_Agent"] = &(request->user_agent);
+    map["Error"] = &(request->error);
 
     return (map);
 }
@@ -38,9 +39,6 @@ std::map<std::string, void*>     init_request_header(c_request_header *request) 
 std::map<std::string, f_request_header>     init_parser_request(void) {
     std::map<std::string, f_request_header>   map;
 
-    map["Method"] = &parse_method;
-    // map["Path"] = &parse_path;
-    // map["Protocol"] = &;
     // map["Date"] = &;
     // map["Accept_Charset"] = &;
     // map["Accept_language"] = &;
