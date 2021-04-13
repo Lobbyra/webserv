@@ -12,6 +12,9 @@ const std::string whitespaces("\t\n\v\f\r ");
 std::string get_word_it(std::string::const_iterator it,
                         const std::string sep = whitespaces);
 
+std::string get_word(std::string const &src, std::string::const_iterator it,
+                     std::string sep);
+
 bool    ft_isin(const char &c, const std::string &str);
 bool    is_space(char c);
 bool    is_str_num(std::string str);
