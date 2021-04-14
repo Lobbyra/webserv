@@ -1,0 +1,39 @@
+GET /home.html HTTP/1.1
+Host: developer.mozilla.org
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.9; rv:50.0) Gecko/20100101 Firefox/50.0
+Accept-Language: en-US,en;q=0.5
+Referer: https://developer.mozilla.org/testpage.html
+Connection: keep-alive
+
+
+GET      /        HTTP/1.1
+Host:                  localhost:18000
+Connection: keep-alive
+sec-ch-ua: "Google Chrome";v="89", "Chromium";v="89", ";Not A Brand";v="99"
+
+/* -------------------------------------------------
+**                  GNL                             
+--------------------------------------------------*/
+
+Line : GET /home.html HTTP/1.1
+Line : Host: developer.mozilla.org
+Line : User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.9; rv:50.0) Gecko/20100101 Firefox/50.0
+Line : Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Line : Accept-Language: en-US,en;q=0.5
+Line : Accept-Encoding: gzip, deflate, br
+Line : Referer: https://developer.mozilla.org/testpage.html
+Line : Connection: keep-alive
+Line : Upgrade-Insecure-Requests: 1
+Line : If-Modified-Since: Mon, 18 Jul 2016 02:36:04 GMT
+Line : If-None-Match: "c561c68d0ba92bbeb8b0fff2a9199f722e3a621a"
+Line : Cache-Control: max-age=0
+
+
+// test function 
+// std::cout << "request : " << &request.method << " | adresss : " << request_header["method"] << std::endl;
+
+// test
+// std::string str = "GET";
+// std::string * ptr = static_cast<std::string *>(request_header["method"]);
+// *ptr = str;
+// std::cout << "data2 : " << request.method << " | " << *(static_cast<std::string *>(request_header.find("method")->second)) << std::endl;

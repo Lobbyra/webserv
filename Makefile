@@ -42,18 +42,28 @@ PARSE_CONF_FILES = ${addprefix ${PARSE_FUNS_PATH}, ${PARSE_FUNS_FILES}}	\
 				   check_key.cpp get_serv.cpp parse_conf.cpp
 PARSE_CONF_HEADER = parse_conf.hpp
 
+PARSE_REQUEST_HEADER_PATH = 	./parse_request_header/
+PARSE_REQUEST_HEADER_FILES = 	parse_request_header.cpp 	\
+								parse_request_line.cpp		\
+								init_maps.cpp				\
+
+PARSE_REQUEST_HEADER_HEADER = 	parse_request_header.hpp
+
 UTILS_PATH = utils/
 UTILS_FILES = get_keys.cpp is_space.cpp get_word_it.cpp skip_it.cpp			\
-			  is_str_num.cpp ft_isin.cpp ft_error.cpp ft_timeval_init.cpp
+			  is_str_num.cpp ft_isin.cpp ft_error.cpp ft_timeval_init.cpp	\
+			  get_word.cpp
 UTILS_HEADER = utils.hpp insert_stream_cont.hpp
 
 SRCS_FILES = ${ROOT_FILES} \
 			 ${addprefix ${PARSE_CONF_PATH}, ${PARSE_CONF_FILES}} \
-			 ${addprefix ${UTILS_PATH}, ${UTILS_FILES}}
+			 ${addprefix ${UTILS_PATH}, ${UTILS_FILES}}	\
+			 $(addprefix ${PARSE_REQUEST_HEADER_PATH}, ${PARSE_REQUEST_HEADER_FILES})
 
 HEADER_FILES = ${ROOT_HEADER} \
 			   ${addprefix ${PARSE_CONF_PATH}, ${PARSE_CONF_HEADER}} \
-			   ${addprefix ${UTILS_PATH}, ${UTILS_HEADER}}
+			   ${addprefix ${UTILS_PATH}, ${UTILS_HEADER}}	\
+			   ${addprefix ${PARSE_REQUEST_HEADER_PATH}, ${PARSE_REQUEST_HEADER_HEADER}}
 
 HEADER_FULL = ${addprefix ${SRCS_PATH}, ${HEADER_FILES}}
 
@@ -61,7 +71,8 @@ OBJS_PATH = ./obj/
 OBJS_PATHS = ${OBJS_PATH} \
 			 ${OBJS_PATH}/${PARSE_CONF_PATH} \
 			 ${OBJS_PATH}/${PARSE_CONF_PATH}/${PARSE_FUNS_PATH} \
-			 ${OBJS_PATH}/${UTILS_PATH}
+			 ${OBJS_PATH}/${UTILS_PATH} \
+			 ${OBJS_PATH}/${PARSE_REQUEST_HEADER_PATH}
 OBJS = ${addprefix ${OBJS_PATH}, ${SRCS_FILES:.cpp=.o}}
 
 all: ${LIBS}
