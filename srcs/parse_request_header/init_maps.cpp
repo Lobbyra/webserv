@@ -47,7 +47,7 @@ std::map<std::string, f_request_header>     init_parser_request(void) {
     map["User-Agent"] = &parse_field_list_string;
     // map["Host"] = &;
     // map["Port"] = &;
-    // map["Referer"] = &;
+    // map["Refeer"] = &;
 
     return (map);
 }
