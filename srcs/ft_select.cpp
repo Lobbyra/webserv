@@ -2,7 +2,7 @@
 #include <sys/socket.h>
 #include "utils/utils.hpp"
 
-fd_set  socketlst_to_fdset(t_socketlst const &lst) {
+static fd_set  socketlst_to_fdset(t_socketlst const &lst) {
     t_socketlst::const_iterator it = lst.begin(), ite = lst.end();
     fd_set fdset;
 
@@ -12,7 +12,7 @@ fd_set  socketlst_to_fdset(t_socketlst const &lst) {
     return (fdset);
 }
 
-fd_set  respmap_to_fdset(t_respmap const *mp) {
+static fd_set  respmap_to_fdset(t_respmap const *mp) {
     t_respmap::const_iterator it = mp->begin(), ite = mp->end();
     fd_set fdset;
 
@@ -23,7 +23,7 @@ fd_set  respmap_to_fdset(t_respmap const *mp) {
     return (fdset);
 }
 
-int socket_max(t_socketlst const &lst, t_respmap const *const map_) {
+static int socket_max(t_socketlst const &lst, t_respmap const *const map_) {
     int max = 0;
 
     t_socketlst::const_iterator it = lst.begin(), ite = lst.end();
@@ -38,7 +38,7 @@ int socket_max(t_socketlst const &lst, t_respmap const *const map_) {
     return (max);
 }
 
-t_socketlst fdset_to_socketlst(t_socketlst const &lst, fd_set const &set) {
+static t_socketlst fdset_to_socklst(t_socketlst const &lst, fd_set const &set) {
     t_socketlst::const_iterator it = lst.begin(), ite = lst.end();
     t_socketlst res;
 
@@ -48,7 +48,7 @@ t_socketlst fdset_to_socketlst(t_socketlst const &lst, fd_set const &set) {
     return (res);
 }
 
-void    fdset_to_respmap(t_respmap *mp, fd_set const &set) {
+static void    fdset_to_respmap(t_respmap *mp, fd_set const &set) {
     t_respmap::iterator it = mp->begin(), ite = mp->end();
 
     for (; it != ite; ++it)
@@ -56,8 +56,7 @@ void    fdset_to_respmap(t_respmap *mp, fd_set const &set) {
             it->second = true;
 }
 
-t_socketlst
-ft_select(t_socketlst const &listen_ports, t_respmap *resp_avail)
+t_socketlst ft_select(t_socketlst const &listen_ports, t_respmap *resp_avail)
 {
     fd_set  r_fdset, w_fdset;
     struct timeval time;
@@ -69,7 +68,7 @@ ft_select(t_socketlst const &listen_ports, t_respmap *resp_avail)
     select(socket_max(listen_ports, resp_avail) + 1, \
             &r_fdset, &w_fdset, NULL, &time);
 
-    clients = fdset_to_socketlst(listen_ports, r_fdset);
+    clients = fdset_to_socklst(listen_ports, r_fdset);
     fdset_to_respmap(resp_avail, w_fdset);
 
     if (errno == EAGAIN || clients.size() == 0) {
@@ -80,12 +79,9 @@ ft_select(t_socketlst const &listen_ports, t_respmap *resp_avail)
         ft_error("select");
 
     t_socketlst::iterator it = clients.begin(), ite = clients.end();
+    socklen_t   socklen = sizeof(t_sockaddr);
     for (; it != ite; ++it) {
-        t_sockaddr  sockaddr;
-        socklen_t   socklen = sizeof(sockaddr);
-
-        it->client_fd = accept(it->entry_socket, &sockaddr, &socklen);
-        it->client_addr = sockaddr;
+        it->client_fd = accept(it->entry_socket, &it->client_addr, &socklen);
         if (errno != 0)
             ft_error("accept");
     }

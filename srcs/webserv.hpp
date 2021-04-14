@@ -45,7 +45,6 @@ std::list<c_server>     parse_conf(std::string path);
 void                    webserv(std::list<c_server> const &conf);
 t_socketlst             init_listen(std::list<c_server> const &conf);
 
-t_socketlst
-ft_select(t_socketlst const &listen_ports, t_respmap *resp_avail);
+t_socketlst ft_select(t_socketlst const &listen_ports, t_respmap *resp_avail);
 
-#endif // ****************************************************** WEBSERV_HPP end //
+#endif // *************************************************** WEBSERV_HPP end //
