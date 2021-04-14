@@ -1,13 +1,9 @@
 #include "webserv.hpp"
 #include <sys/socket.h>
-#include <netinet/in.h> // struct sockaddr_in
 #include <arpa/inet.h> // inet_pton
 #include <fcntl.h>
 
-typedef struct sockaddr t_sockaddr;
-typedef struct sockaddr_in t_sockaddr_in;
-
-static int  makeSocket(const int &port) {
+static int  makeSocketfd(const int &port) {
     int newSocket;
     t_sockaddr_in servaddr;
 
@@ -24,14 +20,23 @@ static int  makeSocket(const int &port) {
         ft_error("bind");
     if ((listen(newSocket, 10)) < 0)
         ft_error("listen");
-	return (newSocket);
+    return (newSocket);
 }
 
-t_fdlst	init_listen(std::list<c_server> const &conf) {
-    t_fdlst res;
-	std::list<c_server>::const_iterator it = conf.begin(), ite = conf.end();
+static s_socket makeSocket(const c_server *server) {
+    s_socket newSocket;
 
-	for (; it != ite; ++it)
-		res.push_back(makeSocket(it->listen.port));
+    ft_bzero(&newSocket, sizeof(newSocket));
+    newSocket.entry_socket = makeSocketfd(server->listen.port);
+    newSocket.server = server;
+    return (newSocket);
+}
+
+t_socketlst     init_listen(std::list<c_server> const &conf) {
+    std::list<c_server>::const_iterator it = conf.begin(), ite = conf.end();
+    t_socketlst res;
+
+    for (; it != ite; ++it)
+        res.push_back(makeSocket(&(*it)));
     return (res);
 }

@@ -44,7 +44,7 @@ PARSE_CONF_HEADER = parse_conf.hpp
 
 UTILS_PATH = utils/
 UTILS_FILES = get_keys.cpp is_space.cpp get_word_it.cpp skip_it.cpp			\
-			  is_str_num.cpp ft_isin.cpp ft_error.cpp
+			  is_str_num.cpp ft_isin.cpp ft_error.cpp ft_timeval_init.cpp
 UTILS_HEADER = utils.hpp insert_stream_cont.hpp
 
 SRCS_FILES = ${ROOT_FILES} \

@@ -31,4 +31,6 @@ it  ft_find(it start, it end, T const &val) {
 void    ft_error(std::string const &src,
                  std::string const &err = strerror(errno));
 
+void    ft_timeval_init(struct timeval *const time, int sec = 0, int usec = 0);
+
 #endif // ***************************************************** UTILS_HPP end //
