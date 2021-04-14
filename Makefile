@@ -43,11 +43,12 @@ PARSE_CONF_HEADER = parse_conf.hpp
 
 PARSE_REQUEST_HEADER_PATH = 	./parse_request_header/
 
-PARSE_REQUEST_HEADER_FILES = 	parse_request_header.cpp 	\
+PARSE_REQUEST_HEADER_FILES = 	read_request_header.cpp 	\
 								parse_request_line.cpp		\
+								parse_request_header.cpp	\
 								init_maps.cpp				\
 
-PARSE_REQUEST_HEADER_HEADER = 	parse_request_header.hpp
+PARSE_REQUEST_HEADER = 	parse_request.hpp
 
 UTILS_PATH = ./utils/
 UTILS_FILES = get_keys.cpp is_space.cpp get_word_it.cpp skip_it.cpp			\

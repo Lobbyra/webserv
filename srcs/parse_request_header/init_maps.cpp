@@ -1,4 +1,4 @@
-#include "parse_request_header.hpp"
+#include "parse_request.hpp"
 
 std::list<std::string>      init_prefix_method(void)
 {
@@ -23,14 +23,14 @@ std::map<std::string, void*>     init_request_header(c_request_header *request) 
     map["Path"] = &(request->path);
     map["Protocol"] = &(request->protocol);
     // map["Date"] = &(request->date);
-    map["Accept_Charset"] = &(request->accept_charset);
-    map["Accept_language"] = &(request->accept_language);
+    map["Accept-Charset"] = &(request->accept_charset);
+    map["Accept-Language"] = &(request->accept_language);
     map["Authorization"] = &(request->authorization);
-    map["Content_language"] = &(request->content_language);
+    map["Content-Type"] = &(request->content_type);
     map["Host"] = &(request->host);
     map["Port"] = &(request->port);
     map["Referer"] = &(request->referer);
-    map["User_Agent"] = &(request->user_agent);
+    map["User-Agent"] = &(request->user_agent);
     map["Error"] = &(request->error);
 
     return (map);
@@ -40,14 +40,14 @@ std::map<std::string, f_request_header>     init_parser_request(void) {
     std::map<std::string, f_request_header>   map;
 
     // map["Date"] = &;
-    // map["Accept_Charset"] = &;
-    // map["Accept_language"] = &;
-    // map["Authorization"] = &;
-    // map["Content_language"] = &;
+    map["Accept-Charset"] = &parse_field_list_string;
+    map["Accept-Language"] = &parse_field_list_string;
+    map["Authorization"] = &parse_field_list_string;
+    map["Content-Type"] = &parse_field_list_string;
+    map["User-Agent"] = &parse_field_list_string;
     // map["Host"] = &;
     // map["Port"] = &;
     // map["Referer"] = &;
-    // map["User_Agent"] = &;
 
     return (map);
 }
