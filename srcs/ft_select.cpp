@@ -81,9 +81,10 @@ ft_select(t_socketlst const &listen_ports, t_respmap *resp_avail)
 
     t_socketlst::iterator it = clients.begin(), ite = clients.end();
     for (; it != ite; ++it) {
-        t_sockaddr sockaddr;
+        t_sockaddr  sockaddr;
+        socklen_t   socklen = sizeof(sockaddr);
 
-        it->client_fd = accept(it->entry_socket, &sockaddr, NULL);
+        it->client_fd = accept(it->entry_socket, &sockaddr, &socklen);
         it->client_addr = sockaddr;
         if (errno != 0)
             ft_error("accept");
