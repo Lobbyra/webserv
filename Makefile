@@ -12,7 +12,7 @@ CYAN = \033[96m
 NAME = webserv
 
 CC = clang++
-CFLAGS = -Wall -Wextra -Werror -std=c++98 -fsanitize=address
+CFLAGS = -Wall -Wextra -Werror -std=c++98 #-fsanitize=address
 
 LIB_A = lib.a
 LIB_PATH = ./srcs/lib/
@@ -90,7 +90,7 @@ test: ${LIBS} ${OBJS_PATHS} ${OBJS} ${HEADER_FULL}
 	@printf "$(BOLD)Make $(RED)$@$(EOC)"
 	@echo " $(BOLD)with$(EOC) $(GREEN)$(CC)$(EOC) $(CYAN)$(CFLAGS)$(EOC): "
 	@$(eval TMP := $(shell ls ${OBJS} | grep -v "main.o"))
-	@${CC} ${CFLAGS} -fsanitize=address -o $@ ${TMP} ${LIBS}
+	@${CC} ${CFLAGS} -o $@ ${TMP} ${LIBS}
 
 ${OBJS_PATHS}:
 	@mkdir -p $@
