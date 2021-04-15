@@ -36,7 +36,7 @@ std::ostream    &operator<<(std::ostream &o, std::map<Tkey, Tvalue> const &i)
 };
 
 template < class T >
-inline std::ostream& operator<<(std::ostream& os, const std::list<T>& v) 
+inline std::ostream& operator<<(std::ostream& os, const std::list<T>& v)
 {
     os << "{";
     for (typename std::list<T>::const_iterator it = v.begin(); it != v.end(); ++it) {

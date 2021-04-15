@@ -8,12 +8,15 @@ static int  print_usage(char *prog_name) {
 int     main(int argc, char **argv) {
     if (argc != 2)
         return (print_usage(argv[0]));
+    std::list<c_server> conf;
 
     try {
-        std::cout << parse_conf(argv[1]) << std::endl;
+        conf = parse_conf(argv[1]);
+        std::cout << conf << std::endl;
     }
     catch (std::exception &e) {
         std::cerr << "Error config : " << e.what() << std::endl;
     }
+    webserv(conf);
     return (0);
 }
