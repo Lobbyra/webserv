@@ -1,4 +1,16 @@
-#include "parse_request_header.hpp"
+#include "parse_request.hpp"
+
+static size_t     check_request_line(std::map<std::string,
+                                     void *> request_header) {
+    if (((static_cast<std::string *>(request_header["Method"]))->length()) <= 0)
+        return (400);
+    else if (((static_cast<std::string *>(request_header["Path"]))->length()) <= 0)
+        return (400);
+    else if (((static_cast<std::string *>
+    (request_header["Protocol"]))->length()) <= 0)
+        return (400);
+    return (0);
+}
 
 static void    parse_protocol(std::string const &line,
                        std::string::const_iterator &it,
@@ -32,20 +44,8 @@ static void    parse_path(std::string line,
     while (it != ite && sep.find(*it) == std::string::npos)
         ++it;
     while (it != ite && sep.find(*it) != std::string::npos)
-        ++it;;
+        ++it;
     parse_protocol(line, it, request_header);
-}
-
-static size_t     check_request_line(std::map<std::string,
-                                     void *> request_header) {
-    if (((static_cast<std::string *>(request_header["Method"]))->length()) <= 0)
-        return (400);
-    else if (((static_cast<std::string *>(request_header["Path"]))->length()) <= 0)
-        return (400);
-    else if (((static_cast<std::string *>
-    (request_header["Protocol"]))->length()) <= 0)
-        return (400);
-    return (0);
 }
 
 void    parse_method(std::string line, 
@@ -60,8 +60,7 @@ void    parse_method(std::string line,
     {
         if (prefix == *it)
         {
-            std::string * ptr = static_cast<std::string *>
-            (request_header["Method"]);
+            std::string * ptr = static_cast<std::string *>(request_header["Method"]);
             *ptr = prefix;
             parse_path(line, request_header);
             break ;

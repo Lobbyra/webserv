@@ -12,7 +12,7 @@ CYAN = \033[96m
 NAME = webserv
 
 CC = clang++
-CFLAGS = -Wall -Wextra -Werror -std=c++98 -fsanitize=address
+CFLAGS = -Wall -Wextra -Werror -std=c++98 #-fsanitize=address
 
 LIB_A = lib.a
 LIB_PATH = ./srcs/lib/
@@ -43,11 +43,12 @@ PARSE_CONF_FILES = ${addprefix ${PARSE_FUNS_PATH}, ${PARSE_FUNS_FILES}}	\
 PARSE_CONF_HEADER = parse_conf.hpp
 
 PARSE_REQUEST_HEADER_PATH = 	./parse_request_header/
-PARSE_REQUEST_HEADER_FILES = 	parse_request_header.cpp 	\
+PARSE_REQUEST_HEADER_FILES =	read_request_header.cpp 	\
 								parse_request_line.cpp		\
+								parse_request_header.cpp	\
 								init_maps.cpp				\
 
-PARSE_REQUEST_HEADER_HEADER = 	parse_request_header.hpp
+PARSE_REQUEST_HEADER = 	parse_request.hpp
 
 UTILS_PATH = utils/
 UTILS_FILES = get_keys.cpp is_space.cpp get_word_it.cpp skip_it.cpp			\
@@ -89,7 +90,7 @@ test: ${LIBS} ${OBJS_PATHS} ${OBJS} ${HEADER_FULL}
 	@printf "$(BOLD)Make $(RED)$@$(EOC)"
 	@echo " $(BOLD)with$(EOC) $(GREEN)$(CC)$(EOC) $(CYAN)$(CFLAGS)$(EOC): "
 	@$(eval TMP := $(shell ls ${OBJS} | grep -v "main.o"))
-	@${CC} ${CFLAGS} -fsanitize=address -o $@ ${TMP} ${LIBS}
+	@${CC} ${CFLAGS} -o $@ ${TMP} ${LIBS}
 
 ${OBJS_PATHS}:
 	@mkdir -p $@
