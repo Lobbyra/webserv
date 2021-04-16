@@ -7,6 +7,8 @@ c_callback::c_callback(void) {
 c_callback::c_callback(s_socket client, s_request_header request) {
     _init_s_socket(client);
     _init_request_header(request);
+    if (this->server)
+        _init_server_hpp(this->server);
     return ;
 }
 
@@ -47,6 +49,23 @@ void        c_callback::_init_s_socket(s_socket client) {
     this->client_addr = client.client_addr;
 }
 
+void        c_callback::_init_server_hpp(c_server *server) {
+    this->client_max_body_size = server->client_max_body_size;
+    this->srv_id = server->srv_id;
+    this->index = server->index;
+    this->listen = server->listen;
+    this->server_name = server->server_name;
+    this->root = server->root;
+    this->autoindex = server->autoindex;
+    this->fastcgi_param = server->fastcgi_param;
+    this->error_page = server->error_page;
+    this->location = server->location;
+}
+
+// void        c_callback::_server_variable_check(c_location location) {
+
+// }
+
 
 std::ostream	&operator<<(std::ostream &o, c_callback const &src) {
     o << COLOR_YELLOW << "Callback debug :" << COLOR_RESET << std::endl \
@@ -54,7 +73,6 @@ std::ostream	&operator<<(std::ostream &o, c_callback const &src) {
     << COLOR_WHITE << "\tentry_socket: " << COLOR_RESET << src.entry_socket << "." << std::endl \
     // COLOR_WHITE << << "\tserver: << COLOR_RESET " << src.server << "." << std::endl 
     << COLOR_WHITE << "\tclient_fd: " << COLOR_RESET << src.client_fd << "." << std::endl \
-    // COLOR_WHITE << << "\tclient_addr: << COLOR_RESET " << src.client_addr << "." << std::endl << std::endl 
     << COLOR_BLUE << "s_request_header:" << COLOR_RESET << std::endl \
     << COLOR_WHITE << "\tmethod: " << COLOR_RESET << src.method << "." << std::endl \
     << COLOR_WHITE << "\tpath: " << COLOR_RESET << src.path << "." << std::endl \
