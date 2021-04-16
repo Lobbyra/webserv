@@ -45,10 +45,7 @@ void    parse_request_header(std::string line,
                              std::map<std::string, void *> request_header,
                              std::map<std::string, f_request_header>
                              parser_request);
-<<<<<<< HEAD:srcs/parse_request_header/parse_request.hpp
-=======
 
 std::list<s_request_header>     parse_request(t_socketlst clients);
->>>>>>> main:srcs/parse_request_header/parse_request.hpp
 
 #endif
