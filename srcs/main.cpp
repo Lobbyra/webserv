@@ -1,6 +1,6 @@
 #include "webserv.hpp"
 
-volatile bool g_run = 1;
+extern volatile bool g_run;
 
 static void ft_signal(int sig) {
     static_cast<void>(sig);
