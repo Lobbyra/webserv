@@ -24,6 +24,8 @@ void    webserv(std::list<c_server> const &conf) {
 
     while (g_run) {
         clients = ft_select(listen_ports, resp_avail);
+        if (clients.empty() == false && g_run)
+            parse_request(clients);
     }
     set_reuse_port(listen_ports);
 }
