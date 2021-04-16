@@ -69,8 +69,6 @@ std::list<s_request_header>     parse_request(t_socketlst clients) {
     return (list_requests);
 }
 
-// volatile bool g_run = 1;
-
 // int         main(int ac, char **av)
 // {
 //     int                 fd;
