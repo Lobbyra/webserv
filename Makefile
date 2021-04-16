@@ -35,7 +35,7 @@ PARSE_FUNS_FILES = parse_autoindex.cpp            parse_listen.cpp			  \
 				   parse_client_max_body_size.cpp parse_root.cpp			  \
 				   parse_fastcgi_param.cpp        skip_k_get_value.cpp		  \
 				   parse_server_name.cpp parse_index.cpp parse_error_page.cpp \
-				   parse_location.cpp
+				   parse_location.cpp parse_fastcgi_pass.cpp
 
 PARSE_CONF_FILES = ${addprefix ${PARSE_FUNS_PATH}, ${PARSE_FUNS_FILES}}	\
 				   get_conf.cpp skip_param.cpp init_maps.cpp			\
