@@ -1,6 +1,6 @@
 #include "webserv.hpp"
 
-extern volatile bool g_run;
+volatile bool g_run = 1;
 
 static void    set_reuse_port(t_socketlst const &lst) {
     int fd;
