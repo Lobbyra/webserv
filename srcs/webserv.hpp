@@ -47,4 +47,6 @@ t_socketlst             init_listen(std::list<c_server> const &conf);
 
 t_socketlst ft_select(t_socketlst const &listen_ports, t_respmap *resp_avail);
 
+# include "parse_request_header/parse_request.hpp"
+
 #endif // *************************************************** WEBSERV_HPP end //

@@ -46,4 +46,6 @@ void    parse_request_header(std::string line,
                              std::map<std::string, f_request_header>
                              parser_request);
 
+std::list<s_request_header>     parse_request(t_socketlst clients);
+
 #endif

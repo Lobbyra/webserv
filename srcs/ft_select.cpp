@@ -72,7 +72,7 @@ t_socketlst ft_select(t_socketlst const &listen_ports, t_respmap *resp_avail)
     fdset_to_respmap(resp_avail, w_fdset);
 
     if (errno == EAGAIN || errno == EINTR || clients.size() == 0) {
-        std::cout << "*silence*" << std::endl;
+        // std::cout << "*silence*" << std::endl;
         return (clients);
     }
     else if (errno != 0)
