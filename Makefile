@@ -26,8 +26,8 @@ endif
 SRCS_PATH = ./srcs/
 
 ROOT_FILES = main.cpp c_server.cpp c_location.cpp webserv.cpp init_listen.cpp \
-			 ft_select.cpp
-ROOT_HEADER = webserv.hpp c_location.hpp c_server.hpp
+			 ft_select.cpp callback.cpp
+ROOT_HEADER = webserv.hpp c_location.hpp c_server.hpp callback.hpp
 
 PARSE_CONF_PATH = parse_conf/
 PARSE_FUNS_PATH = parse_funs/
