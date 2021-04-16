@@ -64,6 +64,11 @@ std::list<int>  ft_fd_isset(fd_set *fdset) {
     return (res);
 }
 
+#define STDIN STDIN_FILENO
+#define BASE_VERBOSE 0
+#define USE_STDIN 1
+#define VERBOSE_STDIN 1
+
 void    ft_server(std::list<int> ports)
 {
     const std::string resp = "HTTP/1.1 200 OK\r\n\r\nGot The Message! :o";
@@ -81,13 +86,23 @@ void    ft_server(std::list<int> ports)
         std::list<int> fd_isset;
 
         fdset = fdset_full();
+        if (USE_STDIN)
+            FD_SET(STDIN, &fdset);
         ft_timeout_init(&time);
         select(socket_max() + 1, &fdset, NULL, NULL, &time);
 
         fd_isset = ft_fd_isset(&fdset);
 
+        if (USE_STDIN) {
+            if (VERBOSE_STDIN)
+                std::cout << "[A] IS_SET STDIN: " << FD_ISSET(STDIN, &fdset) << std::endl;
+            if (FD_ISSET(STDIN, &fdset))
+                fd_isset.push_back(STDIN);
+        }
+
         if (errno == EAGAIN || fd_isset.size() == 0) {
-            std::cout << "No connection yet..." << std::endl;
+            if (BASE_VERBOSE)
+                std::cout << "No connection yet..." << std::endl;
             continue ;
         }
         else if (errno != 0)
@@ -95,11 +110,22 @@ void    ft_server(std::list<int> ports)
 
         std::list<int>::const_iterator it, ite = fd_isset.end();
         for (it = fd_isset.begin(); it != ite; ++it) {
-            connfd = accept(*it, NULL, NULL);
+            connfd = (*it == STDIN) ? STDIN : accept(*it, NULL, NULL);
             if (errno != 0)
                 ft_error("accept");
-            std::cout << "Oh! Message received on socket: " << *it << std::endl;
-            close(connfd);
+
+            if (BASE_VERBOSE)
+                std::cout << "Oh! Message received on socket: " << *it << std::endl;
+            if (*it == STDIN) {
+                char *line;
+                std::cout << "GNL: " << get_next_line(connfd, &line) << std::endl;
+                std::cout << "CONTENT: " << line << std::endl;
+                free(line);
+            }
+            else {
+                //read_fd(connfd);
+                close(connfd);
+            }
         }
 
         /*
@@ -120,7 +146,7 @@ static bool usage_error(char *str)
 int main(int argc, char **argv) {
     std::list<int> ports;
 
-    if (argc == 1)
+    if (USE_STDIN == false && argc == 1)
         return (usage_error(argv[0]));
     for (int i = 1; i < argc; ++i)
         ports.push_back(atoi(argv[i]));
