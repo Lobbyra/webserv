@@ -1,6 +1,17 @@
 #include "webserv.hpp"
 
-static int  print_usage(char *prog_name) {
+volatile bool g_run = 1;
+
+static void ft_signal(int sig) {
+    static_cast<void>(sig);
+    g_run = 0;
+}
+
+static void ft_signalhandler_enable(void) {
+    signal(SIGINT, ft_signal);
+}
+
+static int  print_usage(char const *const prog_name) {
     std::cerr << "Usage: " << prog_name << " <nginx.conf>" << std::endl;
     return (1);
 }
@@ -17,6 +28,7 @@ int     main(int argc, char **argv) {
     catch (std::exception &e) {
         std::cerr << "Error config : " << e.what() << std::endl;
     }
+    ft_signalhandler_enable();
     webserv(conf);
     return (0);
 }

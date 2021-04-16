@@ -22,8 +22,12 @@ std::ostream& operator<<(std::ostream& os, s_request_header const &src)
     return os;
 };
 
+<<<<<<< HEAD
 s_request_header    read_request_header(void)
 {
+=======
+s_request_header    read_request_header(int fd) {
+>>>>>>> main
     int                                         i = 0;
     int                                         status;
     char                                        *line;
@@ -34,6 +38,7 @@ s_request_header    read_request_header(void)
 
     request_header = init_request_header(&request);
     parser_request = init_parser_request();
+<<<<<<< HEAD
     while ((status = get_next_line(0, &line)) == 1) {
         buf = (std::string)line;
         if (!line[0] && i < 1)
@@ -50,6 +55,23 @@ s_request_header    read_request_header(void)
             parse_request_header(line, request_header, parser_request);
         } else if (!line[0] && i > 0)          // Request message body
         {
+=======
+    while ((status = get_next_line(fd, &line)) == 1) {
+        buf = (std::string)line;
+        if (buf.empty() == false && *(--buf.end()) == '\r')
+            buf.erase(--buf.end());
+        if (buf.empty() == true && i < 1)
+        {
+            free(line);
+            continue ;
+        } else if (i == 0) {                            // Request line
+            if (buf[0] != ' ')
+                parse_method(buf, request_header);
+            i++;
+        } else if (buf.empty() == false && i > 0) {     // Request header
+            parse_request_header(buf, request_header, parser_request);
+        } else if (buf.empty() == true && i > 0) {      // Request message body
+>>>>>>> main
             free(line);
             break ;
         }
@@ -57,6 +79,7 @@ s_request_header    read_request_header(void)
     }
     if (status == 0)
         free(line);
+<<<<<<< HEAD
     std::cout << std::endl << request << std::endl;
     return (request);
 }
@@ -77,5 +100,32 @@ s_request_header    read_request_header(void)
 // int         main(void)
 // {
 //     read_request_header();
+=======
+    return (request);
+}
+
+std::list<s_request_header>     parse_request(t_socketlst clients) {
+    std::list<s_request_header>     list_requests;
+    t_socketlst::iterator           it, ite;
+
+    it = clients.begin();
+    ite = clients.end();
+    for (; it != ite; ++it)
+        list_requests.push_back(read_request_header((*it).client_fd));
+    return (list_requests);
+}
+
+// volatile bool g_run = 1;
+
+// int         main(int ac, char **av)
+// {
+//     int                 fd;
+//     s_request_header    request;
+
+//     fd = open(av[ac - 1], O_RDONLY);
+//     std::cout << "FD :" << fd << std::endl << std::endl;
+//     request = read_request_header(fd);
+//     std::cout << request << std::endl;
+>>>>>>> main
 //     return (0);
 // }
