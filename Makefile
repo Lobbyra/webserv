@@ -44,6 +44,7 @@ PARSE_CONF_HEADER = parse_conf.hpp
 
 PARSE_REQUEST_HEADER_PATH = 	./parse_request_header/
 PARSE_REQUEST_HEADER_FILES =	read_request_header.cpp 	\
+								parse_request.cpp			\
 								parse_request_line.cpp		\
 								parse_request_header.cpp	\
 								init_maps.cpp				\
