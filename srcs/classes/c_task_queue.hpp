@@ -11,12 +11,12 @@ class    dumb_cb {
 
     dumb_cb(void);
     dumb_cb(std::string const &method);
-    dumb_cb(dumb_cb const &src) { *this = src; };
+    dumb_cb(dumb_cb const &src);
     dumb_cb &operator=(dumb_cb const &src);
     virtual ~dumb_cb();
 
     void    exec(void);
-    bool    is_over(void) { return (_it_recipes == _recipes.end()); };
+    bool    is_over(void);
 
     void    coucou(void) { std::cout << "coucou" << std::endl; }
     void    salut(void) { std::cout << "salut" << std::endl; }
@@ -26,7 +26,11 @@ class    dumb_cb {
 
     t_recipes       _recipes;
     t_recipes_it    _it_recipes;
-    std::map<std::string, std::list<t_dumb_f> > g_meth_fun;
+
+    std::list<t_dumb_f> _get_get_recipe(void);
+    void    _init_meth_fun();
+
+    std::map<std::string, std::list<t_dumb_f> > _meth_funs;
 
 };
 

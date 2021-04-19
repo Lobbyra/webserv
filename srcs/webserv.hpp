@@ -78,4 +78,6 @@ t_socketlst ft_select(t_socketlst const &listen_ports, t_respmap *resp_avail);
 void            init_callback(t_socketlst clients,
                               std::list<s_request_header> requests);
 
+# include "classes/c_task_queue.hpp"
+
 #endif // *************************************************** WEBSERV_HPP end //

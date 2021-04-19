@@ -1,23 +1,36 @@
 # include "c_task_queue.hpp"
 
-extern std::map<std::string, std::list<t_dumb_f> > g_meth_fun;
-
 /*
  **    /// CONSTRUCTORS & DESTRUCTORS PART \
  */
+
+std::list<dumb_cb::t_dumb_f>     dumb_cb::_get_get_recipe(void) {
+    std::list<t_dumb_f> funs;
+
+    funs.push_back(&dumb_cb::coucou);
+    funs.push_back(&dumb_cb::salut);
+    funs.push_back(&dumb_cb::bonjour);
+
+    return (funs);
+}
+
+void    dumb_cb::_init_meth_fun() {
+    _meth_funs["GET"] = _get_get_recipe();
+}
+
 dumb_cb::dumb_cb(void) {
-    g_meth_fun["GET"] = {&dumb_cb::coucou, &dumb_cb::salut, &dumb_cb::bonjour};
     return ;
 }
 
-dumb_cb::dumb_cb(std::string const &method)
-: _recipes(g_meth_fun[method]), _it_recipes(_recipes.end()) {
+dumb_cb::dumb_cb(std::string const &method) {
+    _init_meth_fun();
+    _meth_funs[method] = _get_get_recipe();
+    _recipes = _meth_funs[method];
+    _it_recipes = _recipes.begin();
     return ;
 }
 
 dumb_cb::dumb_cb(dumb_cb const &src) {
-    _recipes = src._recipes;
-    _it_recipes = src._it_recipes;
     *this = src;
 }
 
@@ -31,19 +44,22 @@ dumb_cb::~dumb_cb() {
 
 void    dumb_cb::exec(void) {
     if (this->is_over() == false) {
-        *(_it_recipes)();
+        (this->*(*_it_recipes))();
+        _recipes.back();
         ++_it_recipes;
     }
 }
 
 bool    dumb_cb::is_over(void) {
-    return ();
+    return (_it_recipes == _recipes.end());
 }
 
 /*
  **    /// OPERATOR OVERLOADS PART \\
  */
 dumb_cb    &dumb_cb::operator=(dumb_cb const &src) {
+    _recipes = src._recipes;
+    _it_recipes = src._it_recipes;
     return (*this);
 }
 
@@ -67,9 +83,12 @@ c_task_queue::~c_task_queue() {
  */
 
 void    c_task_queue::exec_task(void) {
-    _tasks.back().exec();
-    if (_tasks.back().is_over() == true) {
+    if (_tasks.size() == 0)
+        return;
+    _tasks.back()->exec();
+    if (_tasks.back()->is_over() == true) {
         delete _tasks.back();
+        _tasks.pop();
         return ;
     }
     _tasks.push(_tasks.back());
@@ -100,6 +119,6 @@ void    c_task_queue::push(std::list<s_request_header> requests,
  **    /// OPERATOR OVERLOADS PART \\
  */
 c_task_queue    &c_task_queue::operator=(c_task_queue const &src) {
+    (void)src;
     return (*this);
 }
-
