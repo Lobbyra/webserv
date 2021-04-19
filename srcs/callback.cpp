@@ -49,7 +49,7 @@ void        c_callback::_init_s_socket(s_socket client) {
     this->client_addr = client.client_addr;
 }
 
-void        c_callback::_init_server_hpp(c_server *server) {
+void        c_callback::_init_server_hpp(c_server const *server) {
     this->client_max_body_size = server->client_max_body_size;
     this->srv_id = server->srv_id;
     this->index = server->index;
