@@ -1,0 +1,110 @@
+/* -------------------------------------------------
+**               Prefix request client             
+--------------------------------------------------*/
+
+Accept-Charset
+Accept-Language
+Authorization
+Host
+Referer
+User-Agent
+Content-Length
+Date
+Content-Type
+Transfer-Encoding
+
+
+/* -------------------------------------------------
+**               Example request client             
+--------------------------------------------------*/
+
+GET /home.html HTTP/1.1
+Host: developer.mozilla.org
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.9; rv:50.0) Gecko/20100101 Firefox/50.0
+Accept-Language: en-US,en;q=0.5
+Referer: https://developer.mozilla.org/testpage.html
+Connection: keep-alive
+
+
+GET      /        HTTP/1.1
+Host:                  localhost:18000
+Connection: keep-alive
+
+
+GET / HTTP/1.1
+Accept-Charset: utf-8, iso-8859-1;q=0.5
+Accept-Language: fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7
+Authorization: Basic YWxhZGRpbjpvcGVuc2VzYW1l
+Content-Type: text/html; charset=UTF-8
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36
+Host: localhost:18000
+Date: Wed, 21 Oct 2015 07:28:00 GMT
+Referer: https://developer.mozilla.org/en-US/docs/Web/JavaScript
+Transfer-Encoding: chunked
+Content-Length: 47
+
+
+Authorization: Hawk id="abcxyz123", ts="1592459563", nonce="gWqbkw", mac="vxBCccCutXGV30gwEDKu1NDXSeqwfq7Z0sg/HP1HjOU="
+Host: localhost:80
+
+GET / HTTP/1.1
+Host: localhost:18000
+Connection: keep-alive
+Cache-Control: max-age=0
+sec-ch-ua: "Google Chrome";v="89", "Chromium";v="89", ";Not A Brand";v="99"
+sec-ch-ua-mobile: ?0
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9
+Sec-Fetch-Site: none
+Sec-Fetch-Mode: navigate
+Sec-Fetch-User: ?1
+Sec-Fetch-Dest: document
+Accept-Encoding: gzip, deflate, br
+Accept-Language: fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7
+
+GET / HTTP/1.1
+Host:                            localhost:18000
+User-Agent:                   curl/7.54.0
+Accept: */*
+
+
+/* -------------------------------------------------
+**                  GNL                             
+--------------------------------------------------*/
+
+Line : GET /home.html HTTP/1.1
+Line : Host: developer.mozilla.org
+Line : User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.9; rv:50.0) Gecko/20100101 Firefox/50.0
+Line : Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Line : Accept-Language: en-US,en;q=0.5
+Line : Accept-Encoding: gzip, deflate, br
+Line : Referer: https://developer.mozilla.org/testpage.html
+Line : Connection: keep-alive
+Line : Upgrade-Insecure-Requests: 1
+Line : If-Modified-Since: Mon, 18 Jul 2016 02:36:04 GMT
+Line : If-None-Match: "c561c68d0ba92bbeb8b0fff2a9199f722e3a621a"
+Line : Cache-Control: max-age=0
+
+
+/* -------------------------------------------------
+**                  Test Function                   
+--------------------------------------------------*/
+// std::cout << "request : " << &request.method << " | adresss : " << request_header["method"] << std::endl;
+
+// std::string str = "GET";
+// std::string * ptr = static_cast<std::string *>(request_header["method"]);
+// *ptr = str;
+// std::cout << "data2 : " << request.method << " | " << *(static_cast<std::string *>(request_header.find("method")->second)) << std::endl;
+
+
+//  Debug-parse std::list<std::string>
+
+std::string start(it, ite);
+std::cout << "start:" << start << std::endl;
+
+std::list<std::string>::iterator    it_l;
+
+it_l = ptr->end();
+it_l--;
+std::cout << "list:" << *(it_l) << "." << std::endl;

@@ -12,6 +12,9 @@ const std::string whitespaces("\t\n\v\f\r ");
 std::string get_word_it(std::string::const_iterator it,
                         const std::string sep = whitespaces);
 
+std::string get_word(std::string const &src, std::string::const_iterator it,
+                     std::string sep);
+
 bool    ft_isin(const char &c, const std::string &str);
 bool    is_space(char c);
 bool    is_str_num(std::string str);
@@ -27,5 +30,10 @@ it  ft_find(it start, it end, T const &val) {
         start++;
     return (start);
 }
+
+void    ft_error(std::string const &src,
+                 std::string const &err = strerror(errno));
+
+void    ft_timeval_init(struct timeval *const time, int sec = 0, int usec = 0);
 
 #endif // ***************************************************** UTILS_HPP end //

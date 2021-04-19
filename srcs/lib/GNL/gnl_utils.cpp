@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   gnl_utils.cpp                                      :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: mli <mli@student.42.fr>                    +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/01/02 17:53:26 by mli               #+#    #+#             */
-/*   Updated: 2021/03/22 12:29:49 by mli              ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "get_next_line.h"
 
 void		ft_lstclear_gnl(t_gnl **alst)
@@ -48,11 +36,11 @@ t_gnl		*ft_lstnew_gnl(int fd)
 	return (newNode);
 }
 
-t_fdlst		*ft_addfront_fd(t_fdlst **astruct, int fd)
+t_gnlfdlst		*ft_addfront_fd(t_gnlfdlst **astruct, int fd)
 {
-	t_fdlst	*newNode;
+	t_gnlfdlst	*newNode;
 
-	if (!(newNode = (t_fdlst *)malloc(sizeof(*newNode))))
+	if (!(newNode = (t_gnlfdlst *)malloc(sizeof(*newNode))))
 		return (NULL);
 	newNode->fd = fd;
 	if (!(newNode->list = ft_lstnew_gnl(fd)))
@@ -65,11 +53,11 @@ t_fdlst		*ft_addfront_fd(t_fdlst **astruct, int fd)
 	return (newNode);
 }
 
-void		ft_total_remove_fd(t_fdlst **begin_fd, t_fdlst *to_delete_fd)
+void		ft_total_remove_fd(t_gnlfdlst **begin_fd, t_gnlfdlst *to_delete_fd)
 {
 	t_gnl		*current;
 	t_gnl		*then;
-	t_fdlst		*tmp_fd;
+	t_gnlfdlst		*tmp_fd;
 
 	if (!to_delete_fd)
 		return ;
@@ -96,9 +84,9 @@ void		ft_total_remove_fd(t_fdlst **begin_fd, t_fdlst *to_delete_fd)
 
 int			get_next_line(int fd, char **line)
 {
-	int					return_value;
-	static t_fdlst		*begin_fd = NULL;
-	t_fdlst				*right_fd;
+	int						return_value;
+	static t_gnlfdlst		*begin_fd = NULL;
+	t_gnlfdlst				*right_fd;
 
 	right_fd = begin_fd;
 	if (fd < 0 || BUFFER_SIZE <= 0)

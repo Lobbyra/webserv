@@ -6,7 +6,7 @@
 #    By: jereligi <jereligi@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/04/07 15:03:53 by jereligi          #+#    #+#              #
-#    Updated: 2021/04/08 15:12:16 by jereligi         ###   ########.fr        #
+#    Updated: 2021/04/08 15:24:44 by jereligi         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,17 +24,15 @@ CYAN = \033[96m
 # ############################################################################ #
 
 
-NAME = mini_serv
+NAME = mini_client
 
-SRC = 	mini_serv.cpp			\
-		./GNL/get_next_line.cpp \
-		./GNL/gnl_utils.cpp
+SRC = 	select.cpp
 
 OBJ = $(SRC:.cpp=.o)
 
-CXX = clang++
+CC = clang++
 
-CXXFLAGS = -Wall -Wextra -Werror -std=c++98
+CPPFLAGS = -Wall -Wextra -Werror -std=c++98
 
 all : 
 			@printf "$(BOLD)Make $(RED)$(NAME)$(EOC)"
@@ -42,7 +40,7 @@ all :
 			@make $(NAME)
 
 $(NAME) :	$(OBJ)
-			$(CXX) $(CXXFLAGS) -o $(NAME) $(OBJ)
+			$(CC) $(CFLAGS) -o $(NAME) $(OBJ)
 			
 clean :
 			rm -rf $(OBJ)

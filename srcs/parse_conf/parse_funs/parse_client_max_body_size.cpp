@@ -21,7 +21,7 @@ void    parse_client_max_body_size(std::string::const_iterator it, void *ptr) {
 }
 
 /*
-int		main(void)
+int        main(void)
 {
     int res;
     std::string str = "client_max_body_size 20m;";

@@ -2,6 +2,7 @@ NAME		=	mini_server
 
 SRCS		=	lib.cpp					\
 				main.cpp				\
+				response.cpp			\
 				mini_serv.cpp			\
 				get_next_line.cpp		\
 				get_next_line_utils.cpp
@@ -13,7 +14,7 @@ CPP			=	clang++
 
 OBJS		=	$(SRCS:.cpp=.o)
 
-CPPFLAGS		+=	-Wall -Werror -Wextra
+CPPFLAGS		+=	-Wall -Wextra
 
 all			:	$(NAME)
 
