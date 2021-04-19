@@ -45,3 +45,5 @@ docs/poc/mini_serv/*/mini_serv
 docs/poc/mini_serv/*/mini_server
 docs/poc/select/*/select
 docs/poc/strtime/strtime
+
+*.swp
