@@ -1,15 +1,13 @@
 #ifndef C_TASK_QUEUE_HPP
 # define C_TASK_QUEUE_HPP
 
-typedef t_dumb_f void (dumb_cb::*)(void);
-typedef std::list<t_dumb_f> t_recipes;
-typedef std::list<t_dumb_f>::const_iterator t_recipes_it;
-
-std::map<std::string, std::list<t_dumb_f> > g_meth_fun;
-g_meth_fun["GET"] = {&dumb_cd::coucou, &dumb_cd::salut, &dumb_cd::bonjour};
+# include "../webserv.hpp"
 
 class    dumb_cb {
  public:
+    typedef void (dumb_cb::*t_dumb_f)(void);
+    typedef std::list<t_dumb_f>                 t_recipes;
+    typedef std::list<t_dumb_f>::const_iterator t_recipes_it;
 
     dumb_cb(void);
     dumb_cb(std::string const &method);
@@ -22,12 +20,13 @@ class    dumb_cb {
 
     void    coucou(void) { std::cout << "coucou" << std::endl; }
     void    salut(void) { std::cout << "salut" << std::endl; }
-    void    bonjour(void) { std::cout << "bonjour" << std::endl;
+    void    bonjour(void) { std::cout << "bonjour" << std::endl; }
 
  private:
 
     t_recipes       _recipes;
     t_recipes_it    _it_recipes;
+    std::map<std::string, std::list<t_dumb_f> > g_meth_fun;
 
 };
 
@@ -45,12 +44,8 @@ class    c_task_queue {
 
 
  private:
-    _pop();
-
-    std::queue<dumb_cb> _tasks; 
+    std::queue<dumb_cb*> _tasks; 
 
 };
-
-std::ostream    &operator<<(std::ostream &o, c_task_queue const &i);
 
 #endif

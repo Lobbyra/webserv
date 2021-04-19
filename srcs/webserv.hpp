@@ -1,8 +1,9 @@
 #ifndef WEBSERV_HPP
 # define WEBSERV_HPP
 
-# include <iostream>
+# include <queue>
 # include <string>
+# include <iostream>
 # include <exception>
 # include <fcntl.h>
 # include <netinet/in.h> // struct sockaddr_in
@@ -48,5 +49,7 @@ t_socketlst             init_listen(std::list<c_server> const &conf);
 t_socketlst ft_select(t_socketlst const &listen_ports, t_respmap *resp_avail);
 
 # include "parse_request_header/parse_request.hpp"
+
+# include "classes/c_task_queue.hpp"
 
 #endif // *************************************************** WEBSERV_HPP end //

@@ -1,15 +1,12 @@
-#ifndef C_TASK_QUEUE_HPP
-# define C_TASK_QUEUE_HPP
-
 # include "c_task_queue.hpp"
-# include "dumb_cb.hpp"
 
-extern g_meth_fun;
+extern std::map<std::string, std::list<t_dumb_f> > g_meth_fun;
 
 /*
  **    /// CONSTRUCTORS & DESTRUCTORS PART \
  */
 dumb_cb::dumb_cb(void) {
+    g_meth_fun["GET"] = {&dumb_cb::coucou, &dumb_cb::salut, &dumb_cb::bonjour};
     return ;
 }
 
@@ -50,11 +47,6 @@ dumb_cb    &dumb_cb::operator=(dumb_cb const &src) {
     return (*this);
 }
 
-td::ostream    &operator<<(std::ostream &o, dumb_cb const &i) {
-    o /*<< DATA*/ << std::endl;
-    return (o);
-}
-
 /*
  **    /// CONSTRUCTORS & DESTRUCTORS PART \
  */
@@ -76,9 +68,12 @@ c_task_queue::~c_task_queue() {
 
 void    c_task_queue::exec_task(void) {
     _tasks.back().exec();
-    if (_tasks.back().is_over() == false)
-        _tasks.push(_tasks.back());
-    _tasks._pop();
+    if (_tasks.back().is_over() == true) {
+        delete _tasks.back();
+        return ;
+    }
+    _tasks.push(_tasks.back());
+    _tasks.pop();
 }
 
 void    c_task_queue::push(std::list<s_request_header> requests,
@@ -86,8 +81,19 @@ void    c_task_queue::push(std::list<s_request_header> requests,
     dumb_cb *cb_temp;
     std::list<s_socket>::iterator           it_clients;
     std::list<s_request_header>::iterator   it_requests;
+    std::list<s_socket>::iterator           ite_clients;
+    std::list<s_request_header>::iterator   ite_requests;
 
-    it_clients = 
+    it_clients = clients.begin();
+    it_requests = requests.begin();
+    ite_clients = clients.end();
+    ite_requests = requests.end();
+    while (it_clients != ite_clients && it_requests != ite_requests) {
+        cb_temp = new dumb_cb((*it_requests).method);
+        _tasks.push(cb_temp);
+        ++it_clients;
+        ++it_requests;
+    }
 }
 
 /*
@@ -97,9 +103,3 @@ c_task_queue    &c_task_queue::operator=(c_task_queue const &src) {
     return (*this);
 }
 
-std::ostream    &operator<<(std::ostream &o, c_task_queue const &i) {
-    o /*<< DATA*/ << std::endl;
-    return (o);
-}
-
-#endif

@@ -47,3 +47,4 @@ docs/poc/select/*/select
 docs/poc/strtime/strtime
 
 *.swp
+log
