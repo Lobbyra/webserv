@@ -12,13 +12,14 @@ CYAN = \033[96m
 NAME = webserv
 
 CC = clang++
-CFLAGS = -Wall -Wextra -Werror -std=c++98 -fsanitize=address
+CFLAGS = -Wall -Wextra -Werror -std=c++98
 
 LIB_A = lib.a
 LIB_PATH = ./srcs/lib/
 
 LIBS = ${addprefix ${LIB_PATH}, ${LIB_A}}
 
+f=f
 ifeq ($(f), f)
 	CFLAGS += -fsanitize=address -g3
 endif
@@ -100,7 +101,7 @@ ${OBJS_PATH}%.o: ${SRCS_PATH}%.cpp ${HEADER_FULL}
 	@printf "$(YELLOW)▓$(EOC)"
 
 ${LIB_PATH}${LIB_A}:
-	@make -C ${LIB_PATH}
+	@make f="$f" -C ${LIB_PATH}
 
 clean:
 	@make -C ${LIB_PATH} fclean

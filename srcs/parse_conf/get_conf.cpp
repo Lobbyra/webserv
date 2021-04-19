@@ -11,11 +11,14 @@ void    check_curly_braces(const std::string &conf) {
     for (; it != ite; ++it) {
         if (*it == '{')
             ++lbrace;
-        else if (*it == '}')
+        else if (*it == '}') {
+            if (it - 2 >= conf.begin() && *(it - 2) != ';')
+                throw std::logic_error("get_conf: Missing ';' at end of scope");
             ++rbrace;
+        }
     }
     if (lbrace != rbrace)
-        throw std::logic_error("GetConfig: Braces does not match");
+        throw std::logic_error("get_conf: Braces does not match");
 }
 
 static void    add_content_to_str(std::string &res, const char *line) {
@@ -61,6 +64,7 @@ std::string    get_conf(const char *const path) {
 
     close(fd);
     res.erase(--(res.end()));
+    check_curly_braces(res);
     return (res);
 }
 
