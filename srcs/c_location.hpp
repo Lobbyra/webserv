@@ -18,6 +18,7 @@ class    c_location {
     std::string     root;
     std::string     route;
     std::string     autoindex;
+    std::string     fastcgi_pass;
     t_cgi_param     fastcgi_param;
     t_error_page    error_page;
 

@@ -19,6 +19,7 @@ LIB_PATH = ./srcs/lib/
 
 LIBS = ${addprefix ${LIB_PATH}, ${LIB_A}}
 
+f=f
 ifeq ($(f), f)
 	CFLAGS += -fsanitize=address -g3
 endif
@@ -26,8 +27,8 @@ endif
 SRCS_PATH = ./srcs/
 
 ROOT_FILES = main.cpp c_server.cpp c_location.cpp webserv.cpp init_listen.cpp \
-			 ft_select.cpp
-ROOT_HEADER = webserv.hpp c_location.hpp c_server.hpp
+			 ft_select.cpp callback.cpp
+ROOT_HEADER = webserv.hpp c_location.hpp c_server.hpp callback.hpp
 
 CLASSES_PATH	= classes/
 CLASSES_FILES	= c_task_queue.cpp
@@ -38,7 +39,7 @@ PARSE_FUNS_FILES = parse_autoindex.cpp            parse_listen.cpp			  \
 				   parse_client_max_body_size.cpp parse_root.cpp			  \
 				   parse_fastcgi_param.cpp        skip_k_get_value.cpp		  \
 				   parse_server_name.cpp parse_index.cpp parse_error_page.cpp \
-				   parse_location.cpp
+				   parse_location.cpp parse_fastcgi_pass.cpp
 
 PARSE_CONF_PATH 	= parse_conf/
 PARSE_CONF_FILES	= ${addprefix ${PARSE_FUNS_PATH}, ${PARSE_FUNS_FILES}}	\
@@ -48,6 +49,7 @@ PARSE_CONF_HEADER	= parse_conf.hpp
 
 PARSE_REQUEST_HEADER_PATH  = 	./parse_request_header/
 PARSE_REQUEST_HEADER_FILES =	read_request_header.cpp 	\
+								parse_request.cpp			\
 								parse_request_line.cpp		\
 								parse_request_header.cpp	\
 								init_maps.cpp				\
@@ -107,7 +109,7 @@ ${OBJS_PATH}%.o: ${SRCS_PATH}%.cpp ${HEADER_FULL}
 	@printf "$(YELLOW)▓$(EOC)"
 
 ${LIB_PATH}${LIB_A}:
-	@make -C ${LIB_PATH}
+	@make f="$f" -C ${LIB_PATH}
 
 clean:
 	@make -C ${LIB_PATH} fclean

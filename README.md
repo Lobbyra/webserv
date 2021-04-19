@@ -11,7 +11,7 @@ See /docs/webserv.pdf
 
 Mandatory language is to code in C++98 (Yes that's shit but :man_shrugging: ).
 
-More details on documentation, how we work in group [here](https://www.notion.so/Documentation-Webserv-320727979ffd4176a7dd5ba41aaadf46).
+More details on documentation, how we work in group [here](https://docs.google.com/document/d/1EjlUZITNCIwvusAyVSZqPTGKYWnJlEGoLdAdgaEYKFY/edit?usp=sharing).
 
 ## Contact
 
