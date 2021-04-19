@@ -12,7 +12,7 @@ CYAN = \033[96m
 NAME = webserv
 
 CC = clang++
-CFLAGS = -Wall -Wextra -Werror -std=c++98
+CFLAGS = -Wall -Wextra -Werror -std=c++98 -ferror-limit=2
 
 LIB_A = lib.a
 LIB_PATH = ./srcs/lib/
@@ -30,20 +30,24 @@ ROOT_FILES = main.cpp c_server.cpp c_location.cpp webserv.cpp init_listen.cpp \
 			 ft_select.cpp callback.cpp
 ROOT_HEADER = webserv.hpp c_location.hpp c_server.hpp callback.hpp
 
-PARSE_CONF_PATH = parse_conf/
-PARSE_FUNS_PATH = parse_funs/
+CLASSES_PATH	= classes/
+CLASSES_FILES	= c_task_queue.cpp
+CLASSES_HEADERS	= c_task_queue.hpp
+
+PARSE_FUNS_PATH	 = parse_funs/
 PARSE_FUNS_FILES = parse_autoindex.cpp            parse_listen.cpp			  \
 				   parse_client_max_body_size.cpp parse_root.cpp			  \
 				   parse_fastcgi_param.cpp        skip_k_get_value.cpp		  \
 				   parse_server_name.cpp parse_index.cpp parse_error_page.cpp \
 				   parse_location.cpp parse_fastcgi_pass.cpp
 
-PARSE_CONF_FILES = ${addprefix ${PARSE_FUNS_PATH}, ${PARSE_FUNS_FILES}}	\
-				   get_conf.cpp skip_param.cpp init_maps.cpp			\
-				   check_key.cpp get_serv.cpp parse_conf.cpp
-PARSE_CONF_HEADER = parse_conf.hpp
+PARSE_CONF_PATH 	= parse_conf/
+PARSE_CONF_FILES	= ${addprefix ${PARSE_FUNS_PATH}, ${PARSE_FUNS_FILES}}	\
+					  get_conf.cpp skip_param.cpp init_maps.cpp			\
+				   	  check_key.cpp get_serv.cpp parse_conf.cpp
+PARSE_CONF_HEADER	= parse_conf.hpp
 
-PARSE_REQUEST_HEADER_PATH = 	./parse_request_header/
+PARSE_REQUEST_HEADER_PATH  = 	./parse_request_header/
 PARSE_REQUEST_HEADER_FILES =	read_request_header.cpp 	\
 								parse_request.cpp			\
 								parse_request_line.cpp		\
@@ -61,12 +65,14 @@ UTILS_HEADER = utils.hpp insert_stream_cont.hpp
 SRCS_FILES = ${ROOT_FILES} \
 			 ${addprefix ${PARSE_CONF_PATH}, ${PARSE_CONF_FILES}} \
 			 ${addprefix ${UTILS_PATH}, ${UTILS_FILES}}	\
-			 $(addprefix ${PARSE_REQUEST_HEADER_PATH}, ${PARSE_REQUEST_HEADER_FILES})
+			 $(addprefix ${PARSE_REQUEST_HEADER_PATH}, ${PARSE_REQUEST_HEADER_FILES}) \
+			 $(addprefix ${CLASSES_PATH}, ${CLASSES_FILES})
 
 HEADER_FILES = ${ROOT_HEADER} \
 			   ${addprefix ${PARSE_CONF_PATH}, ${PARSE_CONF_HEADER}} \
 			   ${addprefix ${UTILS_PATH}, ${UTILS_HEADER}}	\
-			   ${addprefix ${PARSE_REQUEST_HEADER_PATH}, ${PARSE_REQUEST_HEADER_HEADER}}
+			   ${addprefix ${PARSE_REQUEST_HEADER_PATH}, ${PARSE_REQUEST_HEADER_HEADER}} \
+			   ${addprefix ${CLASSES_PATH}, ${CLASSES_HEADERS}}
 
 HEADER_FULL = ${addprefix ${SRCS_PATH}, ${HEADER_FILES}}
 
@@ -75,7 +81,8 @@ OBJS_PATHS = ${OBJS_PATH} \
 			 ${OBJS_PATH}/${PARSE_CONF_PATH} \
 			 ${OBJS_PATH}/${PARSE_CONF_PATH}/${PARSE_FUNS_PATH} \
 			 ${OBJS_PATH}/${UTILS_PATH} \
-			 ${OBJS_PATH}/${PARSE_REQUEST_HEADER_PATH}
+			 ${OBJS_PATH}/${PARSE_REQUEST_HEADER_PATH} \
+			 ${OBJS_PATH}/${CLASSES_PATH}
 OBJS = ${addprefix ${OBJS_PATH}, ${SRCS_FILES:.cpp=.o}}
 
 all: ${LIBS}

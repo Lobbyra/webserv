@@ -22,14 +22,17 @@ void    webserv(std::list<c_server> const &conf) {
     t_socketlst const               listen_ports = init_listen(conf);
     t_socketlst                     clients;
     std::list<s_request_header>     requests;
+    c_task_queue                    task_queue;
 
     while (g_run) {
         clients = ft_select(listen_ports, resp_avail);
         if (clients.empty() == false && g_run)
         {
             requests = parse_request(clients);
+            task_queue.push(requests, clients);
             // init_callback(clients, requests);
         }
+        task_queue.exec_task();
     }
     set_reuse_port(listen_ports);
 }
