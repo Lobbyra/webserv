@@ -37,8 +37,7 @@ s_request_header    read_request_header(int fd) {
         buf = (std::string)line;
         if (buf.empty() == false && *(--buf.end()) == '\r')
             buf.erase(--buf.end());
-        if (buf.empty() == true && i < 1)
-        {
+        if (buf.empty() == true && i < 1) {
             free(line);
             continue ;
         } else if (i == 0) {                            // Request line

@@ -18,14 +18,18 @@ static void    set_reuse_port(t_socketlst const &lst) {
 }
 
 void    webserv(std::list<c_server> const &conf) {
-    t_respmap *resp_avail = new t_respmap;
-    t_socketlst const listen_ports = init_listen(conf);
-    t_socketlst clients;
+    t_respmap                       *resp_avail = new t_respmap;
+    t_socketlst const               listen_ports = init_listen(conf);
+    t_socketlst                     clients;
+    std::list<s_request_header>     requests;
 
     while (g_run) {
         clients = ft_select(listen_ports, resp_avail);
         if (clients.empty() == false && g_run)
-            parse_request(clients);
+        {
+            requests = parse_request(clients);
+            // init_callback(clients, requests);
+        }
     }
     set_reuse_port(listen_ports);
 }
