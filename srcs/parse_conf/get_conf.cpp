@@ -1,3 +1,4 @@
+
 #include "../webserv.hpp"
 
 static bool    is_separator(char c) {
