@@ -26,7 +26,8 @@ int     main(int argc, char **argv) {
         std::cout << conf << std::endl;
     }
     catch (std::exception &e) {
-        std::cerr << "Error config : " << e.what() << std::endl;
+        std::cerr << "Error config: " << e.what() << std::endl;
+        return (1);
     }
     ft_signalhandler_enable();
     webserv(conf);

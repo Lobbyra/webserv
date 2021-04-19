@@ -25,13 +25,14 @@ c_location::~c_location() {
 **    /// OPERATOR OVERLOADS PART \\
 */
 c_location   &c_location::operator=(c_location const &src) {
-    root = src.root;
-    index = src.index;
-    route = src.route;
-    autoindex = src.autoindex;
-    error_page = src.error_page;
-    fastcgi_param = src.fastcgi_param;
-    client_max_body_size = src.client_max_body_size;
+    this->root = src.root;
+    this->index = src.index;
+    this->route = src.route;
+    this->autoindex = src.autoindex;
+    this->error_page = src.error_page;
+    this->fastcgi_pass = src.fastcgi_pass;
+    this->fastcgi_param = src.fastcgi_param;
+    this->client_max_body_size = src.client_max_body_size;
     return (*this);
 }
 
@@ -55,6 +56,8 @@ std::ostream    &operator<<(std::ostream &o, c_location const &i) {
     }
     if (i.fastcgi_param.empty() == false)
         o << "    fastcgi_param = [\n" << i.fastcgi_param << "]" << std::endl;
+    if (i.fastcgi_pass.empty() == false)
+        o << "    fastcgi_pass = [\n" << i.fastcgi_pass << "]" << std::endl;
     indent_lvl--;
     return (o);
 };

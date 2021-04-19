@@ -12,13 +12,14 @@ CYAN = \033[96m
 NAME = webserv
 
 CC = clang++
-CFLAGS = -Wall -Wextra -Werror -std=c++98 #-fsanitize=address
+CFLAGS = -Wall -Wextra -Werror -std=c++98
 
 LIB_A = lib.a
 LIB_PATH = ./srcs/lib/
 
 LIBS = ${addprefix ${LIB_PATH}, ${LIB_A}}
 
+f=f
 ifeq ($(f), f)
 	CFLAGS += -fsanitize=address -g3
 endif
@@ -35,7 +36,7 @@ PARSE_FUNS_FILES = parse_autoindex.cpp            parse_listen.cpp			  \
 				   parse_client_max_body_size.cpp parse_root.cpp			  \
 				   parse_fastcgi_param.cpp        skip_k_get_value.cpp		  \
 				   parse_server_name.cpp parse_index.cpp parse_error_page.cpp \
-				   parse_location.cpp
+				   parse_location.cpp parse_fastcgi_pass.cpp
 
 PARSE_CONF_FILES = ${addprefix ${PARSE_FUNS_PATH}, ${PARSE_FUNS_FILES}}	\
 				   get_conf.cpp skip_param.cpp init_maps.cpp			\
@@ -101,7 +102,7 @@ ${OBJS_PATH}%.o: ${SRCS_PATH}%.cpp ${HEADER_FULL}
 	@printf "$(YELLOW)▓$(EOC)"
 
 ${LIB_PATH}${LIB_A}:
-	@make -C ${LIB_PATH}
+	@make f="$f" -C ${LIB_PATH}
 
 clean:
 	@make -C ${LIB_PATH} fclean
