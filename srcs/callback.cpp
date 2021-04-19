@@ -47,7 +47,7 @@ void        c_callback::_init_request_header(s_request_header request) {
 
 void        c_callback::_init_s_socket(s_socket client) {
     this->entry_socket = client.entry_socket;
-    this->server = client.server;
+    this->server = (c_server *)client.server;
     this->client_fd = client.client_fd;
     this->client_addr = client.client_addr;
 }
@@ -72,9 +72,21 @@ void        c_callback::_server_variable_check(std::list<c_location> location) {
     ite = location.end();
     for (; it != ite; ++it)
     {
-        std::cout << "path:" << this->path << "." << std::endl;
-        std::cout << "Route: " << (*it).route << "." << std::endl;
-        // if (this->path == (*it).route)
+        if (this->path == (*it).route)
+        {
+            if((*it).client_max_body_size)
+                this->server->client_max_body_size = (*it).client_max_body_size;
+            if((*it).index.begin() != (*it).index.end())
+                this->server->index = (*it).index;
+            if ((*it).root.empty() == false)
+                this->server->root = (*it).root;
+            if ((*it).autoindex.empty() == false)
+                this->server->autoindex = (*it).autoindex;
+            if ((*it).fastcgi_param.empty() == false)
+                this->server->fastcgi_param = (*it).fastcgi_param;
+            if ((*it).error_page.empty() == false)
+                this->server->error_page = (*it).error_page;
+        }
     }
 }
 

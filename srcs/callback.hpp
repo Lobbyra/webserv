@@ -18,7 +18,7 @@ public:
 
     //s_socket
     int                         entry_socket;
-    c_server const              *server;
+    c_server                    *server;
     int                         client_fd;
     t_sockaddr                  client_addr;
 
