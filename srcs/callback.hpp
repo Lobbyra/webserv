@@ -63,10 +63,10 @@ private:
     void    _init_request_header(s_request_header request);
     void    _init_s_socket(s_socket client);
     void    _init_server_hpp(c_server const *server);
-    void    _server_variable_check(c_location location);
+    void    _server_variable_check(std::list<c_location> location);
 
 };
 
-// std::ostream	&operator<<(std::ostream &o, c_callback const &i);
+std::ostream	&operator<<(std::ostream &o, c_callback const &i);
 
 #endif

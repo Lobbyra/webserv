@@ -8,7 +8,10 @@ c_callback::c_callback(s_socket client, s_request_header request) {
     _init_s_socket(client);
     _init_request_header(request);
     if (this->server)
+    {
         _init_server_hpp(this->server);
+        _server_variable_check(this->server->location);
+    }
     return ;
 }
 
@@ -62,9 +65,18 @@ void        c_callback::_init_server_hpp(c_server const *server) {
     this->location = server->location;
 }
 
-// void        c_callback::_server_variable_check(c_location location) {
+void        c_callback::_server_variable_check(std::list<c_location> location) {
+    std::list<c_location>::iterator     it, ite;
 
-// }
+    it = location.begin();
+    ite = location.end();
+    for (; it != ite; ++it)
+    {
+        std::cout << "path:" << this->path << "." << std::endl;
+        std::cout << "Route: " << (*it).route << "." << std::endl;
+        // if (this->path == (*it).route)
+    }
+}
 
 
 std::ostream	&operator<<(std::ostream &o, c_callback const &src) {
