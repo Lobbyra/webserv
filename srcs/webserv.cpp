@@ -2,7 +2,7 @@
 
 volatile bool g_run = 1;
 
-static void    set_reuse_port(t_socketlst const *const lst) {
+static void set_reuse_port(t_socketlst const *const lst) {
     int fd;
     const int opt = 1;
     t_socketlst::const_iterator it = lst->begin(), ite = lst->end();
@@ -17,6 +17,16 @@ static void    set_reuse_port(t_socketlst const *const lst) {
     }
 }
 
+static bool is_client_ready(t_socketlst const *const clients) {
+    t_socketlst::const_iterator it = clients->begin(), ite = clients->end();
+
+    for (; it != ite; ++it) {
+        if (it->is_read_ready == true)
+            return (true);
+    }
+    return (false);
+}
+
 void    webserv(std::list<c_server> const &conf) {
     t_socketlst                 *clients = new t_socketlst;
     std::list<s_request_header> requests;
@@ -25,7 +35,9 @@ void    webserv(std::list<c_server> const &conf) {
     *clients = init_clients(conf);
     while (g_run) {
         ft_select(clients);
-        if (clients.empty() == false && g_run)
+        if (g_run == false)
+            break ;
+        if (is_client_ready(clients) == false)
         {
             requests = parse_request(clients);
             task_queue.push(requests, clients);
