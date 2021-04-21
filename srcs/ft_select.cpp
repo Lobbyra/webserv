@@ -23,11 +23,14 @@ static int socket_max(t_socketlst const *const lst) {
     return (max);
 }
 
-static bool update_socketlst(t_socketlst *const lst, fd_set *r_set, fd_set *w_set) {
+static bool update_socketlst(t_socketlst *const lst, fd_set *r_set,
+                             fd_set *w_set) {
     t_socketlst::iterator it = lst->begin(), ite = lst->end();
     bool raised_true = false;
     bool isset_r;
 
+    // will be used to wait if client is ready to recieve the response 
+    w_set = NULL;
     for (; it != ite; ++it) {
         isset_r = FD_ISSET(it->entry_socket, r_set);
 

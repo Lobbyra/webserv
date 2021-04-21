@@ -96,7 +96,7 @@ void    c_task_queue::exec_task(void) {
 }
 
 void    c_task_queue::push(std::list<s_request_header> requests,
-                           std::list<s_socket> clients) {
+                           std::list<s_socket> *clients) {
     c_callback *cb_temp;
     std::list<s_socket>::iterator           it_clients;
     std::list<s_request_header>::iterator   it_requests;

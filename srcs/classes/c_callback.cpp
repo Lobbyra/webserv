@@ -15,7 +15,7 @@ c_callback::c_callback(s_socket client, s_request_header request) {
 
     _init_meth_functions();
     _recipes = _meth_funs[this->method];
-    _it_recipes = _recipes.end();
+    _it_recipes = _recipes.begin();
     return ;
 }
 
@@ -51,6 +51,19 @@ bool    c_callback::is_over(void) {
 /*
  * ####### PRIVATE FUNCTIONS
  */
+void    c_callback::_init_meth_functions(void) {
+    _meth_funs["GET"] = _init_recipe_dumb();
+}
+
+std::list<c_callback::t_task_f>     c_callback::_init_recipe_dumb(void) {
+    std::list<t_task_f> tasks; 
+
+    tasks.push_back(&c_callback::dumb_coucou);
+    tasks.push_back(&c_callback::dumb_salut);
+    tasks.push_back(&c_callback::dumb_bonjour);
+
+    return (tasks);
+}
 
 void    c_callback::_init_request_header(s_request_header request) {
     this->method = request.method;
@@ -147,16 +160,3 @@ void            init_callback(t_socketlst clients, std::list<s_request_header> r
     std::cout << callback << std::endl;
 }
 
-void    c_callback::_init_meth_functions(void) {
-    _meth_funs["GET"] = _init_recipe_dumb();
-}
-
-std::list<c_callback::t_task_f>     c_callback::_init_recipe_dumb(void) {
-    std::list<t_task_f> tasks; 
-
-    tasks.push_back(&c_callback::dumb_coucou);
-    tasks.push_back(&c_callback::dumb_salut);
-    tasks.push_back(&c_callback::dumb_bonjour);
-
-    return (tasks);
-}
