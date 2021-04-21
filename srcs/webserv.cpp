@@ -37,11 +37,9 @@ void    webserv(std::list<c_server> const &conf) {
         ft_select(clients);
         if (g_run == false)
             break ;
-        if (is_client_ready(clients) == true)
-        {
+        if (is_client_ready(clients) == true) {
             requests = parse_request(clients);
             task_queue.push(requests, clients);
-            // init_callback(clients, requests);
         }
         task_queue.exec_task();
     }

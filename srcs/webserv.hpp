@@ -41,8 +41,8 @@ typedef std::list<int>                      t_fdlst;
 typedef std::map<int, std::string>          t_error_page;
 typedef std::map<std::string, std::string>  t_cgi_param;
 
-# include "c_location.hpp"
-# include "c_server.hpp"
+# include "classes/c_location.hpp"
+# include "classes/c_server.hpp"
 # include "parse_conf/parse_conf.hpp"
 
 typedef struct sockaddr t_sockaddr;
