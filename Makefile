@@ -80,6 +80,14 @@ OBJS_PATHS = ${OBJS_PATH} \
 			 ${OBJS_PATH}/${CLASSES_PATH}
 OBJS	   = ${addprefix ${OBJS_PATH}, ${SRCS_FILES:.cpp=.o}}
 
+INCL_PATHS = ${SRCS_PATH}/. \
+			 ${SRCS_PATH}/${PARSE_CONF_PATH} \
+			 ${SRCS_PATH}/${PARSE_CONF_PATH}/${PARSE_FUNS_PATH} \
+			 ${SRCS_PATH}/${UTILS_PATH} \
+			 ${SRCS_PATH}/${PARSE_REQUEST_HEADER_PATH} \
+			 ${SRCS_PATH}/${CLASSES_PATH}
+INCL_FLAGS = ${addprefix -I, ${INCL_PATHS}}
+
 all: ${LIBS}
 	@printf "$(BOLD)Make $(RED)$(NAME)$(EOC)"
 	@echo " $(BOLD)with$(EOC) $(GREEN)$(CC)$(EOC) $(CYAN)$(CFLAGS)$(EOC): "
@@ -87,20 +95,20 @@ all: ${LIBS}
 
 $(NAME): ${LIBS} ${OBJS_PATHS} ${OBJS} ${HEADER_FULL}
 	@echo ""
-	@${CC} ${CFLAGS} -o ${NAME} ${OBJS} ${LIBS}
+	@${CC} ${CFLAGS} ${INCL_FLAGS} -o ${NAME} ${OBJS} ${LIBS}
 
 test: ${LIBS} ${OBJS_PATHS} ${OBJS} ${HEADER_FULL}
 	@echo ""
 	@printf "$(BOLD)Make $(RED)$@$(EOC)"
 	@echo " $(BOLD)with$(EOC) $(GREEN)$(CC)$(EOC) $(CYAN)$(CFLAGS)$(EOC): "
 	@$(eval TMP := $(shell ls ${OBJS} | grep -v "main.o"))
-	@${CC} ${CFLAGS} -o $@ ${TMP} ${LIBS}
+	@${CC} ${CFLAGS} ${INCL_FLAGS} -o $@ ${TMP} ${LIBS}
 
 ${OBJS_PATHS}:
 	@mkdir -p $@
 
 ${OBJS_PATH}%.o: ${SRCS_PATH}%.cpp ${HEADER_FULL}
-	@${CC} ${CFLAGS} -c $< -o $@
+	@${CC} ${CFLAGS} ${INCL_FLAGS} -c $< -o $@
 	@printf "$(YELLOW)▓$(EOC)"
 
 ${LIB_PATH}${LIB_A}:

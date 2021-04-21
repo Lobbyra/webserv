@@ -1,4 +1,4 @@
-#include "../parse_conf.hpp"
+#include "parse_conf.hpp"
 
 /*
  * This function have to parse a list of path. It throw and error only if

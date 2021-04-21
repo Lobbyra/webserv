@@ -1,7 +1,7 @@
 #ifndef C_TASK_QUEUE_HPP
 # define C_TASK_QUEUE_HPP
 
-# include "../webserv.hpp"
+# include "webserv.hpp"
 
 class c_callback;
 
@@ -49,7 +49,7 @@ class    c_task_queue {
                  std::list<s_socket> *clients);
 
  private:
-    std::queue<c_callback*> _tasks; 
+    std::queue<c_callback*> _tasks;
 
 };
 
