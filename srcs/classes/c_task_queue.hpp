@@ -44,11 +44,10 @@ class    c_task_queue {
 
     void    exec_task(void);
     void    push(std::list<s_request_header> requests,
-                 std::list<s_socket> clients);
-
+                 std::list<s_socket> *clients);
 
  private:
-    std::queue<dumb_cb*> _tasks; 
+    std::queue<dumb_cb*> _tasks;
 
 };
 

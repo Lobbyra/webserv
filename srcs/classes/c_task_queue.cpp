@@ -96,21 +96,23 @@ void    c_task_queue::exec_task(void) {
 }
 
 void    c_task_queue::push(std::list<s_request_header> requests,
-                           std::list<s_socket> clients) {
+                           std::list<s_socket> *clients) {
     dumb_cb *cb_temp;
     std::list<s_socket>::iterator           it_clients;
     std::list<s_request_header>::iterator   it_requests;
     std::list<s_socket>::iterator           ite_clients;
     std::list<s_request_header>::iterator   ite_requests;
 
-    it_clients = clients.begin();
+    it_clients = clients->begin();
     it_requests = requests.begin();
-    ite_clients = clients.end();
+    ite_clients = clients->end();
     ite_requests = requests.end();
     while (it_clients != ite_clients && it_requests != ite_requests) {
         cb_temp = new dumb_cb((*it_requests).method);
         _tasks.push(cb_temp);
-        ++it_clients;
+        while (it_clients != ite_clients && \
+            (it_clients->is_read_ready == false || it_clients->is_header_read))
+            ++it_clients;
         ++it_requests;
     }
 }
