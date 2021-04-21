@@ -21,7 +21,7 @@ static bool is_client_ready(t_socketlst const *const clients) {
     t_socketlst::const_iterator it = clients->begin(), ite = clients->end();
 
     for (; it != ite; ++it) {
-        if (it->is_read_ready == true)
+        if (it->is_read_ready == true && it->is_header_read == false)
             return (true);
     }
     return (false);

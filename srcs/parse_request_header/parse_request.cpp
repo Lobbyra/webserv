@@ -22,18 +22,19 @@ std::ostream& operator<<(std::ostream& os, s_request_header const &src)
     return os;
 };
 
-std::list<s_request_header>     parse_request(t_socketlst const *clients) {
+std::list<s_request_header>     parse_request(t_socketlst *const clients) {
     std::list<s_request_header>     list_requests;
-    t_socketlst::const_iterator     it, ite;
+    t_socketlst::iterator           it, ite;
 
     it = clients->begin();
     ite = clients->end();
     for (; it != ite; ++it)
-        if (it->is_read_ready == true)
+        if (it->is_read_ready == true) {
             list_requests.push_back(read_request_header(it->client_fd));
+            it->is_header_read = true;
+        }
     return (list_requests);
 }
-
 
 // int         main(int ac, char **av)
 // {
