@@ -71,15 +71,17 @@ struct s_socket {
     c_server const  *server;
     int             client_fd;
     t_sockaddr      client_addr;
+    bool            is_read_ready;
+    bool            is_write_ready;
+    bool            is_header_read;
 };
 
 typedef std::list<s_socket>     t_socketlst;
 
 std::list<c_server>     parse_conf(std::string path);
 void                    webserv(std::list<c_server> const &conf);
-t_socketlst             init_listen(std::list<c_server> const &conf);
-
-t_socketlst ft_select(t_socketlst const &listen_ports, t_respmap *resp_avail);
+t_socketlst             init_clients(std::list<c_server> const &conf);
+void                    ft_select(t_socketlst *const clients);
 
 # include "parse_request_header/parse_request.hpp"
 

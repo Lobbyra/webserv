@@ -32,7 +32,7 @@ static s_socket makeSocket(const c_server *server) {
     return (newSocket);
 }
 
-t_socketlst     init_listen(std::list<c_server> const &conf) {
+t_socketlst     init_clients(std::list<c_server> const &conf) {
     std::list<c_server>::const_iterator it = conf.begin(), ite = conf.end();
     t_socketlst res;
 

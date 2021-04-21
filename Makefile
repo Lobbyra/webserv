@@ -12,7 +12,7 @@ CYAN = \033[96m
 NAME = webserv
 
 CC = clang++
-CFLAGS = -Wall -Wextra -Werror -std=c++98 -fsanitize=address -ferror-limit=2
+CFLAGS = -Wall -Wextra -Werror -std=c++98 -ferror-limit=2
 
 LIB_A = lib.a
 LIB_PATH = ./srcs/lib/
@@ -47,7 +47,7 @@ PARSE_CONF_FILES	= ${addprefix ${PARSE_FUNS_PATH}, ${PARSE_FUNS_FILES}}	\
 				   	  check_key.cpp get_serv.cpp parse_conf.cpp
 PARSE_CONF_HEADER	= parse_conf.hpp
 
-PARSE_REQUEST_HEADER_PATH  = 	./parse_request_header/
+PARSE_REQUEST_HEADER_PATH  = 	parse_request_header/
 PARSE_REQUEST_HEADER_FILES =	read_request_header.cpp 	\
 								parse_request.cpp			\
 								parse_request_line.cpp		\
@@ -99,7 +99,7 @@ test: ${LIBS} ${OBJS_PATHS} ${OBJS} ${HEADER_FULL}
 	@printf "$(BOLD)Make $(RED)$@$(EOC)"
 	@echo " $(BOLD)with$(EOC) $(GREEN)$(CC)$(EOC) $(CYAN)$(CFLAGS)$(EOC): "
 	@$(eval TMP := $(shell ls ${OBJS} | grep -v "main.o"))
-	@${CC} ${CFLAGS} -fsanitize=address -o $@ ${TMP} ${LIBS}
+	@${CC} ${CFLAGS} -o $@ ${TMP} ${LIBS}
 
 ${OBJS_PATHS}:
 	@mkdir -p $@
