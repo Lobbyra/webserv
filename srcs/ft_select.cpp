@@ -5,8 +5,8 @@
 static void init_fdsets(t_socketlst *const lst, fd_set *r_set, fd_set *w_set) {
     t_socketlst::const_iterator it = lst->begin(), ite = lst->end();
 
-    FD_ZERO(&r_set);
-    FD_ZERO(&w_set);
+    FD_ZERO(r_set);
+    FD_ZERO(w_set);
     for (; it != ite; ++it) {
         FD_SET(it->entry_socket, r_set);
         if (it->client_fd != 0)
