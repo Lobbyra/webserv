@@ -1,13 +1,16 @@
-#ifndef CALLBACK_HPP
-# define CALLBACK_HPP
+#ifndef C_CALLBACK_HPP
+# define C_CALLBACK_HPP
 
-#include "webserv.hpp"
+#include "../webserv.hpp"
 
 struct s_request_header;
 
 class	c_callback
 {
 public:
+    typedef void (c_callback::*t_task_f)(void);
+    typedef std::list<t_task_f>                 t_recipes;
+    typedef std::list<t_task_f>::const_iterator t_recipes_it;
 
     c_callback(void);
     // c_callback(c_callback const &src);
@@ -50,13 +53,14 @@ public:
     size_t                      content_length;
     size_t                      error;
 
-    //other
-    /*
-    std::map<int, bool>         *resp_avail;
-    t_recipes                   recipe;
-    t_recipes_it                it_recipes;
-    bool                        is_over() {};
-    void                        exec() {};*/
+    // Main functions
+    bool                        is_over();
+    void                        exec();
+
+    // dumb Functions
+    void    dumb_coucou(void) { std::cout << "coucou" << std::endl; };
+    void    dumb_salut(void) { std::cout << "salut" << std::endl; };
+    void    dumb_bonjour(void) { std::cout << "bonjour" << std::endl; };
 
 private:
 
@@ -65,6 +69,12 @@ private:
     void    _init_server_hpp(c_server const *server);
     void    _server_variable_check(std::list<c_location> location);
 
+    t_recipes                   _recipes;
+    t_recipes_it                _it_recipes;
+    std::map<std::string, std::list<t_task_f> > _meth_funs;
+
+    void                _init_meth_functions(void);
+    std::list<t_task_f> _init_recipe_dumb(void); 
 };
 
 std::ostream	&operator<<(std::ostream &o, c_callback const &i);

@@ -3,6 +3,8 @@
 
 # include "../webserv.hpp"
 
+class c_callback;
+
 class    dumb_cb {
  public:
     typedef void (dumb_cb::*t_dumb_f)(void);
@@ -47,7 +49,7 @@ class    c_task_queue {
                  std::list<s_socket> *clients);
 
  private:
-    std::queue<dumb_cb*> _tasks;
+    std::queue<c_callback*> _tasks; 
 
 };
 

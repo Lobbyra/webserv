@@ -1,11 +1,19 @@
 #ifndef WEBSERV_HPP
 # define WEBSERV_HPP
 
+// C++ HEADERS
 # include <queue>
 # include <string>
 # include <iostream>
 # include <exception>
+
+// C HEADERS
+# include <errno.h>
 # include <fcntl.h>
+# include <signal.h>
+# include <stdlib.h>
+# include <string.h>
+# include <stdlib.h>
 # include <netinet/in.h> // struct sockaddr_in
 
 extern int indent_lvl;
@@ -33,8 +41,8 @@ typedef std::list<int>                      t_fdlst;
 typedef std::map<int, std::string>          t_error_page;
 typedef std::map<std::string, std::string>  t_cgi_param;
 
-# include "c_location.hpp"
-# include "c_server.hpp"
+# include "classes/c_location.hpp"
+# include "classes/c_server.hpp"
 # include "parse_conf/parse_conf.hpp"
 
 typedef struct sockaddr t_sockaddr;
@@ -80,6 +88,7 @@ void                    ft_select(t_socketlst *const clients);
 void            init_callback(t_socketlst clients,
                               std::list<s_request_header> requests);
 
+# include "classes/c_callback.hpp"
 # include "classes/c_task_queue.hpp"
 
 #endif // *************************************************** WEBSERV_HPP end //

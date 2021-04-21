@@ -1,7 +1,7 @@
 #ifndef C_LOCATION_HPP
 # define C_LOCATION_HPP
 
-#include "webserv.hpp"
+#include "../webserv.hpp"
 
 class   c_server;
 
