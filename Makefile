@@ -27,7 +27,7 @@ endif
 SRCS_PATH = ./srcs/
 
 ROOT_FILES  = main.cpp webserv.cpp init_clients.cpp ft_select.cpp
-ROOT_HEADER = webserv.hpp 
+ROOT_HEADER = webserv.hpp
 
 CLASSES_PATH	= classes/
 CLASSES_FILES	= c_task_queue.cpp c_callback.cpp c_location.cpp c_server.cpp
