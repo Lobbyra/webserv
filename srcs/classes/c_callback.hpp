@@ -62,6 +62,7 @@ public:
     void    dumb_salut(void) { std::cout << "salut" << std::endl; };
     void    dumb_bonjour(void) { std::cout << "bonjour" << std::endl; };
 
+
 private:
 
     void    _init_request_header(s_request_header request);
@@ -72,9 +73,23 @@ private:
     t_recipes                   _recipes;
     t_recipes_it                _it_recipes;
     std::map<std::string, std::list<t_task_f> > _meth_funs;
+    std::map<int, std::string>                  _error_message;
 
     void                _init_meth_functions(void);
     std::list<t_task_f> _init_recipe_dumb(void);
+    std::list<t_task_f> _init_recipe_head(void);
+
+    /*******************************************
+	*****              Method              *****
+	*******************************************/
+
+    // general
+    std::string     _response(void);
+
+    // head
+    void     _head_request_is_valid(void);
+    void     _head_response(void);
+
 };
 
 std::ostream	&operator<<(std::ostream &o, c_callback const &i);
