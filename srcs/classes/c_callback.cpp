@@ -183,7 +183,7 @@ std::ostream	&operator<<(std::ostream &o, c_callback const &src) {
     std::endl << \
     COLOR_WHITE_("\tcontent_length: ") << src.content_length << \
     std::endl << \
-    COLOR_WHITE_("\terror: ") << src.error << \
+    COLOR_WHITE_("\tstatus_code: ") << src.status_code << \
     std::endl;
     return o;
 }
