@@ -47,6 +47,7 @@ void    webserv(std::list<c_server> const &conf) {
     c_task_queue                task_queue;
 
     *clients = init_clients(conf);
+    task_queue.set_clients(clients);
     while (g_run) {
         ft_select(clients);
         std::cout << *clients << std::endl;
