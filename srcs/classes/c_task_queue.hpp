@@ -5,6 +5,8 @@
 
 class c_callback;
 
+class c_callback;
+
 class    dumb_cb {
  public:
     typedef void (dumb_cb::*t_dumb_f)(void);

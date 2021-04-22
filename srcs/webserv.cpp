@@ -13,6 +13,8 @@ static void set_reuse_port(t_socketlst const *const lst) {
 
         if (setsockopt(fd, SOL_SOCKET, SO_REUSEPORT, &opt, sizeof(opt)))
             ft_error("setsockopt");
+        if (setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)))
+            ft_error("setsockopt");
         close(fd);
     }
 }
