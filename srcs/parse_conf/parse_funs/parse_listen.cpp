@@ -1,4 +1,4 @@
-#include "../parse_conf.hpp"
+#include "parse_conf.hpp"
 
 /* Expect "listen IP:PORT;"
  * Attached, no space allowed

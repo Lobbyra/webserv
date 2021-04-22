@@ -1,11 +1,11 @@
-EOC = \033[0m
+EOC  = \033[0m
 BOLD = \033[1m
-RED = \033[91m
-GREEN = \033[92m
-YELLOW = \033[93m
-DBLUE = \033[94m
+RED    = \033[91m
+CYAN   = \033[96m
+GREEN  = \033[92m
+DBLUE  = \033[94m
 PURPLE = \033[95m
-CYAN = \033[96m
+YELLOW = \033[93m
 
 # ############################################################################ #
 
@@ -14,7 +14,7 @@ NAME = webserv
 CC = clang++
 CFLAGS = -Wall -Wextra -Werror -std=c++98 -ferror-limit=2
 
-LIB_A = lib.a
+LIB_A	 = lib.a
 LIB_PATH = ./srcs/lib/
 
 LIBS = ${addprefix ${LIB_PATH}, ${LIB_A}}
@@ -26,40 +26,35 @@ endif
 
 SRCS_PATH = ./srcs/
 
-ROOT_FILES = main.cpp c_server.cpp c_location.cpp webserv.cpp init_clients.cpp \
-			 ft_select.cpp callback.cpp
-ROOT_HEADER = webserv.hpp c_location.hpp c_server.hpp callback.hpp
+ROOT_FILES  = main.cpp webserv.cpp init_clients.cpp ft_select.cpp
+ROOT_HEADER = webserv.hpp
 
 CLASSES_PATH	= classes/
-CLASSES_FILES	= c_task_queue.cpp
-CLASSES_HEADERS	= c_task_queue.hpp
+CLASSES_FILES	= c_task_queue.cpp c_callback.cpp c_location.cpp c_server.cpp
+CLASSES_HEADERS	= c_task_queue.hpp c_callback.hpp c_location.hpp c_server.hpp
 
 PARSE_FUNS_PATH	 = parse_funs/
-PARSE_FUNS_FILES = parse_autoindex.cpp            parse_listen.cpp			  \
+PARSE_FUNS_FILES = parse_autoindex.cpp parse_listen.cpp			  			  \
 				   parse_client_max_body_size.cpp parse_root.cpp			  \
-				   parse_fastcgi_param.cpp        skip_k_get_value.cpp		  \
+				   parse_fastcgi_param.cpp skip_k_get_value.cpp		  		  \
 				   parse_server_name.cpp parse_index.cpp parse_error_page.cpp \
 				   parse_location.cpp parse_fastcgi_pass.cpp
 
 PARSE_CONF_PATH 	= parse_conf/
-PARSE_CONF_FILES	= ${addprefix ${PARSE_FUNS_PATH}, ${PARSE_FUNS_FILES}}	\
-					  get_conf.cpp skip_param.cpp init_maps.cpp			\
+PARSE_CONF_FILES	= ${addprefix ${PARSE_FUNS_PATH}, ${PARSE_FUNS_FILES}} \
+					  get_conf.cpp skip_param.cpp init_maps.cpp			   \
 				   	  check_key.cpp get_serv.cpp parse_conf.cpp
 PARSE_CONF_HEADER	= parse_conf.hpp
 
-PARSE_REQUEST_HEADER_PATH  = 	parse_request_header/
-PARSE_REQUEST_HEADER_FILES =	read_request_header.cpp 	\
-								parse_request.cpp			\
-								parse_request_line.cpp		\
-								parse_request_header.cpp	\
-								init_maps.cpp				\
+PARSE_REQUEST_HEADER_PATH  = parse_request_header/
+PARSE_REQUEST_HEADER_FILES = read_request_header.cpp parse_request.cpp		  \
+							 parse_request_line.cpp  parse_request_header.cpp \
+							 init_maps.cpp
 
-PARSE_REQUEST_HEADER = 	parse_request.hpp
-
-UTILS_PATH = utils/
-UTILS_FILES = get_keys.cpp is_space.cpp get_word_it.cpp skip_it.cpp			\
-			  is_str_num.cpp ft_isin.cpp ft_error.cpp ft_timeval_init.cpp	\
-			  get_word.cpp
+UTILS_PATH   = utils/
+UTILS_FILES	 = get_keys.cpp is_space.cpp get_word_it.cpp skip_it.cpp	   \
+			   is_str_num.cpp ft_isin.cpp ft_error.cpp ft_timeval_init.cpp \
+			   get_word.cpp
 UTILS_HEADER = utils.hpp insert_stream_cont.hpp
 
 SRCS_FILES = ${ROOT_FILES} \
@@ -76,14 +71,22 @@ HEADER_FILES = ${ROOT_HEADER} \
 
 HEADER_FULL = ${addprefix ${SRCS_PATH}, ${HEADER_FILES}}
 
-OBJS_PATH = ./obj/
+OBJS_PATH  = ./obj/
 OBJS_PATHS = ${OBJS_PATH} \
 			 ${OBJS_PATH}/${PARSE_CONF_PATH} \
 			 ${OBJS_PATH}/${PARSE_CONF_PATH}/${PARSE_FUNS_PATH} \
 			 ${OBJS_PATH}/${UTILS_PATH} \
 			 ${OBJS_PATH}/${PARSE_REQUEST_HEADER_PATH} \
 			 ${OBJS_PATH}/${CLASSES_PATH}
-OBJS = ${addprefix ${OBJS_PATH}, ${SRCS_FILES:.cpp=.o}}
+OBJS	   = ${addprefix ${OBJS_PATH}, ${SRCS_FILES:.cpp=.o}}
+
+INCL_PATHS = ${SRCS_PATH}/. \
+			 ${SRCS_PATH}/${PARSE_CONF_PATH} \
+			 ${SRCS_PATH}/${PARSE_CONF_PATH}/${PARSE_FUNS_PATH} \
+			 ${SRCS_PATH}/${UTILS_PATH} \
+			 ${SRCS_PATH}/${PARSE_REQUEST_HEADER_PATH} \
+			 ${SRCS_PATH}/${CLASSES_PATH}
+INCL_FLAGS = ${addprefix -I, ${INCL_PATHS}}
 
 all: ${LIBS}
 	@printf "$(BOLD)Make $(RED)$(NAME)$(EOC)"
@@ -92,20 +95,20 @@ all: ${LIBS}
 
 $(NAME): ${LIBS} ${OBJS_PATHS} ${OBJS} ${HEADER_FULL}
 	@echo ""
-	@${CC} ${CFLAGS} -o ${NAME} ${OBJS} ${LIBS}
+	@${CC} ${CFLAGS} ${INCL_FLAGS} -o ${NAME} ${OBJS} ${LIBS}
 
 test: ${LIBS} ${OBJS_PATHS} ${OBJS} ${HEADER_FULL}
 	@echo ""
 	@printf "$(BOLD)Make $(RED)$@$(EOC)"
 	@echo " $(BOLD)with$(EOC) $(GREEN)$(CC)$(EOC) $(CYAN)$(CFLAGS)$(EOC): "
 	@$(eval TMP := $(shell ls ${OBJS} | grep -v "main.o"))
-	@${CC} ${CFLAGS} -o $@ ${TMP} ${LIBS}
+	@${CC} ${CFLAGS} ${INCL_FLAGS} -o $@ ${TMP} ${LIBS}
 
 ${OBJS_PATHS}:
 	@mkdir -p $@
 
 ${OBJS_PATH}%.o: ${SRCS_PATH}%.cpp ${HEADER_FULL}
-	@${CC} ${CFLAGS} -c $< -o $@
+	@${CC} ${CFLAGS} ${INCL_FLAGS} -c $< -o $@
 	@printf "$(YELLOW)▓$(EOC)"
 
 ${LIB_PATH}${LIB_A}:

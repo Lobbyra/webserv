@@ -1,4 +1,4 @@
-#include "../parse_conf.hpp"
+#include "parse_conf.hpp"
 
 void    parse_fastcgi_pass(std::string::const_iterator it, void *ptr) {
     std::string *const data = reinterpret_cast<std::string *>(ptr);

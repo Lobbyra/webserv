@@ -1,5 +1,5 @@
 
-#include "../webserv.hpp"
+#include "webserv.hpp"
 
 static bool    is_separator(char c) {
     return ((c == '{' || c == '}' || c == ';'));

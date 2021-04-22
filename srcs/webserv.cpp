@@ -13,6 +13,8 @@ static void set_reuse_port(t_socketlst const *const lst) {
 
         if (setsockopt(fd, SOL_SOCKET, SO_REUSEPORT, &opt, sizeof(opt)))
             ft_error("setsockopt");
+        if (setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)))
+            ft_error("setsockopt");
         close(fd);
     }
 }
@@ -37,13 +39,12 @@ void    webserv(std::list<c_server> const &conf) {
         ft_select(clients);
         if (g_run == false)
             break ;
-        if (is_client_ready(clients) == true)
-        {
+        if (is_client_ready(clients) == true) {
             requests = parse_request(clients);
             task_queue.push(requests, clients);
-            // init_callback(clients, requests);
         }
         task_queue.exec_task();
     }
     set_reuse_port(clients);
+    delete clients;
 }

@@ -87,6 +87,7 @@ void    c_task_queue::exec_task(void) {
         return;
     _tasks.back()->exec();
     if (_tasks.back()->is_over() == true) {
+        close(_tasks.back()->client_fd);
         delete _tasks.back();
         _tasks.pop();
         return ;
@@ -97,7 +98,7 @@ void    c_task_queue::exec_task(void) {
 
 void    c_task_queue::push(std::list<s_request_header> requests,
                            std::list<s_socket> *clients) {
-    dumb_cb *cb_temp;
+    c_callback *cb_temp;
     std::list<s_socket>::iterator           it_clients;
     std::list<s_request_header>::iterator   it_requests;
     std::list<s_socket>::iterator           ite_clients;
@@ -108,7 +109,7 @@ void    c_task_queue::push(std::list<s_request_header> requests,
     ite_clients = clients->end();
     ite_requests = requests.end();
     while (it_clients != ite_clients && it_requests != ite_requests) {
-        cb_temp = new dumb_cb((*it_requests).method);
+        cb_temp = new c_callback(*it_clients, *it_requests);
         _tasks.push(cb_temp);
         while (it_clients != ite_clients && \
             (it_clients->is_read_ready == false || it_clients->is_header_read))

@@ -1,7 +1,7 @@
 #ifndef PARSE_REQUEST_HPP
 # define PARSE_REQUEST_HPP
 
-#include "../webserv.hpp"
+#include "webserv.hpp"
 
 #include <unistd.h>
 #include <list>

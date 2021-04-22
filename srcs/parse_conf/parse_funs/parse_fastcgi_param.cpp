@@ -1,4 +1,4 @@
-#include "../parse_conf.hpp"
+#include "parse_conf.hpp"
 
 void    parse_fastcgi_param(t_strcit it, void *ptr) {
     t_cgi_param *const data = reinterpret_cast<t_cgi_param *>(ptr);

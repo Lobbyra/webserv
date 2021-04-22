@@ -1,9 +1,9 @@
-#include "../parse_conf.hpp"
+#include "parse_conf.hpp"
 
 /*
  * This function will take an iterator to the first letter of a location block
  * and return a structure from the context. (see /srcs/data_structures.hpp)
- * 
+ *
  * Two location type are allowed :
  * - path
  *      location PATH {}
@@ -15,7 +15,7 @@
  * - extension
  *      location ~ \EXTENSION {}
  *      location ~ \.php {}
- *   A file extension. route saved as ".php" in a string. Must 
+ *   A file extension. route saved as ".php" in a string. Must
  */
 
 /*
@@ -54,7 +54,7 @@ static std::string  get_route(t_strcit it) {
 
     if (*it != '/')
         return ("");
-    return (get_word_it(it)); 
+    return (get_word_it(it));
 }
 
 // skip the part "location (~) [URI] { ". Start a 'l' of "location"

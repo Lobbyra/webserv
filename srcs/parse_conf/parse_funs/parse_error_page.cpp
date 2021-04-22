@@ -1,20 +1,20 @@
-#include "../parse_conf.hpp"
+#include "parse_conf.hpp"
 
 /*
  * This function will parse an error_page line.
- * 
+ *
  * It take an iterator that point on first letter of error_page
- * 
+ *
  * When there is many code for one file like this :
  * error_page 501 502 503 err_5XX.html;
  * error_page jdfiuos;
  * error_page;
- * 
+ *
  * It will return a map as this :
  * error_page[501] = err_5XX.html
  * error_page[502] = err_5XX.html
  * error_page[503] = err_5XX.html
- * 
+ *
  * The return is design to be merged in a map cause we can have many error_page
  * call and we will save this data in one unique map.
  */
