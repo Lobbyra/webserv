@@ -79,17 +79,20 @@ private:
     void                _init_meth_functions(void);
     std::list<t_task_f> _init_recipe_dumb(void);
     std::list<t_task_f> _init_recipe_head(void);
+    std::list<t_task_f> _init_recipe_delete(void);
 
     /*******************************************
 	*****              Method              *****
 	*******************************************/
-
     // general
     std::string     _response(void);
 
     // head
     void     _head_request_is_valid(void);
     void     _head_response(void);
+
+    // delete
+    void     _delete_request_is_valid(void);
 
 };
 
