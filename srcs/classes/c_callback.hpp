@@ -51,7 +51,7 @@ public:
     std::list<std::string>      content_type;
     std::list<std::string>      user_agent;
     size_t                      content_length;
-    size_t                      error;
+    size_t                      status_code;
 
     // Main functions
     bool                        is_over();
@@ -69,11 +69,12 @@ private:
     void    _init_s_socket(s_socket client);
     void    _init_server_hpp(c_server const *server);
     void    _server_variable_check(std::list<c_location> location);
+    void    _init_map_status_message(void);
 
     t_recipes                   _recipes;
     t_recipes_it                _it_recipes;
     std::map<std::string, std::list<t_task_f> > _meth_funs;
-    std::map<int, std::string>                  _error_message;
+    std::map<int, std::string>                  _status_message;
 
     void                _init_meth_functions(void);
     std::list<t_task_f> _init_recipe_dumb(void);

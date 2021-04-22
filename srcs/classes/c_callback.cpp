@@ -12,7 +12,7 @@ c_callback::c_callback(s_socket client, s_request_header request) {
         _init_server_hpp(this->server);
         _server_variable_check(this->server->location);
     }
-
+    _init_map_status_message();
     _init_meth_functions();
     _recipes = _meth_funs[this->method];
     _it_recipes = _recipes.begin();
@@ -51,6 +51,26 @@ bool    c_callback::is_over(void) {
 /*
  * ####### PRIVATE FUNCTIONS
  */
+void    c_callback::_init_map_status_message(void) {
+    _status_message[200] = "OK";
+    _status_message[201] = "Creapted";
+    _status_message[203] = "Non-Authritative Information";
+    _status_message[204] = "No Content";
+    _status_message[205] = "Reset Content";
+    _status_message[206] = "Partial Content";
+    _status_message[400] = "Bad Request";
+    _status_message[401] = "Unauthorized";
+    _status_message[402] = "Payment Required";
+    _status_message[403] = "Forbidden";
+    _status_message[404] = "Not Found";
+    _status_message[405] = "Method Not Allowed";
+    _status_message[406] = "Not Acceptable";
+    _status_message[408] = "Request Timeout";
+    _status_message[409] = "Conflict";
+    _status_message[410] = "Gone";
+    _status_message[411] = "Length Required";
+}
+
 void    c_callback::_init_meth_functions(void) {
     _meth_funs["GET"] = _init_recipe_dumb();
 }
@@ -79,7 +99,7 @@ void    c_callback::_init_request_header(s_request_header request) {
     this->content_type = request.content_type;
     this->user_agent = request.user_agent;
     this->content_length = request.content_length;
-    this->error = request.error;
+    this->status_code = request.error;
     return ;
 }
 
@@ -149,14 +169,6 @@ std::ostream	&operator<<(std::ostream &o, c_callback const &src) {
         << COLOR_WHITE << "\tcontent_type: " << COLOR_RESET << src.content_type << "." << std::endl \
         << COLOR_WHITE << "\tuser_agent: " << COLOR_RESET << src.user_agent << "." << std::endl \
         << COLOR_WHITE << "\tcontent_length: " << COLOR_RESET << src.content_length << "." << std::endl \
-        << COLOR_WHITE << "\terror: " << COLOR_RESET << src.error << "." << std::endl;
+        << COLOR_WHITE << "\terror: " << COLOR_RESET << src.status_code << "." << std::endl;
     return o;
 }
-
-void            init_callback(t_socketlst clients, std::list<s_request_header> requests)
-{
-
-    c_callback      callback(clients.front(), requests.front());
-    std::cout << callback << std::endl;
-}
-
