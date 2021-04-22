@@ -86,6 +86,7 @@ void    c_task_queue::exec_task(void) {
     if (_tasks.size() == 0)
         return;
     _tasks.back()->exec();
+
     if (_tasks.back()->is_over() == true) {
         close(_tasks.back()->client_fd);
         delete _tasks.back();

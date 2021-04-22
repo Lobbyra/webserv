@@ -34,9 +34,9 @@ CLASSES_FILES	= c_task_queue.cpp c_callback.cpp c_location.cpp c_server.cpp
 CLASSES_HEADERS	= c_task_queue.hpp c_callback.hpp c_location.hpp c_server.hpp
 
 PARSE_FUNS_PATH	 = parse_funs/
-PARSE_FUNS_FILES = parse_autoindex.cpp parse_listen.cpp			  			  \
+PARSE_FUNS_FILES = parse_autoindex.cpp parse_listen.cpp						  \
 				   parse_client_max_body_size.cpp parse_root.cpp			  \
-				   parse_fastcgi_param.cpp skip_k_get_value.cpp		  		  \
+				   parse_fastcgi_param.cpp skip_k_get_value.cpp				  \
 				   parse_server_name.cpp parse_index.cpp parse_error_page.cpp \
 				   parse_location.cpp parse_fastcgi_pass.cpp
 
