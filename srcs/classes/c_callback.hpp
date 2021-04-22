@@ -74,7 +74,7 @@ private:
     std::map<std::string, std::list<t_task_f> > _meth_funs;
 
     void                _init_meth_functions(void);
-    std::list<t_task_f> _init_recipe_dumb(void); 
+    std::list<t_task_f> _init_recipe_dumb(void);
 };
 
 std::ostream	&operator<<(std::ostream &o, c_callback const &i);

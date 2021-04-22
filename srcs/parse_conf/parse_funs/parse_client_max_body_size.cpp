@@ -1,4 +1,4 @@
-#include "../parse_conf.hpp"
+#include "parse_conf.hpp"
 
 void    parse_client_max_body_size(std::string::const_iterator it, void *ptr) {
     int *const data = reinterpret_cast<int *>(ptr);
