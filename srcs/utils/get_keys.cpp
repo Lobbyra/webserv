@@ -11,6 +11,7 @@ std::list<std::string>  get_keys(void) {
     keys.push_back("autoindex");
     keys.push_back("error_page");
     keys.push_back("server_name");
+    keys.push_back("fastcgi_pass");
     keys.push_back("fastcgi_param");
     keys.push_back("client_max_body_size");
     return (keys);

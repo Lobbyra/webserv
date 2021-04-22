@@ -4,7 +4,7 @@
 # include <list>
 # include <string>
 # include <iostream>
-# include "../webserv.hpp"
+# include "webserv.hpp"
 
 typedef void (*f_parser)(t_strcit, void*);
 
@@ -27,6 +27,7 @@ void    parse_location(t_strcit it, void *ptr);
 void    parse_autoindex(t_strcit it, void *ptr);
 void    parse_error_page(t_strcit it, void *ptr);
 void    parse_server_name(t_strcit it, void *ptr);
+void    parse_fastcgi_pass(t_strcit it, void *ptr);
 void    parse_fastcgi_param(t_strcit it, void *ptr);
 void    parse_client_max_body_size(t_strcit it, void *ptr);
 

@@ -5,6 +5,7 @@
 
 static int  makeSocketfd(const int &port) {
     int newSocket;
+    const int opt = 1;
     t_sockaddr_in servaddr;
 
     if ((newSocket = socket(AF_INET, SOCK_STREAM, 0)) < 0)
@@ -16,6 +17,8 @@ static int  makeSocketfd(const int &port) {
     servaddr.sin_addr.s_addr = htonl(INADDR_ANY);
     servaddr.sin_port = htons(port);
 
+    if (setsockopt(newSocket, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)))
+        ft_error("bind");
     if ((bind(newSocket, (t_sockaddr *)&servaddr, sizeof(servaddr))) < 0)
         ft_error("bind");
     if ((listen(newSocket, 10)) < 0)
@@ -32,7 +35,7 @@ static s_socket makeSocket(const c_server *server) {
     return (newSocket);
 }
 
-t_socketlst     init_listen(std::list<c_server> const &conf) {
+t_socketlst     init_clients(std::list<c_server> const &conf) {
     std::list<c_server>::const_iterator it = conf.begin(), ite = conf.end();
     t_socketlst res;
 

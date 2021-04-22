@@ -1,21 +1,42 @@
-#include "../webserv.hpp"
+
+#include "webserv.hpp"
 
 static bool    is_separator(char c) {
     return ((c == '{' || c == '}' || c == ';'));
 }
 
-void    check_curly_braces(const std::string &conf) {
+// start = conf.begin(), it = point at {, keyword = the one to check;
+static bool check_key(t_strcit begin, t_strcit it, std::string const keyword) {
+    const t_strcit start = (--it) - keyword.size();
+
+    if (start < begin)
+        return (0);
+    if (keyword.compare(std::string(start, it)) != 0)
+        return (0);
+    if (start - 1 >= begin && *(start - 1) != ' ')
+        return (0);
+    return (1);
+}
+
+static void    check_curly_braces(const std::string &conf) {
     unsigned int lbrace = 0, rbrace = 0;
     std::string::const_iterator it = conf.begin(), ite = conf.end();
 
     for (; it != ite; ++it) {
-        if (*it == '{')
+        if (*it == '{') {
+            if (!check_key(conf.begin(), it, "server") &&
+                !check_key(conf.begin(), it, "location"))
+                throw std::logic_error("get_conf: Invalid scope type");
             ++lbrace;
-        else if (*it == '}')
+        }
+        else if (*it == '}') {
+            if (it - 2 >= conf.begin() && *(it - 2) != ';')
+                throw std::logic_error("get_conf: Missing ';' at end of scope");
             ++rbrace;
+        }
     }
     if (lbrace != rbrace)
-        throw std::logic_error("GetConfig: Braces does not match");
+        throw std::logic_error("get_conf: Braces does not match");
 }
 
 static void    add_content_to_str(std::string &res, const char *line) {
@@ -61,6 +82,7 @@ std::string    get_conf(const char *const path) {
 
     close(fd);
     res.erase(--(res.end()));
+    check_curly_braces(res);
     return (res);
 }
 

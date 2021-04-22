@@ -1,10 +1,19 @@
 #ifndef WEBSERV_HPP
 # define WEBSERV_HPP
 
-# include <iostream>
+// C++ HEADERS
+# include <queue>
 # include <string>
+# include <iostream>
 # include <exception>
+
+// C HEADERS
+# include <errno.h>
 # include <fcntl.h>
+# include <signal.h>
+# include <stdlib.h>
+# include <string.h>
+# include <stdlib.h>
 # include <netinet/in.h> // struct sockaddr_in
 
 extern int indent_lvl;
@@ -32,8 +41,8 @@ typedef std::list<int>                      t_fdlst;
 typedef std::map<int, std::string>          t_error_page;
 typedef std::map<std::string, std::string>  t_cgi_param;
 
-# include "c_location.hpp"
-# include "c_server.hpp"
+# include "classes/c_location.hpp"
+# include "classes/c_server.hpp"
 # include "parse_conf/parse_conf.hpp"
 
 typedef struct sockaddr t_sockaddr;
@@ -62,19 +71,24 @@ struct s_socket {
     c_server const  *server;
     int             client_fd;
     t_sockaddr      client_addr;
+    bool            is_read_ready;
+    bool            is_write_ready;
+    bool            is_header_read;
 };
 
 typedef std::list<s_socket>     t_socketlst;
 
 std::list<c_server>     parse_conf(std::string path);
 void                    webserv(std::list<c_server> const &conf);
-t_socketlst             init_listen(std::list<c_server> const &conf);
-
-t_socketlst ft_select(t_socketlst const &listen_ports, t_respmap *resp_avail);
+t_socketlst             init_clients(std::list<c_server> const &conf);
+void                    ft_select(t_socketlst *const clients);
 
 # include "parse_request_header/parse_request.hpp"
 
 void            init_callback(t_socketlst clients,
                               std::list<s_request_header> requests);
+
+# include "classes/c_callback.hpp"
+# include "classes/c_task_queue.hpp"
 
 #endif // *************************************************** WEBSERV_HPP end //

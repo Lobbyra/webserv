@@ -1,4 +1,4 @@
-#include "./classes/c_callback.hpp"
+#include "c_callback.hpp"
 
 c_callback::c_callback(void) {
     return ;
@@ -12,6 +12,10 @@ c_callback::c_callback(s_socket client, s_request_header request) {
         _init_server_hpp(this->server);
         _server_variable_check(this->server->location);
     }
+
+    _init_meth_functions();
+    _recipes = _meth_funs[this->method];
+    _it_recipes = _recipes.begin();
     return ;
 }
 
@@ -26,8 +30,42 @@ c_callback::~c_callback(void) {
 // c_callback	&c_callback::operator=(c_callback const &src) {
 //     return (*this);
 // }
+//
 
-void        c_callback::_init_request_header(s_request_header request) {
+/*
+ * ####### PUBLIC FUNCTIONS
+ */
+
+void    c_callback::exec(void) {
+    if (this->is_over() == false) {
+        (this->*(*_it_recipes))();
+        _recipes.back();
+        ++_it_recipes;
+    }
+}
+
+bool    c_callback::is_over(void) {
+    return (_it_recipes == _recipes.end());
+}
+
+/*
+ * ####### PRIVATE FUNCTIONS
+ */
+void    c_callback::_init_meth_functions(void) {
+    _meth_funs["GET"] = _init_recipe_dumb();
+}
+
+std::list<c_callback::t_task_f>     c_callback::_init_recipe_dumb(void) {
+    std::list<t_task_f> tasks; 
+
+    tasks.push_back(&c_callback::dumb_coucou);
+    tasks.push_back(&c_callback::dumb_salut);
+    tasks.push_back(&c_callback::dumb_bonjour);
+
+    return (tasks);
+}
+
+void    c_callback::_init_request_header(s_request_header request) {
     this->method = request.method;
     this->path = request.path;
     this->protocol = request.protocol;
@@ -93,25 +131,25 @@ void        c_callback::_server_variable_check(std::list<c_location> location) {
 
 std::ostream	&operator<<(std::ostream &o, c_callback const &src) {
     o << COLOR_YELLOW << "Callback debug :" << COLOR_RESET << std::endl \
-    << COLOR_BLUE << "s_socket:" << COLOR_RESET << std::endl \
-    << COLOR_WHITE << "\tentry_socket: " << COLOR_RESET << src.entry_socket << "." << std::endl \
-    // COLOR_WHITE << << "\tserver: << COLOR_RESET " << src.server << "." << std::endl 
-    << COLOR_WHITE << "\tclient_fd: " << COLOR_RESET << src.client_fd << "." << std::endl \
-    << COLOR_BLUE << "s_request_header:" << COLOR_RESET << std::endl \
-    << COLOR_WHITE << "\tmethod: " << COLOR_RESET << src.method << "." << std::endl \
-    << COLOR_WHITE << "\tpath: " << COLOR_RESET << src.path << "." << std::endl \
-    << COLOR_WHITE << "\tprotocol: " << COLOR_RESET << src.protocol << "." << std::endl \
-    << COLOR_WHITE << "\tdate: " << COLOR_RESET << src.date << "." << std::endl \
-    << COLOR_WHITE << "\thost: " << COLOR_RESET << src.host << "." << std::endl \
-    << COLOR_WHITE << "\treferer: " << COLOR_RESET << src.referer << "." << std::endl \
-    << COLOR_WHITE << "\ttransfer_encoding: " << COLOR_RESET << src.transfer_encoding << "." << std::endl \
-    << COLOR_WHITE << "\taccept_charset: " << COLOR_RESET << src.accept_charset << "." << std::endl \
-    << COLOR_WHITE << "\taccept_language: " << COLOR_RESET << src.accept_language << "." << std::endl \
-    << COLOR_WHITE << "\tauthorization: " << COLOR_RESET << src.authorization << "." << std::endl \
-    << COLOR_WHITE << "\tcontent_type: " << COLOR_RESET << src.content_type << "." << std::endl \
-    << COLOR_WHITE << "\tuser_agent: " << COLOR_RESET << src.user_agent << "." << std::endl \
-    << COLOR_WHITE << "\tcontent_length: " << COLOR_RESET << src.content_length << "." << std::endl \
-    << COLOR_WHITE << "\terror: " << COLOR_RESET << src.error << "." << std::endl;
+        << COLOR_BLUE << "s_socket:" << COLOR_RESET << std::endl \
+        << COLOR_WHITE << "\tentry_socket: " << COLOR_RESET << src.entry_socket << "." << std::endl \
+        // COLOR_WHITE << << "\tserver: << COLOR_RESET " << src.server << "." << std::endl 
+        << COLOR_WHITE << "\tclient_fd: " << COLOR_RESET << src.client_fd << "." << std::endl \
+        << COLOR_BLUE << "s_request_header:" << COLOR_RESET << std::endl \
+        << COLOR_WHITE << "\tmethod: " << COLOR_RESET << src.method << "." << std::endl \
+        << COLOR_WHITE << "\tpath: " << COLOR_RESET << src.path << "." << std::endl \
+        << COLOR_WHITE << "\tprotocol: " << COLOR_RESET << src.protocol << "." << std::endl \
+        << COLOR_WHITE << "\tdate: " << COLOR_RESET << src.date << "." << std::endl \
+        << COLOR_WHITE << "\thost: " << COLOR_RESET << src.host << "." << std::endl \
+        << COLOR_WHITE << "\treferer: " << COLOR_RESET << src.referer << "." << std::endl \
+        << COLOR_WHITE << "\ttransfer_encoding: " << COLOR_RESET << src.transfer_encoding << "." << std::endl \
+        << COLOR_WHITE << "\taccept_charset: " << COLOR_RESET << src.accept_charset << "." << std::endl \
+        << COLOR_WHITE << "\taccept_language: " << COLOR_RESET << src.accept_language << "." << std::endl \
+        << COLOR_WHITE << "\tauthorization: " << COLOR_RESET << src.authorization << "." << std::endl \
+        << COLOR_WHITE << "\tcontent_type: " << COLOR_RESET << src.content_type << "." << std::endl \
+        << COLOR_WHITE << "\tuser_agent: " << COLOR_RESET << src.user_agent << "." << std::endl \
+        << COLOR_WHITE << "\tcontent_length: " << COLOR_RESET << src.content_length << "." << std::endl \
+        << COLOR_WHITE << "\terror: " << COLOR_RESET << src.error << "." << std::endl;
     return o;
 }
 
@@ -121,3 +159,4 @@ void            init_callback(t_socketlst clients, std::list<s_request_header> r
     c_callback      callback(clients.front(), requests.front());
     std::cout << callback << std::endl;
 }
+
