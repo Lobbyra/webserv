@@ -28,11 +28,12 @@ std::list<s_request_header>     parse_request(t_socketlst *const clients) {
 
     it = clients->begin();
     ite = clients->end();
-    for (; it != ite; ++it)
-        if (it->is_read_ready == true && it->is_header_read == false) {
-            list_requests.push_back(read_request_header(it->client_fd));
-            it->is_header_read = true;
-        }
+    for (; it != ite; ++it) {
+        if (it->is_read_ready == false || it->is_header_read || !it->client_fd)
+            continue;
+        list_requests.push_back(read_request_header(it->client_fd));
+        it->is_header_read = true;
+    }
     return (list_requests);
 }
 
