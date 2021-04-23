@@ -8,12 +8,14 @@ static void init_fdsets(t_socketlst const *lst, fd_set *r_set, fd_set *w_set) {
     FD_ZERO(r_set);
     FD_ZERO(w_set);
     for (; it != ite; ++it) {
-        if (it->client_fd == 0)
+        if (it->client_fd == 0) {
             FD_SET(it->entry_socket, r_set);
-        else
+            FD_SET(it->entry_socket, w_set);
+        } else {
             FD_SET(it->client_fd, r_set);
+            FD_SET(it->entry_socket, w_set);
+        }
     }
-    FD_COPY(r_set, w_set);
 }
 
 static int socket_max(t_socketlst const *const lst) {
