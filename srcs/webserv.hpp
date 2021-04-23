@@ -41,6 +41,8 @@ struct  s_ipport {
     std::string     ip;
 };
 
+bool    operator==(s_ipport const &a, s_ipport const &b);
+
 typedef std::string::iterator               t_strit;
 typedef std::string::const_iterator         t_strcit;
 typedef std::list<std::string>              t_strlst;

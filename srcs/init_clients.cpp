@@ -26,15 +26,9 @@ static int  makeSocketfd(const int &port) {
     return (newSocket);
 }
 
-static s_socket makeSocket(t_socketlst const &socklst, const c_server *server) {
-    t_socketlst::const_iterator it = socklst.begin(), ite = socklst.end();
+static s_socket makeSocket(const c_server *server) {
     s_socket newSocket;
 
-    while (it != ite && !(it->ipport->ip == server->listen.ip \
-        && it->ipport->port == server->listen.port))
-        ++it;
-    if (it != ite)
-        return (*it);
     ft_bzero(&newSocket, sizeof(newSocket));
     newSocket.entry_socket = makeSocketfd(server->listen.port);
     newSocket.ipport = &server->listen;
@@ -49,7 +43,13 @@ t_socketlst     init_clients(std::list<c_server> const &conf) {
     for (; it != ite; ++it) {
         if (it->listen.ip.empty())
             continue ;
-        res.push_back(makeSocket(res, &(*it)));
+        t_socketlst::const_iterator sock_it = res.begin(), sock_ite = res.end();
+
+        while (sock_it != sock_ite && !(*sock_it->ipport == it->listen))
+            ++sock_it;
+        if (sock_it != sock_ite)
+            continue ;
+        res.push_back(makeSocket(&(*it)));
     }
     return (res);
 }
