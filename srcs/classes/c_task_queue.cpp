@@ -12,6 +12,13 @@ c_task_queue::~c_task_queue() {
     return ;
 }
 
+// Flush data in a fd
+static void flush_fd(int fd) {
+    char *buf;
+
+    while (get_next_line(fd, &buf) > 0) {}
+}
+
 // This function will remove finished request from client list
 static void    remove_clients(std::list<s_socket> *clients, int client_fd) {
     std::list<s_socket>::iterator it  = clients->begin();
@@ -19,6 +26,7 @@ static void    remove_clients(std::list<s_socket> *clients, int client_fd) {
 
     while (it != ite) {
         if (it->client_fd == client_fd) {
+            flush_fd(client_fd);
             close(client_fd);
             clients->erase(it);
             break ;
