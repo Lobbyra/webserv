@@ -1,7 +1,10 @@
 #ifndef C_CALLBACK_HPP
 # define C_CALLBACK_HPP
 
-#include "../webserv.hpp"
+# include "../webserv.hpp"
+# include <sys/types.h>
+# include <sys/stat.h>
+# include <dirent.h>
 
 struct s_request_header;
 
@@ -93,6 +96,7 @@ private:
 
     // delete
     void     _delete_request_is_valid(void);
+    void     _delete_remove(void);
 
 };
 
