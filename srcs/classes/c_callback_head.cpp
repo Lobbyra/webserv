@@ -15,7 +15,7 @@ std::string                         c_callback::_response(void) {
 }
 
 void                                c_callback::_head_request_is_valid(void) {
-    this->path.insert(0, root);
+    this->path.insert(0, this->root);
 
     if ((this->host.empty()) == true)
         this->status_code = 400;
