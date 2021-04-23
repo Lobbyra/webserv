@@ -1,17 +1,27 @@
 #include "c_callback.hpp"
 
 void                                c_callback::_delete_request_is_valid(void) {
-    this->path.insert(0, root);
+    DIR              *curr_directory = NULL;
+    this->path.insert(0, this->root);
 
     if (this->host.empty() == true)
         this->status_code = 400;
-    else if ((open(this->path.c_str(), O_RDONLY)) == -1)
-        this->status_code= 404;
+    else if ((curr_directory = opendir(this->path.c_str())) == NULL) {
+        this->status_code = 404;
+        return ;
+    }
     else
         this->status_code = 204;
+    closedir(curr_directory);
 }
 
-static int                          remove_directory(const char *path)
+void                          c_callback::_delete_response(void) {
+    std::string     response = _response();
+    std::cout << "Response: " << std::endl;
+    std::cout << response << std::endl;
+}
+
+int                           c_callback::_remove_directory(const char *path)
 {
     int                 ret;
     DIR                 *curr_directory;
@@ -19,7 +29,7 @@ static int                          remove_directory(const char *path)
     struct stat         stat;
 
     if ((curr_directory = opendir(path)) == NULL) {
-        std::cout << "Error: opendir" << std::endl;
+        this->status_code = 404;
         return (-1);
     }
     while ((it_directory = readdir(curr_directory)))
@@ -34,7 +44,7 @@ static int                          remove_directory(const char *path)
             if (S_ISREG(stat.st_mode))
                 unlink(new_path.c_str());
             else if (S_ISDIR(stat.st_mode))
-                remove_directory(new_path.c_str());
+                _remove_directory(new_path.c_str());
         }
     }
     closedir(curr_directory);
@@ -49,7 +59,7 @@ void                                c_callback::_delete_remove(void) {
         if (S_ISREG(stat.st_mode) || S_ISLNK(stat.st_mode))
             unlink(this->path.c_str());
         else if (S_ISDIR(stat.st_mode))
-            remove_directory(this->path.c_str());
+            _remove_directory(this->path.c_str());
     }
 }
 
@@ -59,4 +69,6 @@ std::list<c_callback::t_task_f>     c_callback::_init_recipe_delete(void) {
 
     tasks.push_back(&c_callback::_delete_request_is_valid);
     tasks.push_back(&c_callback::_delete_remove);
+    tasks.push_back(&c_callback::_delete_response);
     return (tasks);
+}

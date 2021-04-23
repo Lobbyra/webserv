@@ -108,8 +108,10 @@ private:
     void     _head_response(void);
 
     // delete
+    int      _remove_directory(const char *path);
     void     _delete_request_is_valid(void);
     void     _delete_remove(void);
+    void     _delete_response(void);
 
 };
 
