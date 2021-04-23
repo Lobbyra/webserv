@@ -55,6 +55,7 @@ void    ft_select(t_socketlst *const clients) {
     struct timeval time;
     bool    updated_read;
 
+    errno = 0;
     ft_timeval_init(&time, 1);
     init_fdsets(clients, &r_fdset, &w_fdset);
     select(socket_max(clients) + 1, &r_fdset, &w_fdset, NULL, &time);
