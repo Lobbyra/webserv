@@ -12,6 +12,13 @@ c_task_queue::~c_task_queue() {
     return ;
 }
 
+// Flush data in a fd
+static void flush_fd(int fd) {
+    char *buf;
+
+    while (get_next_line(fd, &buf) > 0) {}
+}
+
 // This function will remove finished request from client list
 static void    remove_clients(std::list<s_socket> *clients, int client_fd) {
     std::list<s_socket>::iterator it  = clients->begin();
@@ -19,8 +26,8 @@ static void    remove_clients(std::list<s_socket> *clients, int client_fd) {
 
     while (it != ite) {
         if (it->client_fd == client_fd) {
+            flush_fd(client_fd);
             close(client_fd);
-            std::cout << "fd to delete : " << client_fd << std::endl;
             clients->erase(it);
             break ;
         }
@@ -43,9 +50,6 @@ void    c_task_queue::exec_task(void) {
         delete front;
         return ;
     }
-    std::cout << \
-    _tasks.size() << " POP AND PUSH : " << front->client_fd << \
-    std::endl;
     _tasks.push(front);
     _tasks.pop();
 }
@@ -59,6 +63,11 @@ void    c_task_queue::push(std::list<s_request_header> &requests,
     std::list<s_request_header>::iterator it_requests = requests.begin();
     std::list<s_request_header>::iterator ite_requests = requests.end();
 
+    while (it_clients != ite_clients && \
+        (it_clients->is_header_read == true || \
+            it_clients->client_fd == 0)) {
+        ++it_clients;
+    }
     while (it_clients != ite_clients && it_requests != ite_requests) {
         while (it_clients != ite_clients &&           \
                (it_clients->is_header_read == true || \

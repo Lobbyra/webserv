@@ -1,7 +1,10 @@
 #ifndef C_CALLBACK_HPP
 # define C_CALLBACK_HPP
 
-#include "../webserv.hpp"
+# include "../webserv.hpp"
+# include <sys/types.h>
+# include <sys/stat.h>
+# include <dirent.h>
 
 struct s_request_header;
 
@@ -58,9 +61,22 @@ public:
     void                        exec();
 
     // dumb Functions
-    void    dumb_coucou(void) { std::cout << "coucou" << std::endl; };
-    void    dumb_salut(void) { std::cout << "salut" << std::endl; };
-    void    dumb_bonjour(void) { std::cout << "bonjour" << std::endl; };
+    void    dumb_coucou(void) {
+        std::string resp = "coucour\n";
+        std::cout << resp << std::endl;
+        send(client_fd, resp.c_str(), resp.size(), 0);
+    };
+    void    dumb_salut(void) {
+        std::string resp = "salut\n";
+        std::cout << resp << std::endl;
+        send(client_fd, resp.c_str(), resp.size(), 0);
+    };
+    void    dumb_bonjour(void) {
+        std::string resp = "bonjour\n";
+        std::cout << resp << std::endl;
+        send(client_fd, resp.c_str(), resp.size(), 0);
+    };
+
 
 
 private:
@@ -79,17 +95,21 @@ private:
     void                _init_meth_functions(void);
     std::list<t_task_f> _init_recipe_dumb(void);
     std::list<t_task_f> _init_recipe_head(void);
+    std::list<t_task_f> _init_recipe_delete(void);
 
     /*******************************************
 	*****              Method              *****
 	*******************************************/
-
     // general
     std::string     _response(void);
 
     // head
     void     _head_request_is_valid(void);
     void     _head_response(void);
+
+    // delete
+    void     _delete_request_is_valid(void);
+    void     _delete_remove(void);
 
 };
 

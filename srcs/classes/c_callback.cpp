@@ -71,7 +71,8 @@ void    c_callback::_init_map_status_message(void) {
 }
 
 void    c_callback::_init_meth_functions(void) {
-    _meth_funs["GET"] = _init_recipe_dumb();
+    // _meth_funs["GET"] = _init_recipe_dumb();
+    _meth_funs["GET"] = _init_recipe_head();
 }
 
 std::list<c_callback::t_task_f>     c_callback::_init_recipe_dumb(void) {
@@ -132,17 +133,17 @@ void        c_callback::_server_variable_check(std::list<c_location> location) {
         if (this->path == (*it).route)
         {
             if((*it).client_max_body_size)
-                this->server->client_max_body_size = (*it).client_max_body_size;
+                client_max_body_size = (*it).client_max_body_size;
             if((*it).index.begin() != (*it).index.end())
-                this->server->index = (*it).index;
+                index = (*it).index;
             if ((*it).root.empty() == false)
-                this->server->root = (*it).root;
+                root = (*it).root;
             if ((*it).autoindex.empty() == false)
-                this->server->autoindex = (*it).autoindex;
+                autoindex = (*it).autoindex;
             if ((*it).fastcgi_param.empty() == false)
-                this->server->fastcgi_param = (*it).fastcgi_param;
+                fastcgi_param = (*it).fastcgi_param;
             if ((*it).error_page.empty() == false)
-                this->server->error_page = (*it).error_page;
+                error_page = (*it).error_page;
         }
     }
 }

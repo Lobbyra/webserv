@@ -41,6 +41,8 @@ struct  s_ipport {
     std::string     ip;
 };
 
+bool    operator==(s_ipport const &a, s_ipport const &b);
+
 typedef std::string::iterator               t_strit;
 typedef std::string::const_iterator         t_strcit;
 typedef std::list<std::string>              t_strlst;
@@ -75,6 +77,7 @@ struct s_request_header {
 
 struct s_socket {
     int             entry_socket;
+    s_ipport const  *ipport;
     c_server const  *server;
     int             client_fd;
     t_sockaddr      client_addr;

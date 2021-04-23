@@ -30,7 +30,8 @@ ROOT_FILES  = main.cpp webserv.cpp init_clients.cpp ft_select.cpp
 ROOT_HEADER = webserv.hpp
 
 CLASSES_PATH	= classes/
-CLASSES_FILES	= c_task_queue.cpp c_callback.cpp c_location.cpp c_server.cpp
+CLASSES_FILES	= c_task_queue.cpp c_callback.cpp c_location.cpp c_server.cpp \
+				  c_callback_head.cpp
 CLASSES_HEADERS	= c_task_queue.hpp c_callback.hpp c_location.hpp c_server.hpp
 
 PARSE_FUNS_PATH	 = parse_funs/
@@ -54,7 +55,7 @@ PARSE_REQUEST_HEADER_FILES = read_request_header.cpp parse_request.cpp		  \
 UTILS_PATH   = utils/
 UTILS_FILES	 = get_keys.cpp is_space.cpp get_word_it.cpp skip_it.cpp	   \
 			   is_str_num.cpp ft_isin.cpp ft_error.cpp ft_timeval_init.cpp \
-			   get_word.cpp
+			   get_word.cpp s_ipport.cpp
 UTILS_HEADER = utils.hpp insert_stream_cont.hpp
 
 SRCS_FILES = ${ROOT_FILES} \
