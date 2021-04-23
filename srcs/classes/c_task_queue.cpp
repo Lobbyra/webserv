@@ -29,17 +29,20 @@ static void    remove_clients(std::list<s_socket> *clients, int client_fd) {
 
 // Will execute the last task in the queue and remove it if the recipe is done
 void    c_task_queue::exec_task(void) {
+    c_callback *front;
+
     if (_tasks.size() == 0)
         return;
-    _tasks.back()->exec();
+    front = _tasks.front();
+    front->exec();
 
-    if (_tasks.back()->is_over() == true) {
-        remove_clients(_clients, _tasks.back()->client_fd);
-        delete _tasks.back();
+    if (front->is_over() == true) {
+        remove_clients(_clients, front->client_fd);
         _tasks.pop();
+        delete front;
         return ;
     }
-    _tasks.push(_tasks.back());
+    _tasks.push(front);
     _tasks.pop();
 }
 
@@ -47,23 +50,20 @@ void    c_task_queue::exec_task(void) {
 void    c_task_queue::push(std::list<s_request_header> &requests,
                            std::list<s_socket> *clients) {
     c_callback *cb_temp;
-    std::list<s_socket>::iterator           it_clients   = clients->begin();
-    std::list<s_request_header>::iterator   it_requests  = requests.begin();
-    std::list<s_socket>::iterator           ite_clients  = clients->end();
-    std::list<s_request_header>::iterator   ite_requests = requests.end();
+    std::list<s_socket>::iterator it_clients = clients->begin();
+    std::list<s_socket>::iterator ite_clients = clients->end();
+    std::list<s_request_header>::iterator it_requests = requests.begin();
+    std::list<s_request_header>::iterator ite_requests = requests.end();
 
-    while (it_clients != ite_clients && (it_clients->is_header_read == true ||
-           it_clients->client_fd == 0))
-        ++it_clients;
     while (it_clients != ite_clients && it_requests != ite_requests) {
-        cb_temp = new c_callback(*it_clients, *it_requests);
-        _tasks.push(cb_temp);
-        it_clients->is_header_read = true;
-        while (it_clients != ite_clients &&          \
+        while (it_clients != ite_clients &&           \
                (it_clients->is_header_read == true || \
                it_clients->client_fd == 0)) {
             ++it_clients;
         }
+        cb_temp = new c_callback(*it_clients, *it_requests);
+        it_clients->is_header_read = true;
+        _tasks.push(cb_temp);
         ++it_requests;
     }
 }

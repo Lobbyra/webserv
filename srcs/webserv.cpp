@@ -50,7 +50,8 @@ void    webserv(std::list<c_server> const &conf) {
     task_queue.set_clients(clients);
     while (g_run) {
         ft_select(clients);
-        std::cout << *clients << std::endl;
+        if (clients->size() > 1)
+            std::cout << *clients << std::endl;
         if (g_run == false)
             break ;
         if (is_client_ready(clients) == true) {
