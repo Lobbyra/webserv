@@ -78,7 +78,6 @@ public:
     };
 
 
-
 private:
 
     void    _init_request_header(s_request_header request);
@@ -110,6 +109,13 @@ private:
     // delete
     void     _delete_request_is_valid(void);
     void     _delete_remove(void);
+
+    // GET
+    int     _fd_file;
+    void    _m_get_open(void);
+    void    _meth_get_head(void);
+    void    _meth_get_send(void);
+    void    _meth_get_read(void);
 
 };
 

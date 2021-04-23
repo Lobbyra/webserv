@@ -14,6 +14,7 @@
 # include <stdlib.h>
 # include <string.h>
 # include <stdlib.h>
+# include <sys/errno.h>
 # include <netinet/in.h> // struct sockaddr_in
 
 extern int indent_lvl;
