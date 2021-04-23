@@ -32,6 +32,7 @@ static s_socket makeSocket(const c_server *server) {
     ft_bzero(&newSocket, sizeof(newSocket));
     newSocket.entry_socket = makeSocketfd(server->listen.port);
     newSocket.ipport = &server->listen;
+    newSocket.server = server;
     return (newSocket);
 }
 
