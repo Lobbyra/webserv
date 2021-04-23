@@ -14,7 +14,7 @@ s_request_header    read_request_header(int fd) {
     while ((status = get_next_line(fd, &line)) == 1) {
         buf = (std::string)line;
         if (buf.empty() == false && *(--buf.end()) == '\r')
-            buf.erase(--buf.end());
+            buf.erase(--buf.end());   
         if (buf.empty() == true && i < 1) {
             free(line);
             continue ;
@@ -30,7 +30,11 @@ s_request_header    read_request_header(int fd) {
         }
         free(line);
     }
-    if (status == 0)
+    if (status == -1) {
+        std::cerr << \
+        "GNL : " << status << " : " << strerror(errno) << std::endl;
+    } else if (status == 0) {
         free(line);
+    }
     return (request);
 }

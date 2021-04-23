@@ -61,9 +61,22 @@ public:
     void                        exec();
 
     // dumb Functions
-    void    dumb_coucou(void) { std::cout << "coucou" << std::endl; };
-    void    dumb_salut(void) { std::cout << "salut" << std::endl; };
-    void    dumb_bonjour(void) { std::cout << "bonjour" << std::endl; };
+    void    dumb_coucou(void) {
+        std::string resp = "coucour\n";
+        std::cout << resp << std::endl;
+        send(client_fd, resp.c_str(), resp.size(), 0);
+    };
+    void    dumb_salut(void) {
+        std::string resp = "salut\n";
+        std::cout << resp << std::endl;
+        send(client_fd, resp.c_str(), resp.size(), 0);
+    };
+    void    dumb_bonjour(void) {
+        std::string resp = "bonjour\n";
+        std::cout << resp << std::endl;
+        send(client_fd, resp.c_str(), resp.size(), 0);
+    };
+
 
 
 private:

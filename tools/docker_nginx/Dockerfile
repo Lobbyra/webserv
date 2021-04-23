@@ -10,7 +10,7 @@ RUN		apt install -y	\
 		php7.3			\
 		php7.3-fpm
 
-COPY ./www /www
+COPY    ./www /www
 
 RUN		chown nginx /www
 

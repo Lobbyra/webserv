@@ -24,14 +24,14 @@ static void    check_curly_braces(const std::string &conf) {
 
     for (; it != ite; ++it) {
         if (*it == '{') {
-            if (!check_key(conf.begin(), it, "server") &&
-                !check_key(conf.begin(), it, "location"))
+            if (lbrace == rbrace && !check_key(conf.begin(), it, "server"))
                 throw std::logic_error("get_conf: Invalid scope type");
             ++lbrace;
         }
         else if (*it == '}') {
-            if (it - 2 >= conf.begin() && *(it - 2) != ';')
-                throw std::logic_error("get_conf: Missing ';' at end of scope");
+            if (it - 2 < conf.begin() || !is_separator(*(it - 2))
+                || (it + 2 < ite && *(it + 2) == '{'))
+                throw std::logic_error("get_conf: Invalid end of scope");
             ++rbrace;
         }
     }
