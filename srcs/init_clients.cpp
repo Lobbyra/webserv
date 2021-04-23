@@ -45,7 +45,10 @@ t_socketlst     init_clients(std::list<c_server> const &conf) {
     std::list<c_server>::const_iterator it = conf.begin(), ite = conf.end();
     t_socketlst res;
 
-    for (; it != ite; ++it)
+    for (; it != ite; ++it) {
+        if (it->listen.ip.empty())
+            continue ;
         res.push_back(makeSocket(res, &(*it)));
+    }
     return (res);
 }
