@@ -78,6 +78,7 @@ public:
     };
 
 
+
 private:
 
     void    _init_request_header(s_request_header request);
