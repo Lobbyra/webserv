@@ -75,6 +75,7 @@ struct s_request_header {
 
 struct s_socket {
     int             entry_socket;
+    s_ipport const  *ipport;
     c_server const  *server;
     int             client_fd;
     t_sockaddr      client_addr;

@@ -18,7 +18,7 @@ static int  makeSocketfd(const int &port) {
     servaddr.sin_port = htons(port);
 
     if (setsockopt(newSocket, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)))
-        ft_error("bind");
+        ft_error("setsockopt");
     if ((bind(newSocket, (t_sockaddr *)&servaddr, sizeof(servaddr))) < 0)
         ft_error("bind");
     if ((listen(newSocket, 10)) < 0)
@@ -26,12 +26,18 @@ static int  makeSocketfd(const int &port) {
     return (newSocket);
 }
 
-static s_socket makeSocket(const c_server *server) {
+static s_socket makeSocket(t_socketlst const &socklst, const c_server *server) {
+    t_socketlst::const_iterator it = socklst.begin(), ite = socklst.end();
     s_socket newSocket;
 
+    while (it != ite && !(it->ipport->ip == server->listen.ip \
+        && it->ipport->port == server->listen.port))
+        ++it;
+    if (it != ite)
+        return (*it);
     ft_bzero(&newSocket, sizeof(newSocket));
     newSocket.entry_socket = makeSocketfd(server->listen.port);
-    newSocket.server = server;
+    newSocket.ipport = &server->listen;
     return (newSocket);
 }
 
@@ -39,7 +45,10 @@ t_socketlst     init_clients(std::list<c_server> const &conf) {
     std::list<c_server>::const_iterator it = conf.begin(), ite = conf.end();
     t_socketlst res;
 
-    for (; it != ite; ++it)
-        res.push_back(makeSocket(&(*it)));
+    for (; it != ite; ++it) {
+        if (it->listen.ip.empty())
+            continue ;
+        res.push_back(makeSocket(res, &(*it)));
+    }
     return (res);
 }
