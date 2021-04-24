@@ -96,6 +96,7 @@ private:
     std::list<t_task_f> _init_recipe_dumb(void);
     std::list<t_task_f> _init_recipe_head(void);
     std::list<t_task_f> _init_recipe_delete(void);
+    std::list<t_task_f> _init_recipe_put(void);
 
     /*******************************************
 	*****              Method              *****
@@ -112,6 +113,10 @@ private:
     void     _meth_delete_request_is_valid(void);
     void     _meth_delete_remove(void);
     void     _meth_delete_send(void);
+
+    // put
+    void     _meth_put(void);
+    void     _meth_put_send(void);
 
 };
 
