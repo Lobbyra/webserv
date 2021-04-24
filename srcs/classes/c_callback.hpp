@@ -96,6 +96,7 @@ private:
     std::list<t_task_f> _init_recipe_dumb(void);
     std::list<t_task_f> _init_recipe_head(void);
     std::list<t_task_f> _init_recipe_delete(void);
+    std::list<t_task_f> _init_recipe_put(void);
 
     /*******************************************
 	*****              Method              *****
@@ -104,14 +105,18 @@ private:
     std::string     _response(void);
 
     // head
-    void     _head_request_is_valid(void);
-    void     _head_response(void);
+    void     _meth_head_request_is_valid(void);
+    void     _meth_head_send(void);
 
     // delete
     int      _remove_directory(const char *path);
-    void     _delete_request_is_valid(void);
-    void     _delete_remove(void);
-    void     _delete_response(void);
+    void     _meth_delete_request_is_valid(void);
+    void     _meth_delete_remove(void);
+    void     _meth_delete_send(void);
+
+    // put
+    void     _meth_put(void);
+    void     _meth_put_send(void);
 
 };
 
