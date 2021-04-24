@@ -68,12 +68,14 @@ void    c_callback::_init_map_status_message(void) {
     _status_message[409] = "Conflict";
     _status_message[410] = "Gone";
     _status_message[411] = "Length Required";
+    _status_message[500] = "Internal Server Error";
 }
 
 void    c_callback::_init_meth_functions(void) {
     _meth_funs["GET"] = _init_recipe_dumb();
     _meth_funs["HEAD"] = _init_recipe_head();
     _meth_funs["DELETE"] = _init_recipe_delete();
+    _meth_funs["PUT"] = _init_recipe_delete();
 }
 
 std::list<c_callback::t_task_f>     c_callback::_init_recipe_dumb(void) {
