@@ -14,7 +14,7 @@ s_request_header    read_request_header(int fd) {
     while ((status = get_next_line(fd, &line)) == 1) {
         buf = (std::string)line;
         if (buf.empty() == false && *(--buf.end()) == '\r')
-            buf.erase(--buf.end());   
+            buf.erase(--buf.end());
         if (buf.empty() == true && i < 1) {
             free(line);
             continue ;
