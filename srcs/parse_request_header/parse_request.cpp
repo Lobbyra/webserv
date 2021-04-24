@@ -31,7 +31,18 @@ std::list<s_request_header>     parse_request(t_socketlst *const clients) {
     for (; it != ite; ++it) {
         if (it->is_read_ready == false || it->is_header_read || !it->client_fd)
             continue;
-        list_requests.push_back(read_request_header(it->client_fd));
+        s_request_header new_request_header;
+
+        try {
+            new_request_header = read_request_header(it->client_fd);
+        }
+        catch (const std::exception &e) {
+            std::cerr << "Request header: " << e.what() << std::endl;
+            clients->erase(it++);
+            --it;
+            continue ;
+        }
+        list_requests.push_back(new_request_header);
     }
     return (list_requests);
 }
