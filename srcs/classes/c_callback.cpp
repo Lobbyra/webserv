@@ -128,10 +128,8 @@ void        c_callback::_server_variable_check(std::list<c_location> location) {
 
     it = location.begin();
     ite = location.end();
-    for (; it != ite; ++it)
-    {
-        if (this->path == (*it).route)
-        {
+    for (; it != ite; ++it) {
+        if (this->path == (*it).route) {
             if((*it).client_max_body_size)
                 client_max_body_size = (*it).client_max_body_size;
             if((*it).index.begin() != (*it).index.end())
@@ -144,6 +142,7 @@ void        c_callback::_server_variable_check(std::list<c_location> location) {
                 fastcgi_param = (*it).fastcgi_param;
             if ((*it).error_page.empty() == false)
                 error_page = (*it).error_page;
+            methods = (*it).methods;
         }
     }
 }

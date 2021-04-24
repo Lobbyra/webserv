@@ -32,6 +32,7 @@ public:
     int                         client_max_body_size;
     int                         srv_id;
     t_strlst                    index;
+    t_strlst                    methods;
     s_ipport                    listen;
     t_strlst                    server_name;
     std::string                 root;

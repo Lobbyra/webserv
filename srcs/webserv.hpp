@@ -6,6 +6,7 @@
 # include <string>
 # include <iostream>
 # include <exception>
+# include <algorithm>
 
 // C HEADERS
 # include <errno.h>

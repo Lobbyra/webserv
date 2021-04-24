@@ -26,7 +26,7 @@ c_server    get_serv(t_strcit it_conf) {
     while (*it_conf != '}') {
         key = get_word_it(it_conf);
         check_key(key);
-        if (key == "fastcgi_pass")
+        if (key == "fastcgi_pass" || key == "methods")
             throw std::logic_error(SRV_KEY_NOT_CONTEXT);
         parse_select[key](it_conf, srv_ptr_select[key]);
         skip_param(it_conf);
