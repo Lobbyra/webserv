@@ -13,7 +13,7 @@ static void init_fdsets(t_socketlst const *lst, fd_set *r_set, fd_set *w_set) {
             FD_SET(it->entry_socket, w_set);
         } else {
             FD_SET(it->client_fd, r_set);
-            FD_SET(it->entry_socket, w_set);
+            FD_SET(it->client_fd, w_set);
         }
     }
 }
@@ -78,9 +78,10 @@ void    ft_select(t_socketlst *const clients) {
 
         nclient.client_fd = accept(nclient.entry_socket, \
                             &nclient.client_addr, &socklen);
-        new_clients.push_back(nclient);
         if (errno != 0)
             ft_error("accept");
+        fcntl(nclient.client_fd, F_SETFL, O_NONBLOCK);
+        new_clients.push_back(nclient);
     }
     clients->splice(clients->end(), new_clients);
     std::cout << "*Toc toc toc*" << std::endl;

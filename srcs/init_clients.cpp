@@ -11,7 +11,6 @@ static int  makeSocketfd(const int &port) {
     if ((newSocket = socket(AF_INET, SOCK_STREAM, 0)) < 0)
         ft_error("socket");
 
-    fcntl(newSocket, F_SETFL, O_NONBLOCK);
     bzero(&servaddr, sizeof(servaddr));
     servaddr.sin_family = AF_INET;
     servaddr.sin_addr.s_addr = htonl(INADDR_ANY);
@@ -32,6 +31,7 @@ static s_socket makeSocket(const c_server *server) {
     ft_bzero(&newSocket, sizeof(newSocket));
     newSocket.entry_socket = makeSocketfd(server->listen.port);
     newSocket.ipport = &server->listen;
+    newSocket.server = server;
     return (newSocket);
 }
 
