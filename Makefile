@@ -31,7 +31,7 @@ ROOT_HEADER = webserv.hpp
 
 CLASSES_PATH	= classes/
 CLASSES_FILES	= c_task_queue.cpp c_callback.cpp c_location.cpp c_server.cpp \
-				  c_callback_head.cpp c_callback_delete.cpp
+				  c_callback_head.cpp c_callback_delete.cpp c_callback_put.cpp
 CLASSES_HEADERS	= c_task_queue.hpp c_callback.hpp c_location.hpp c_server.hpp
 
 PARSE_FUNS_PATH	 = parse_funs/
