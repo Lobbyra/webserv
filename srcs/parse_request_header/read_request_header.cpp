@@ -31,8 +31,7 @@ s_request_header    read_request_header(int fd) {
         free(line);
     }
     if (status == -1) {
-        std::cerr << \
-        "GNL : " << status << " : " << strerror(errno) << std::endl;
+        throw std::logic_error(std::string("GNL: ") + strerror(errno));
     } else if (status == 0) {
         free(line);
     }
