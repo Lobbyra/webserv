@@ -1,17 +1,15 @@
 #include "parse_conf.hpp"
 
 /*
- * ERROR MESSAGES
- */
-#define SRV_KEY_NOT_CONTEXT "server: key " + key + " not valid in location"
-
-/*
  * This function take a iterator on first letter of a server block. It will
  * create a server structure (c_server -> srcs/data_structures.hpp).
  *
  * If a key word is not recognised, it will throw an error.
  * Same if a mandatory variable of the c_server isn't set by the context.
  */
+
+#define SRV_KEY_NOT_CONTEXT "server: " + key + " not valid in location"
+#define SRV_NOT_SERVER "server: " + key + " not a server block"
 
 c_server    get_serv(t_strcit it_conf) {
     c_server    srv;
@@ -21,7 +19,10 @@ c_server    get_serv(t_strcit it_conf) {
 
     parse_select = init_parsing_select();
     srv_ptr_select = init_srv_ptr_select(&srv);
-    it_conf += ft_strlen("server { ");
+    if ((key = get_word_it(it_conf)) != "server")
+        throw std::logic_error(SRV_NOT_SERVER);
+    else
+        it_conf += ft_strlen("server { ");
     while (*it_conf != '}') {
         key = get_word_it(it_conf);
         check_key(key);
