@@ -104,14 +104,14 @@ private:
     std::string     _response(void);
 
     // head
-    void     _head_request_is_valid(void);
-    void     _head_response(void);
+    void     _meth_head_request_is_valid(void);
+    void     _meth_head_send(void);
 
     // delete
     int      _remove_directory(const char *path);
-    void     _delete_request_is_valid(void);
-    void     _delete_remove(void);
-    void     _delete_response(void);
+    void     _meth_delete_request_is_valid(void);
+    void     _meth_delete_remove(void);
+    void     _meth_delete_send(void);
 
 };
 
