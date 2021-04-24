@@ -23,11 +23,10 @@ void        c_callback::_meth_put(void) {
     if (lstat(this->path.c_str(), &stat) == 0) {
         this->status_code = 204;
     }
-    else if ((file_fd = open(name_file.c_str(), O_WRONLY | O_CREAT, S_IRWXU)) != -1)
+    if ((file_fd = open(name_file.c_str(), O_WRONLY | O_TRUNC | O_CREAT, S_IRWXU)) != -1)
     {
         if (write(file_fd, body_test.c_str(), body_test.length()) != -1)
         {
-            std::cout << "WRITE: OK" << std::endl;
             close(file_fd);
             this->status_code = 201;
             return ;
