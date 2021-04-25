@@ -14,7 +14,6 @@ void                          c_callback::_meth_put_send(void) {
 void        c_callback::_meth_put(void) {
     struct stat         stat;
     int                 file_fd;
-    std::string         name_file(this->path);
     std::string         body_test("Body de test");
     this->path.insert(0, this->root);
 
@@ -23,11 +22,10 @@ void        c_callback::_meth_put(void) {
     if (lstat(this->path.c_str(), &stat) == 0) {
         this->status_code = 204;
     }
-    else if ((file_fd = open(name_file.c_str(), O_WRONLY | O_CREAT, S_IRWXU)) != -1)
+    if ((file_fd = open(path.c_str(), O_WRONLY | O_TRUNC | O_CREAT, S_IRWXU)) != -1)
     {
         if (write(file_fd, body_test.c_str(), body_test.length()) != -1)
         {
-            std::cout << "WRITE: OK" << std::endl;
             close(file_fd);
             this->status_code = 201;
             return ;
@@ -41,4 +39,5 @@ std::list<c_callback::t_task_f>         c_callback::_init_recipe_put(void){
 
     tasks.push_back(&c_callback::_meth_put);
     tasks.push_back(&c_callback::_meth_put_send);
+    return (tasks);
 }
