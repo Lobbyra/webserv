@@ -86,6 +86,8 @@ struct s_socket {
     bool            is_header_read;
 };
 
+std::ostream    &operator<<(std::ostream &o, s_socket const &i);
+
 typedef std::list<s_socket>     t_socketlst;
 
 std::list<c_server>     parse_conf(std::string path);
