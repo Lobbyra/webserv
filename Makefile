@@ -26,7 +26,8 @@ endif
 
 SRCS_PATH = ./srcs/
 
-ROOT_FILES  = main.cpp webserv.cpp init_clients.cpp ft_select.cpp
+ROOT_FILES  = main.cpp webserv.cpp init_clients.cpp ft_select.cpp \
+			  assign_server_to_clients.cpp
 ROOT_HEADER = webserv.hpp
 
 CLASSES_PATH	= classes/

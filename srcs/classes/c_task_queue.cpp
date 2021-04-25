@@ -61,18 +61,15 @@ void    c_task_queue::push(std::list<s_request_header> &requests,
     std::list<s_request_header>::iterator it_requests = requests.begin();
     std::list<s_request_header>::iterator ite_requests = requests.end();
 
-    while (it_clients != ite_clients && \
-        (it_clients->is_header_read == true || \
-            it_clients->client_fd == 0)) {
-        ++it_clients;
-    }
     while (it_clients != ite_clients && it_requests != ite_requests) {
+        if (it_clients->server == NULL) {
+            ++it_clients;
+            continue ;
+        }
         cb_temp = new c_callback(*it_clients, *it_requests);
         it_clients->is_header_read = true;
         _tasks.push(cb_temp);
-        while (it_clients != ite_clients && (!it_clients->client_fd \
-            || !it_clients->is_read_ready || it_clients->is_header_read))
-            ++it_clients;
+        ++it_clients;
         ++it_requests;
     }
 }

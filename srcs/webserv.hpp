@@ -42,6 +42,7 @@ struct  s_ipport {
 };
 
 bool    operator==(s_ipport const &a, s_ipport const &b);
+bool    operator!=(s_ipport const &a, s_ipport const &b);
 
 typedef std::string::iterator               t_strit;
 typedef std::string::const_iterator         t_strcit;
@@ -94,6 +95,9 @@ std::list<c_server>     parse_conf(std::string path);
 void                    webserv(std::list<c_server> const &conf);
 t_socketlst             init_clients(std::list<c_server> const &conf);
 void                    ft_select(t_socketlst *const clients);
+
+void    assign_server_to_clients(std::list<c_server> const &conf, \
+    t_socketlst *const clients, std::list<s_request_header> const &reqs);
 
 # include "parse_request_header/parse_request.hpp"
 
