@@ -4,6 +4,7 @@
 # include <list>
 # include <string>
 # include <iostream>
+# include <stdlib.h>
 
 # include "insert_stream_cont.hpp"
 
@@ -35,5 +36,8 @@ void    ft_error(std::string const &src,
                  std::string const &err = strerror(errno));
 
 void    ft_timeval_init(struct timeval *const time, int sec = 0, int usec = 0);
+
+std::string get_status_msg(int code);
+std::string get_err_page(int code);
 
 #endif // ***************************************************** UTILS_HPP end //

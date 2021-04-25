@@ -13,7 +13,7 @@ static void init_fdsets(t_socketlst const *lst, fd_set *r_set, fd_set *w_set) {
             FD_SET(it->entry_socket, w_set);
         } else {
             FD_SET(it->client_fd, r_set);
-            FD_SET(it->entry_socket, w_set);
+            FD_SET(it->client_fd, w_set);
         }
     }
 }
