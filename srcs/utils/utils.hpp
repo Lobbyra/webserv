@@ -37,7 +37,9 @@ void    ft_error(std::string const &src,
 
 void    ft_timeval_init(struct timeval *const time, int sec = 0, int usec = 0);
 
-std::string get_status_msg(int code);
+// STATUS TOOLS
 std::string get_err_page(int code);
+std::string get_status_msg(int code);
+std::string get_status_line(int code);
 
 #endif // ***************************************************** UTILS_HPP end //
