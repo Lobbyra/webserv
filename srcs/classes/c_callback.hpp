@@ -80,40 +80,63 @@ public:
 
 
 private:
-
+    /* ATTRIBUT INIT
+     * Function used in construction to init attributs
+     */
     void    _init_request_header(s_request_header request);
     void    _init_s_socket(s_socket client);
     void    _init_server_hpp(c_server const *server);
     void    _server_variable_check(std::list<c_location> location);
-    void    _init_map_status_message(void);
 
+    /* _METH_FUNS
+     * Contain relations between methods and recipes.
+     */
+    void                _init_meth_functions(void);
+    std::map<std::string, std::list<t_task_f> > _meth_funs;
+
+    std::string _response(void);
+
+    /* _RECIPES
+     * List of functions to resolve a request.
+     */
     t_recipes                   _recipes;
     t_recipes_it                _it_recipes;
-    std::map<std::string, std::list<t_task_f> > _meth_funs;
-    std::map<int, std::string>                  _status_message;
 
-    void                _init_meth_functions(void);
+    /* _INIT_RECIPES_*
+     * Get recipe for a specific methods.
+     */
     std::list<t_task_f> _init_recipe_dumb(void);
     std::list<t_task_f> _init_recipe_head(void);
     std::list<t_task_f> _init_recipe_delete(void);
 
-    /*******************************************
-	*****              Method              *****
-	*******************************************/
-    // general
-    std::string     _response(void);
+    /* _FD_BODY
+     * File descriptor that we will read and write in the client_fd.
+     */
+    int     _fd_body;
 
-    // head
-    void     _head_request_is_valid(void);
-    void     _head_response(void);
+    /* _STATUS_MESSAGES
+     * Contain relations between all status codes and messages.
+     */
+    std::map<int, std::string>  _status_message;
+    void                        _init_map_status_message(void);
+    std::string                 _get_status_line(int code);
 
-    // delete
-    void     _delete_request_is_valid(void);
-    void     _delete_remove(void);
+    /* _RESP_HEADERS
+     * Each node will be a line in headers that we will send in client_fd.
+     * The first line is the status line.
+     */
+    std::list<std::string>  _resp_headers;
 
-    // GET
-    int     _fd_file;
-    void    _m_get_open(void);
+    // HEAD RECIPE
+    void    _head_request_is_valid(void);
+    void    _head_response(void);
+
+    // DELETE RECIPE
+    void    _delete_request_is_valid(void);
+    void    _delete_remove(void);
+
+    // GET RECIPE
+    void    _meth_get_open(void);
     void    _meth_get_head(void);
     void    _meth_get_send(void);
     void    _meth_get_read(void);
