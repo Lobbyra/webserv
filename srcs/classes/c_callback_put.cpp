@@ -1,7 +1,5 @@
 #include "c_callback.hpp"
 
-// Path, Host, Content-length
-
 void                          c_callback::_meth_put_send(void) {
     std::string     response = _response();
     std::cout << "Response: " << std::endl;
@@ -22,10 +20,8 @@ void        c_callback::_meth_put(void) {
     if (lstat(this->path.c_str(), &stat) == 0) {
         this->status_code = 204;
     }
-    if ((file_fd = open(path.c_str(), O_WRONLY | O_TRUNC | O_CREAT, S_IRWXU)) != -1)
-    {
-        if (write(file_fd, body_test.c_str(), body_test.length()) != -1)
-        {
+    if ((file_fd = open(path.c_str(), O_WRONLY | O_TRUNC | O_CREAT, S_IRWXU)) != -1) {
+        if (write(file_fd, body_test.c_str(), body_test.length()) != -1) {
             close(file_fd);
             this->status_code = 201;
             return ;

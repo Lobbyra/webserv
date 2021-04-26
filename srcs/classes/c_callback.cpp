@@ -72,10 +72,36 @@ void    c_callback::_init_map_status_message(void) {
 }
 
 void    c_callback::_init_meth_functions(void) {
+    if (this->host.empty() == true) {
+        this->status_code = 400;
+        return ;
+    }
     _meth_funs["GET"] = _init_recipe_dumb();
     _meth_funs["HEAD"] = _init_recipe_head();
     _meth_funs["DELETE"] = _init_recipe_delete();
     _meth_funs["PUT"] = _init_recipe_put();
+}
+
+std::string                         c_callback::_bad_request(void) {
+    std::stringstream sstr;
+    std::string endl("\r\n");
+    
+    sstr << "HTTP/1.1 400 Bad Request" << endl                      \
+    << "Server: " << "Server Drunk Architect TEAM" << endl          \
+    << "Date: " << "Mon, 27 Apr 1645 23:59:59 GMT" << endl << endl  \
+    << "Body: Congragulation !" ;
+
+    std::string       str = sstr.str();
+    return (str);
+}
+
+void        c_callback::_send_bad_request(void) {
+    std::string     response = _response();
+    std::cout << "Response: " << std::endl;
+    std::cout << response << std::endl;
+    if (send(client_fd, response.c_str(), response.length(), 0) == -1) {
+		std::cerr << "error: Respons to client" << std::endl;
+	}
 }
 
 std::list<c_callback::t_task_f>     c_callback::_init_recipe_dumb(void) {
@@ -129,18 +155,14 @@ void        c_callback::_init_server_hpp(c_server const *server) {
 std::list<c_location>::iterator        c_callback::_server_find_route(
     std::list<c_location>::iterator &it, std::list<c_location>::iterator &ite) {
     std::list<c_location>::iterator     it_find;
-    size_t                              old_length = 0;
 
     it_find = ite;
     for (; it != ite; ++it)
     {
-        if ((strncmp(this->path.c_str(), (*it).route.c_str(),
-                     (*it).route.length()) == 0)) {
-            if ((*it).route.length() > old_length) {
-                old_length = (size_t)(*it).route.length();
-                it_find = it;
-            }
-        }
+        if ((ft_strncmp(this->path.c_str(), (*it).route.c_str(), 
+                        this->path.length())) == 0 && 
+                        (this->path.length() == (*it).route.length()))
+            it_find = it;
     }
     return (it_find);
 }

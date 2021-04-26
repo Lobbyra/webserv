@@ -106,6 +106,9 @@ private:
 	*******************************************/
     // general
     std::string     _response(void);
+    std::string     _bad_request(void);
+    
+    void     _send_bad_request(void);
 
     // head
     void     _meth_head_request_is_valid(void);
