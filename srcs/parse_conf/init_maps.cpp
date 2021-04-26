@@ -6,6 +6,7 @@ std::map<std::string, f_parser> init_parsing_select(void) {
     m["root"] = &parse_root;
     m["index"] = &parse_index;
     m["listen"] = &parse_listen;
+    m["methods"] = &parse_methods;
     m["location"] = &parse_location;
     m["autoindex"] = &parse_autoindex;
     m["error_page"] = &parse_error_page;
@@ -36,6 +37,7 @@ std::map<std::string, void*>    init_loc_ptr_select(c_location *loc) {
 
     m["root"] = &(loc->root);
     m["index"] = &(loc->index);
+    m["methods"] = &(loc->methods);
     m["autoindex"] = &(loc->autoindex);
     m["error_page"] = &(loc->error_page);
     m["fastcgi_pass"] = &(loc->fastcgi_pass);

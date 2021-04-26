@@ -79,7 +79,7 @@ void    c_callback::_init_meth_functions(void) {
 }
 
 std::list<c_callback::t_task_f>     c_callback::_init_recipe_dumb(void) {
-    std::list<t_task_f> tasks; 
+    std::list<t_task_f> tasks;
 
     tasks.push_back(&c_callback::dumb_coucou);
     tasks.push_back(&c_callback::dumb_salut);

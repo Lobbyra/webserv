@@ -28,6 +28,7 @@ c_location   &c_location::operator=(c_location const &src) {
     this->root = src.root;
     this->index = src.index;
     this->route = src.route;
+    this->methods = src.methods;
     this->autoindex = src.autoindex;
     this->error_page = src.error_page;
     this->fastcgi_pass = src.fastcgi_pass;
@@ -45,6 +46,8 @@ std::ostream    &operator<<(std::ostream &o, c_location const &i) {
         o << "    root = [" << i.root << "]" << std::endl;
     if (i.index.empty() == false)
         o << "    index = [" << i.index << "]" << std::endl;
+    if (i.methods.empty() == false)
+        o << "    methods = [" << i.methods << "]" << std::endl;
     if (i.autoindex.empty() == false)
         o << "    autoindex = [" << i.autoindex << "]" << std::endl;
     if (i.error_page.empty() == false)
