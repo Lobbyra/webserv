@@ -62,7 +62,7 @@ void    c_task_queue::push(std::list<s_request_header> &requests,
     std::list<s_request_header>::iterator ite_requests = requests.end();
 
     while (it_clients != ite_clients && it_requests != ite_requests) {
-        if (it_clients->server == NULL) {
+        if (it_clients->server == NULL || it_clients->is_header_read) {
             ++it_clients;
             continue ;
         }
