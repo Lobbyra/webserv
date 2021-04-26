@@ -10,7 +10,7 @@ c_callback::c_callback(s_socket client, s_request_header request) {
     if (this->server)
     {
         _init_server_hpp(this->server);
-        _server_variable_check(this->server->location);
+        _server_init_route(this->server->location);
     }
     _init_map_status_message();
     _init_meth_functions();
@@ -126,28 +126,45 @@ void        c_callback::_init_server_hpp(c_server const *server) {
     this->location = server->location;
 }
 
-void        c_callback::_server_variable_check(std::list<c_location> location) {
+std::list<c_location>::iterator        c_callback::_server_find_route(
+    std::list<c_location>::iterator &it, std::list<c_location>::iterator &ite) {
+    std::list<c_location>::iterator     it_find;
+    size_t                              old_length = 0;
+
+    it_find = ite;
+    for (; it != ite; ++it)
+    {
+        if ((strncmp(this->path.c_str(), (*it).route.c_str(),
+                     (*it).route.length()) == 0)) {
+            if ((*it).route.length() > old_length) {
+                old_length = (size_t)(*it).route.length();
+                it_find = it;
+            }
+        }
+    }
+    return (it_find);
+}
+
+void        c_callback::_server_init_route(std::list<c_location> location) {
     std::list<c_location>::iterator     it, ite;
 
     it = location.begin();
     ite = location.end();
-    for (; it != ite; ++it)
+    it = _server_find_route(it, ite);
+    if (it != ite)
     {
-        if (this->path == (*it).route)
-        {
-            if((*it).client_max_body_size)
-                client_max_body_size = (*it).client_max_body_size;
-            if((*it).index.begin() != (*it).index.end())
-                index = (*it).index;
-            if ((*it).root.empty() == false)
-                root = (*it).root;
-            if ((*it).autoindex.empty() == false)
-                autoindex = (*it).autoindex;
-            if ((*it).fastcgi_param.empty() == false)
-                fastcgi_param = (*it).fastcgi_param;
-            if ((*it).error_page.empty() == false)
-                error_page = (*it).error_page;
-        }
+        if((*it).client_max_body_size)
+            client_max_body_size = (*it).client_max_body_size;
+        if((*it).index.begin() != (*it).index.end())
+            index = (*it).index;
+        if ((*it).root.empty() == false)
+            root = (*it).root;
+        if ((*it).autoindex.empty() == false)
+            autoindex = (*it).autoindex;
+        if ((*it).fastcgi_param.empty() == false)
+            fastcgi_param = (*it).fastcgi_param;
+        if ((*it).error_page.empty() == false)
+            error_page = (*it).error_page;
     }
 }
 
