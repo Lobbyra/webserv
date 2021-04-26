@@ -26,7 +26,8 @@ endif
 
 SRCS_PATH = ./srcs/
 
-ROOT_FILES  = main.cpp webserv.cpp init_clients.cpp ft_select.cpp
+ROOT_FILES  = main.cpp webserv.cpp init_clients.cpp ft_select.cpp \
+			  assign_server_to_clients.cpp
 ROOT_HEADER = webserv.hpp
 
 CLASSES_PATH	= classes/
@@ -55,7 +56,7 @@ PARSE_REQUEST_HEADER_FILES = read_request_header.cpp parse_request.cpp		  \
 UTILS_PATH   = utils/
 UTILS_FILES	 = get_keys.cpp is_space.cpp get_word_it.cpp skip_it.cpp	   \
 			   is_str_num.cpp ft_isin.cpp ft_error.cpp ft_timeval_init.cpp \
-			   get_word.cpp s_ipport.cpp
+			   get_word.cpp s_ipport.cpp s_socket.cpp
 UTILS_HEADER = utils.hpp insert_stream_cont.hpp
 
 SRCS_FILES = ${ROOT_FILES} \
