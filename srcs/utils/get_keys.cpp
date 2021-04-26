@@ -7,6 +7,7 @@ std::list<std::string>  get_keys(void) {
     keys.push_back("root");
     keys.push_back("index");
     keys.push_back("listen");
+    keys.push_back("methods");
     keys.push_back("location");
     keys.push_back("autoindex");
     keys.push_back("error_page");

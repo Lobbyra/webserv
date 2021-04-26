@@ -23,6 +23,7 @@ std::string skip_k_get_value(const std::string &key,
 void    parse_root(t_strcit it, void *ptr);
 void    parse_index(t_strcit it, void *ptr);
 void    parse_listen(t_strcit it, void *ptr);
+void    parse_methods(t_strcit it, void *ptr);
 void    parse_location(t_strcit it, void *ptr);
 void    parse_autoindex(t_strcit it, void *ptr);
 void    parse_error_page(t_strcit it, void *ptr);

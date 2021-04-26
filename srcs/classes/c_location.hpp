@@ -15,6 +15,7 @@ class    c_location {
 
     int             client_max_body_size;
     t_strlst        index;
+    t_strlst        methods;
     std::string     root;
     std::string     route;
     std::string     autoindex;

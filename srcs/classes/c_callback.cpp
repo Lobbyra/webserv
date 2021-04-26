@@ -10,7 +10,7 @@ c_callback::c_callback(s_socket client, s_request_header request) {
     if (this->server)
     {
         _init_server_hpp(this->server);
-        _server_variable_check(this->server->location);
+        _server_init_route(this->server->location);
     }
     _init_map_status_message();
     _init_meth_functions();
@@ -72,14 +72,40 @@ void    c_callback::_init_map_status_message(void) {
 }
 
 void    c_callback::_init_meth_functions(void) {
+    if (this->host.empty() == true) {
+        this->status_code = 400;
+        return ;
+    }
     _meth_funs["GET"] = _init_recipe_dumb();
     _meth_funs["HEAD"] = _init_recipe_head();
     _meth_funs["DELETE"] = _init_recipe_delete();
     _meth_funs["PUT"] = _init_recipe_put();
 }
 
+std::string                         c_callback::_bad_request(void) {
+    std::stringstream sstr;
+    std::string endl("\r\n");
+    
+    sstr << "HTTP/1.1 400 Bad Request" << endl                      \
+    << "Server: " << "Server Drunk Architect TEAM" << endl          \
+    << "Date: " << "Mon, 27 Apr 1645 23:59:59 GMT" << endl << endl  \
+    << "Body: Congragulation !" ;
+
+    std::string       str = sstr.str();
+    return (str);
+}
+
+void        c_callback::_send_bad_request(void) {
+    std::string     response = _response();
+    std::cout << "Response: " << std::endl;
+    std::cout << response << std::endl;
+    if (send(client_fd, response.c_str(), response.length(), 0) == -1) {
+		std::cerr << "error: Respons to client" << std::endl;
+	}
+}
+
 std::list<c_callback::t_task_f>     c_callback::_init_recipe_dumb(void) {
-    std::list<t_task_f> tasks; 
+    std::list<t_task_f> tasks;
 
     tasks.push_back(&c_callback::dumb_coucou);
     tasks.push_back(&c_callback::dumb_salut);
@@ -126,28 +152,41 @@ void        c_callback::_init_server_hpp(c_server const *server) {
     this->location = server->location;
 }
 
-void        c_callback::_server_variable_check(std::list<c_location> location) {
+std::list<c_location>::iterator        c_callback::_server_find_route(
+    std::list<c_location>::iterator &it, std::list<c_location>::iterator &ite) {
+    std::list<c_location>::iterator     it_find;
+
+    it_find = ite;
+    for (; it != ite; ++it)
+    {
+        if ((ft_strncmp(this->path.c_str(), (*it).route.c_str(), 
+                        this->path.length())) == 0 && 
+                        (this->path.length() == (*it).route.length()))
+            it_find = it;
+    }
+    return (it_find);
+}
+
+void        c_callback::_server_init_route(std::list<c_location> location) {
     std::list<c_location>::iterator     it, ite;
 
     it = location.begin();
     ite = location.end();
-    for (; it != ite; ++it)
+    it = _server_find_route(it, ite);
+    if (it != ite)
     {
-        if (this->path == (*it).route)
-        {
-            if((*it).client_max_body_size)
-                client_max_body_size = (*it).client_max_body_size;
-            if((*it).index.begin() != (*it).index.end())
-                index = (*it).index;
-            if ((*it).root.empty() == false)
-                root = (*it).root;
-            if ((*it).autoindex.empty() == false)
-                autoindex = (*it).autoindex;
-            if ((*it).fastcgi_param.empty() == false)
-                fastcgi_param = (*it).fastcgi_param;
-            if ((*it).error_page.empty() == false)
-                error_page = (*it).error_page;
-        }
+        if((*it).client_max_body_size)
+            client_max_body_size = (*it).client_max_body_size;
+        if((*it).index.begin() != (*it).index.end())
+            index = (*it).index;
+        if ((*it).root.empty() == false)
+            root = (*it).root;
+        if ((*it).autoindex.empty() == false)
+            autoindex = (*it).autoindex;
+        if ((*it).fastcgi_param.empty() == false)
+            fastcgi_param = (*it).fastcgi_param;
+        if ((*it).error_page.empty() == false)
+            error_page = (*it).error_page;
     }
 }
 
