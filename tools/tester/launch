@@ -1,0 +1,85 @@
+#!/usr/bin/env zsh
+
+# ============================================================================ #
+#                             Global variables                                 #
+# ============================================================================ #
+
+EOC="\e[0m"
+BOLD="\e[1m"
+RED="\e[1;91m"
+GREEN="\e[1;92m"
+YELLOW="\e[1;93m"
+DBLUE="\e[1;94m"
+PURPLE="\e[1;95m"
+CYAN="\e[1;96m"
+
+# ============================================================================ #
+#                               Initialization                                 #
+# ============================================================================ #
+
+# This script shall:
+# Compare the status line of a new request with the expected response
+
+function ft_exit() {
+    >&2 echo $*
+    return 1
+}
+
+if [ $# -lt 1 ] || [ $# -gt 3 ]; then
+    ft_exit "Usage: $0 <file.req> [port=80] [ip=localhost]"
+elif ! [ -e "$1" ]; then
+    ft_exit "File does not exist"
+elif ! [ -s "$1" ]; then
+    ft_exit "Empty file"
+fi
+
+if [ -z "$2" ]; then 2="80"; fi
+if [ -z "$3" ]; then 3="localhost"; fi
+
+# ============================================================================ #
+#                                 Begin                                        #
+# ============================================================================ #
+
+function emojibool () {
+    # 1=bool
+    [ "$1" = "0" ] && echo "${GREEN}✅${EOC}" || echo "${RED}❌${EOC}";
+}
+
+function is_equal () {
+    # 1=first_element; 2=second_element;
+    [ "$1" = "$2" ] && echo 0 || echo 1
+}
+
+function pline () {
+    # 1=testname; 2=bool
+    printf "%-15s: $(emojibool $2)\n" $1
+}
+
+pathtestname="$(echo $1 | cut -d '.' -f1)"
+file_resp="${pathtestname}.resp"
+
+testname="$(echo ${pathtestname} | cut -d '/' -f 2-)"
+tmpfile="${testname}.${RANDOM}.out"
+
+> $tmpfile nc $3 $2 < $1
+
+custom_statusline="$(head -n1 $tmpfile)"
+true_statusline="$(head -n1 $file_resp)"
+
+rm -f $tmpfile
+
+res=$(is_equal "$custom_statusline" "$true_statusline")
+pline $testname $res
+
+function pdiff () {
+    # 1=src; 2=color; 3=line
+    1="$1:"
+    printf "%-8s$2" "$1"
+    printf "$3" | cat -e
+    printf "${EOC}\n"
+}
+
+if [ "$res" = "1" ]; then
+    pdiff "HAVE" "$RED" "$custom_statusline"
+    pdiff "EXPECT" "$GREEN" "$true_statusline"
+fi
