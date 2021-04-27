@@ -32,7 +32,8 @@ ROOT_HEADER = webserv.hpp
 
 CLASSES_PATH	= classes/
 CLASSES_FILES	= c_task_queue.cpp c_callback.cpp c_location.cpp c_server.cpp \
-				  c_callback_head.cpp c_callback_delete.cpp c_callback_put.cpp
+				  c_callback_head.cpp c_callback_delete.cpp					  \
+				  c_callback_put.cpp c_callback_utils.cpp
 CLASSES_HEADERS	= c_task_queue.hpp c_callback.hpp c_location.hpp c_server.hpp
 
 PARSE_FUNS_PATH	 = parse_funs/
@@ -57,7 +58,8 @@ UTILS_PATH	 = utils/
 UTILS_FILES	 = get_keys.cpp is_space.cpp get_word_it.cpp skip_it.cpp	     \
 			   is_str_num.cpp ft_isin.cpp ft_error.cpp ft_timeval_init.cpp   \
 			   get_word.cpp s_ipport.cpp get_status_msg.cpp get_err_page.cpp \
-			   get_status_line.cpp s_socket.cpp
+			   get_status_line.cpp s_socket.cpp strcont_to_str.cpp			 \
+			   lststr_to_str.cpp lststr_to_strcont.cpp
 UTILS_HEADER = utils.hpp insert_stream_cont.hpp
 
 SRCS_FILES = ${ROOT_FILES} \

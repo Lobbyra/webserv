@@ -18,6 +18,9 @@
 # include <sys/errno.h>
 # include <netinet/in.h> // struct sockaddr_in
 
+# define SERVER_NAME "drunkserv 0.1"
+# define HTTP_DATE_FORMAT "%a, %d %b %Y %H:%M:%S %Z"
+
 extern int indent_lvl;
 
 # include "lib/lib.hpp"
