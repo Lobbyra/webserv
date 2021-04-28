@@ -1,0 +1,48 @@
+#!/usr/bin/env zsh
+
+# This script shall:
+# Compare the status line of all request in sub-dir with the expected response
+
+# ============================================================================ #
+#                               Initialization                                 #
+# ============================================================================ #
+
+export SHLVL=1
+source ./launch
+req_dir="requests_samples"
+
+if [ $# -lt 2 ]; then
+    ft_exit "Usage: $0 <ip> <port>"
+elif [ $# -gt 2 ]; then
+    test_methods=(${@: 3:$#})
+else
+    test_methods=($(ls -d $req_dir/*/ | cut -d '/' -f 2))
+fi
+
+ip="$1"
+port="$2"
+
+# ============================================================================ #
+#                                   Begin                                      #
+# ============================================================================ #
+
+function make_test() {
+    files=($(ls $1/*.req))
+    for file in ${files[@]}; do
+        check_one $file $port $ip
+    done
+}
+
+function check_all() {
+    for method in ${test_methods[@]}; do
+        if ! [ -d "${req_dir}/${method}" ]; then
+            echo "Directory does not exist: $method"
+            continue
+        fi
+
+        printf "${YELLOW}%35s${EOC}\n" $method
+        make_test "${req_dir}/${method}"
+    done
+}
+
+check_all
