@@ -44,7 +44,7 @@ static std::string get_date(void) {
 
 static void grh_add_headers(std::list<std::string> &headers, c_callback &cb) {
     // SERVER
-    headers.push_back("Server: drunkserv");
+    headers.push_back("Server: Drunk-Architect TEAM");
     // DATE
     try {
         headers.push_back("Date: " + get_date());
@@ -77,3 +77,22 @@ void    c_callback::_gen_resp_headers(void) {
     _resp_headers += "\r\n\r\n";
 }
 
+
+/* FD_IS_READY_TO_SEND()
+ * Function which verifies that we can write in the fd
+ * If not decrement the iterator it_recipes
+ */
+void                    c_callback::_fd_is_ready_to_send(void) {
+    if (*(this->is_write_ready) == false) {
+        _it_recipes--;
+    }
+}
+
+/* SEND_RESPONS()
+ * Send the respons from the server to the client
+ */
+void                    c_callback::_send_respons(void) {
+    if (send(client_fd, _resp_headers.c_str(), _resp_headers.length(), 0) == -1) {
+		std::cerr << "Error: Respons to client" << std::endl;
+	}
+}

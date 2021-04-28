@@ -9,6 +9,8 @@ std::string get_status_msg(int code) {
             return ("Created");
         case 403:
             return ("Forbidden");
+        case 400:
+            return ("Bad Request");
         case 404:
             return ("Not Found");
         case 500:

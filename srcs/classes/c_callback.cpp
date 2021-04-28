@@ -15,7 +15,7 @@ c_callback::c_callback(s_socket client, s_request_header request) {
     _init_meth_functions();
     _recipes = _meth_funs[this->method];
     if (_recipes.empty() == true) {
-        _send_bad_request();
+        _recipes = _init_error_request();
     }
     _it_recipes = _recipes.begin();
     return ;
@@ -64,28 +64,6 @@ void    c_callback::_init_meth_functions(void) {
     _meth_funs["PUT"] = _init_recipe_put();
 }
 
-std::string                         c_callback::_bad_request(void) {
-    std::stringstream sstr;
-    std::string endl("\r\n");
-    
-    sstr << "HTTP/1.1 400 Bad Request" << endl                      \
-    << "Server: " << "Server Drunk Architect TEAM" << endl          \
-    << "Date: " << "Mon, 27 Apr 1645 23:59:59 GMT" << endl << endl  \
-    << "Body: Congragulation !" ;
-
-    std::string       str = sstr.str();
-    return (str);
-}
-
-void        c_callback::_send_bad_request(void) {
-    std::string     response = _response();
-    std::cout << "Response: " << std::endl;
-    std::cout << response << std::endl;
-    if (send(client_fd, response.c_str(), response.length(), 0) == -1) {
-		std::cerr << "error: Respons to client" << std::endl;
-	}
-}
-
 std::list<c_callback::t_task_f>     c_callback::_init_recipe_dumb(void) {
     std::list<t_task_f> tasks;
 
@@ -119,6 +97,10 @@ void        c_callback::_init_s_socket(s_socket client) {
     this->server = (c_server *)client.server;
     this->client_fd = client.client_fd;
     this->client_addr = client.client_addr;
+    this->is_read_ready = &client.is_read_ready;
+    this->is_write_ready = &client.is_write_ready;
+    this->is_header_read = &client.is_header_read;
+    this->content_length_h = 0;
 }
 
 void        c_callback::_init_server_hpp(c_server const *server) {
