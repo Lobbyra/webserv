@@ -1,4 +1,7 @@
-# include "c_server.hpp"
+#include <iostream>
+
+#include "c_server.hpp"
+#include "insert_stream_cont.hpp"
 
 /*
 **    /// CONSTRUCTORS & DESTRUCTORS PART \\

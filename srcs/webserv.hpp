@@ -41,14 +41,9 @@ extern int indent_lvl;
 # define COLOR_WHITE_(str) COLOR_WHITE << str << COLOR_RESET
 # define COLOR_YELLOW_(str) COLOR_YELLOW << str << COLOR_RESET
 
-#include "data_structures/s_ipport.hpp"
+# include "data_structures/s_ipport.hpp"
 
-typedef std::string::iterator               t_strit;
-typedef std::string::const_iterator         t_strcit;
-typedef std::list<std::string>              t_strlst;
-typedef std::list<int>                      t_fdlst;
-typedef std::map<int, std::string>          t_error_page;
-typedef std::map<std::string, std::string>  t_cgi_param;
+# include "typedefs.hpp"
 
 # include "classes/c_location.hpp"
 # include "classes/c_server.hpp"
@@ -56,7 +51,6 @@ typedef std::map<std::string, std::string>  t_cgi_param;
 
 typedef struct sockaddr t_sockaddr;
 typedef struct sockaddr_in t_sockaddr_in;
-typedef std::map<int, bool> t_respmap;
 
 #include "s_request.hpp"
 #include "s_socket.hpp"

@@ -1,9 +1,7 @@
 #ifndef C_LOCATION_HPP
 # define C_LOCATION_HPP
 
-#include "../webserv.hpp"
-
-class   c_server;
+#include "typedefs.hpp"
 
 class    c_location {
  public:

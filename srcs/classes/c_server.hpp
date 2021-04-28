@@ -1,9 +1,11 @@
 #ifndef C_SERVER_HPP
 # define C_SERVER_HPP
 
-# include "../webserv.hpp"
+# include <list>
 
-class   c_location;
+# include "typedefs.hpp"
+# include "s_ipport.hpp"
+# include "c_location.hpp"
 
 class   c_server {
 public:
@@ -27,6 +29,5 @@ public:
 };
 
 std::ostream    &operator<<(std::ostream &o, c_server const &i);
-std::ostream    &operator<<(std::ostream &o, s_ipport const &i);
 
 #endif

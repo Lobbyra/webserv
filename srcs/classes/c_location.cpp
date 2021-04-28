@@ -1,3 +1,6 @@
+#include <iostream>
+
+#include "insert_stream_cont.hpp"
 #include "c_location.hpp"
 
 int indent_lvl = 1;
