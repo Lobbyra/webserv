@@ -13,17 +13,26 @@ source ./launch
 if [ $# -lt 2 ]; then
     ft_exit "Usage: $0 <ip> <port>"
 elif [ $# -gt 2 ]; then
-    test_protocols=${@: 3:$#}
+    test_protocols=(${@: 3:$#})
 else
     test_protocols=(GET)
 fi
+
+req_dir="./requests_samples"
 
 # ============================================================================ #
 #                                   Begin                                      #
 # ============================================================================ #
 
 function check_all() {
-    return ;
+    for protocol in ${test_protocols[@]}; do
+        if ! [ -d "${req_dir}/${protocol}" ]; then
+            echo "Directory does not exist: $protocol"
+            continue
+        fi
+
+        echo $protocol
+    done
 }
 
-echo $test_protocols
+check_all $1 $2
