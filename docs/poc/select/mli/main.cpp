@@ -4,7 +4,7 @@ std::list<int> g_sockets;
 
 int makeSocket(const int &port) {
     int newSocket;
-    t_sockaddr_in servaddr;
+    sockaddr_in servaddr;
 
     if ((newSocket = socket(AF_INET, SOCK_STREAM, 0)) < 0)
         ft_error("socket");
@@ -16,7 +16,7 @@ int makeSocket(const int &port) {
     servaddr.sin_addr.s_addr = htonl(INADDR_ANY);
     servaddr.sin_port = htons(port);
 
-    if ((bind(newSocket, (t_sockaddr *)&servaddr, sizeof(servaddr))) < 0)
+    if ((bind(newSocket, (sockaddr *)&servaddr, sizeof(servaddr))) < 0)
         ft_error("bind");
     if ((listen(newSocket, 10)) < 0)
         ft_error("listen");

@@ -24,7 +24,7 @@
 
 # include "./GNL/get_next_line.h"
 
-typedef struct sockaddr t_sockaddr;
+typedef struct sockaddr sockaddr;
 
 # define SERVER_PORT 80
 

@@ -26,7 +26,7 @@ public:
     int                         entry_socket;
     c_server                    *server;
     int                         client_fd;
-    t_sockaddr                  client_addr;
+    sockaddr                  client_addr;
     bool                        *is_read_ready;
     bool                        *is_write_ready;
     bool                        *is_header_read;

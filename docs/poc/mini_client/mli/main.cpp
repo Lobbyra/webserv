@@ -34,7 +34,7 @@ void	ft_client(char **argv)
 	if (inet_pton(AF_INET, argv[1], &servaddr.sin_addr) <= 0)
 		ft_error("inet_pton");
 
-	if (connect(sockfd, (t_sockaddr *)&servaddr, sizeof(servaddr)) < 0)
+	if (connect(sockfd, (sockaddr *)&servaddr, sizeof(servaddr)) < 0)
 		ft_error("connect");
 
 	if (write(sockfd, msg.c_str(), msg_len) != msg_len)

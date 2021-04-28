@@ -16,8 +16,8 @@
 
 # include "./GNL/get_next_line.h"
 
-typedef struct sockaddr t_sockaddr;
-typedef struct sockaddr_in t_sockaddr_in;
+typedef struct sockaddr sockaddr;
+typedef struct sockaddr_in sockaddr_in;
 
 void    ft_error(std::string const fct_name);
 void    ft_sigint(int sig);

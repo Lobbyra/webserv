@@ -49,9 +49,6 @@ extern int indent_lvl;
 # include "classes/c_server.hpp"
 # include "parse_conf/parse_conf.hpp"
 
-typedef struct sockaddr t_sockaddr;
-typedef struct sockaddr_in t_sockaddr_in;
-
 #include "s_request.hpp"
 #include "s_socket.hpp"
 

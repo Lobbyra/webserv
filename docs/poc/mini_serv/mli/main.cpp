@@ -40,7 +40,7 @@ void	ft_server(int target_port)
 	servaddr.sin_addr.s_addr = htonl(INADDR_ANY);
 	servaddr.sin_port = htons(target_port);
 
-	if ((bind(listenfd, (t_sockaddr *)&servaddr, sizeof(servaddr))) < 0)
+	if ((bind(listenfd, (sockaddr *)&servaddr, sizeof(servaddr))) < 0)
 		ft_error("bind");
 	if ((listen(listenfd, 10)) < 0)
 		ft_error("listen");
