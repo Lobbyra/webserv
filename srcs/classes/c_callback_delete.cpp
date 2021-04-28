@@ -1,6 +1,6 @@
 #include "c_callback.hpp"
 
-void                        c_callback::_meth_delete_request_is_valid(void) {
+void                    c_callback::_meth_delete_request_is_valid(void) {
     DIR              *curr_directory = NULL;
     this->path.insert(0, this->root);
 
@@ -13,7 +13,7 @@ void                        c_callback::_meth_delete_request_is_valid(void) {
     closedir(curr_directory);
 }
 
-int                         c_callback::_remove_directory(const char *path)
+int                     c_callback::_remove_directory(const char *path)
 {
     int                 ret;
     DIR                 *curr_directory;
@@ -60,6 +60,7 @@ std::list<c_callback::t_task_f>     c_callback::_init_recipe_delete(void) {
     std::list<t_task_f> tasks;
 
     tasks.push_back(&c_callback::_meth_delete_request_is_valid);
+    tasks.push_back(&c_callback::_gen_resp_headers);
     tasks.push_back(&c_callback::_meth_delete_remove);
     tasks.push_back(&c_callback::_fd_is_ready_to_send);
     tasks.push_back(&c_callback::_send_respons);

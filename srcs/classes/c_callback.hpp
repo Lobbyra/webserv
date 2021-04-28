@@ -20,9 +20,11 @@ public:
     // c_callback &operator=(c_callback const &src);
     virtual ~c_callback();
 
-    c_callback(s_socket client, s_request_header request);
+    c_callback(s_socket client, s_request_header request, 
+               std::list<s_socket> *clients);
 
     //s_socket
+    std::list<s_socket>         *clients;
     int                         entry_socket;
     c_server                    *server;
     int                         client_fd;
@@ -169,8 +171,10 @@ private:
     void    _meth_get_read(void);
 
     // PUT RECIPE
-    void     _meth_put(void);
-    void     _meth_put_send(void);
+    void     _meth_put_open_fd(void);
+    void     _meth_put_fd_is_ready_to_write(void);
+    void     _meth_put_write_body(void);
+    s_socket _fd_to_write;
 
 };
 
