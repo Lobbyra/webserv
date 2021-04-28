@@ -1,0 +1,29 @@
+#!/usr/bin/env zsh
+
+# This script shall:
+# Compare the status line of all request in sub-dir with the expected response
+
+# ============================================================================ #
+#                               Initialization                                 #
+# ============================================================================ #
+
+export SHLVL=1
+source ./launch
+
+if [ $# -lt 2 ]; then
+    ft_exit "Usage: $0 <ip> <port>"
+elif [ $# -gt 2 ]; then
+    test_protocols=${@: 3:$#}
+else
+    test_protocols=(GET)
+fi
+
+# ============================================================================ #
+#                                   Begin                                      #
+# ============================================================================ #
+
+function check_all() {
+    return ;
+}
+
+echo $test_protocols
