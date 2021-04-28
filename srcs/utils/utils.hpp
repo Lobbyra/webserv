@@ -10,6 +10,11 @@
 
 const std::string whitespaces("\t\n\v\f\r ");
 
+char        *strcont_to_str(std::string str);
+char        *lststr_to_str(std::list<std::string> const &lst, std::string sep);
+std::string lststr_to_strcont(std::list<std::string> const &lst,
+                              std::string sep);
+
 std::string get_word_it(std::string::const_iterator it,
                         const std::string sep = whitespaces);
 

@@ -28,7 +28,7 @@ public:
     int                         client_fd;
     t_sockaddr                  client_addr;
 
-    //c_server_hpp
+    // Variables from server block from config
     int                         client_max_body_size;
     int                         srv_id;
     t_strlst                    index;
@@ -41,7 +41,7 @@ public:
     t_error_page                error_page;
     std::list<c_location>       location;
 
-    //s_request_header
+    // Variables from client request
     std::string                 method;
     std::string                 path;
     std::string                 protocol;
@@ -57,7 +57,14 @@ public:
     size_t                      content_length;
     size_t                      status_code;
 
-    // Main functions
+    // Response variable that will dump in string to response
+    int         content_length_h;
+    std::string location_h;
+    std::string last_modified_h;
+    // [date] this header will be generated at response creation
+    // [server] always be "drunserv"
+
+    // Main Public functions
     bool                        is_over();
     void                        exec();
 
@@ -65,17 +72,23 @@ public:
     void    dumb_coucou(void) {
         std::string resp = "coucour\n";
         std::cout << resp << std::endl;
-        send(client_fd, resp.c_str(), resp.size(), 0);
+        send(client_fd, "", 1, 0); // shit to remove but make curl working idkw
     };
     void    dumb_salut(void) {
         std::string resp = "salut\n";
         std::cout << resp << std::endl;
-        send(client_fd, resp.c_str(), resp.size(), 0);
     };
     void    dumb_bonjour(void) {
         std::string resp = "bonjour\n";
         std::cout << resp << std::endl;
-        send(client_fd, resp.c_str(), resp.size(), 0);
+
+        std::list<std::string> _headers;
+        this->status_code = 200;
+        this->content_length_h = 0;
+        this->location_h = "/parla/sijissuis/";
+        this->last_modified_h = "hier";
+        _gen_resp_headers();
+        send(client_fd, _resp_headers.c_str(), _resp_headers.size(), 0);
     };
 
 
@@ -100,12 +113,6 @@ private:
 
     std::string _response(void);
 
-    /* _RECIPES
-     * List of functions to resolve a request.
-     */
-    t_recipes                   _recipes;
-    t_recipes_it                _it_recipes;
-
     /* _INIT_RECIPES_*
      * Get recipe for a specific methods.
      */
@@ -114,21 +121,28 @@ private:
     std::list<t_task_f> _init_recipe_delete(void);
     std::list<t_task_f> _init_recipe_put(void);
 
-    /* _FD_BODY
-     * File descriptor that we will read and write in the client_fd.
+    /* _RECIPES
+     * List of functions to resolve a request.
      */
-    int     _fd_body;
+    t_recipes                   _recipes;
+    t_recipes_it                _it_recipes;
 
     /* _STATUS_MESSAGES
      * Contain relations between all status codes and messages.
      */
     std::string                 _get_status_line(int code);
 
-    /* _RESP_HEADERS
-     * Each node will be a line in headers that we will send in client_fd.
-     * The first line is the status line.
+
+    /* _GEN_RESP_HEADERS
+     * Generate headers in string form including status line in _headers
      */
-    std::list<std::string>  _resp_headers;
+    void  _gen_resp_headers(void);
+    std::string _resp_headers;
+
+    /* _FD_BOD
+     * File descriptor that we will be read and write in the client_fd.
+     */
+    int     _fd_body;
 
     std::string             _bad_request(void);
     void                    _send_bad_request(void);
