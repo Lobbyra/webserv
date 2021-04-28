@@ -27,7 +27,7 @@ void        c_callback::_meth_put_open_fd(void) {
 }
 
 void       c_callback::_meth_put_write_body(void) {
-    std::string     body_test("Bonjour ! Body testing.");
+    std::string     body_test("Bonjour ! Body testing.\nHappy test");
 
     if (write(_fd_to_write.client_fd, body_test.c_str(), body_test.length()) != -1) {
             close(_fd_to_write.client_fd);
