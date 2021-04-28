@@ -94,6 +94,8 @@ struct s_socket {
 
 std::ostream    &operator<<(std::ostream &o, s_socket const &i);
 
+std::list<s_request_header> get_requests(std::list<s_socket> *sockets);
+
 typedef std::list<s_socket>     t_socketlst;
 
 std::list<c_server>     parse_conf(std::string path);
@@ -108,6 +110,7 @@ void    assign_server_to_clients(std::list<c_server> const &conf, \
 
 void            init_callback(t_socketlst clients,
                               std::list<s_request_header> requests);
+
 
 # include "classes/c_callback.hpp"
 # include "classes/c_task_queue.hpp"

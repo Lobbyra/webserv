@@ -55,6 +55,10 @@ PARSE_REQUEST_HEADER_FILES = read_request_header.cpp parse_request.cpp		  \
 							 parse_request_line.cpp  parse_request_header.cpp \
 							 init_maps.cpp
 
+GET_REQUESTS_PATH = get_requests/
+GET_REQUESTS_FILES = get_requests.cpp
+GET_REQUESTS_HEADER = get_requests.hpp
+
 UTILS_PATH	 = utils/
 UTILS_FILES	 = get_keys.cpp is_space.cpp get_word_it.cpp skip_it.cpp	     \
 			   is_str_num.cpp ft_isin.cpp ft_error.cpp ft_timeval_init.cpp   \
@@ -64,26 +68,29 @@ UTILS_FILES	 = get_keys.cpp is_space.cpp get_word_it.cpp skip_it.cpp	     \
 UTILS_HEADER = utils.hpp insert_stream_cont.hpp
 
 SRCS_FILES = ${ROOT_FILES} \
-			 ${addprefix ${PARSE_CONF_PATH}, ${PARSE_CONF_FILES}} \
-			 ${addprefix ${UTILS_PATH}, ${UTILS_FILES}}	\
+			 ${addprefix ${PARSE_CONF_PATH}, ${PARSE_CONF_FILES}}		\
+			 ${addprefix ${UTILS_PATH}, ${UTILS_FILES}}					\
 			 $(addprefix ${PARSE_REQUEST_HEADER_PATH}, ${PARSE_REQUEST_HEADER_FILES}) \
-			 $(addprefix ${CLASSES_PATH}, ${CLASSES_FILES})
+			 $(addprefix ${CLASSES_PATH}, ${CLASSES_FILES})				\
+			 ${addprefix ${GET_REQUESTS_PATH}, ${GET_REQUESTS_FILES}}
 
 HEADER_FILES = ${ROOT_HEADER} \
-			   ${addprefix ${PARSE_CONF_PATH}, ${PARSE_CONF_HEADER}} \
-			   ${addprefix ${UTILS_PATH}, ${UTILS_HEADER}}	\
+			   ${addprefix ${PARSE_CONF_PATH}, ${PARSE_CONF_HEADER}}		\
+			   ${addprefix ${UTILS_PATH}, ${UTILS_HEADER}}					\
 			   ${addprefix ${PARSE_REQUEST_HEADER_PATH}, ${PARSE_REQUEST_HEADER_HEADER}} \
-			   ${addprefix ${CLASSES_PATH}, ${CLASSES_HEADERS}}
+			   ${addprefix ${CLASSES_PATH}, ${CLASSES_HEADERS}}				\
+			   ${addprefix ${GET_REQUESTS_PATH}, ${GET_REQUESTS_HEADER}}
 
 HEADER_FULL = ${addprefix ${SRCS_PATH}, ${HEADER_FILES}}
 
 OBJS_PATH  = ./obj/
 OBJS_PATHS = ${OBJS_PATH} \
-			 ${OBJS_PATH}/${PARSE_CONF_PATH} \
+			 ${OBJS_PATH}/${PARSE_CONF_PATH}					\
 			 ${OBJS_PATH}/${PARSE_CONF_PATH}/${PARSE_FUNS_PATH} \
-			 ${OBJS_PATH}/${UTILS_PATH} \
-			 ${OBJS_PATH}/${PARSE_REQUEST_HEADER_PATH} \
-			 ${OBJS_PATH}/${CLASSES_PATH}
+			 ${OBJS_PATH}/${UTILS_PATH}							\
+			 ${OBJS_PATH}/${PARSE_REQUEST_HEADER_PATH}			\
+			 ${OBJS_PATH}/${CLASSES_PATH}						\
+			 ${OBJS_PATH}/${GET_REQUESTS_PATH}
 OBJS	   = ${addprefix ${OBJS_PATH}, ${SRCS_FILES:.cpp=.o}}
 
 INCL_PATHS = ${SRCS_PATH}/. \

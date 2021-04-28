@@ -1,9 +1,9 @@
 #include "webserv.hpp"
 
-/*
+/* ASSIGN_SERVER_TO_CLIENTS
  * Assigns c_server* to clients
  * Server are chosen by s_ipport and server_name if match
-*/
+ */
 
 static bool is_right_conf(t_strlst const &serv_name,
             s_request_header const &request) {
@@ -33,7 +33,8 @@ static c_server const *get_right_conf(std::list<c_server> const &conf,
 }
 
 void    assign_server_to_clients(std::list<c_server> const &conf,
-        t_socketlst *const clients, std::list<s_request_header> const &reqs) {
+                                 t_socketlst *const clients,
+                                 std::list<s_request_header> const &reqs) {
     t_socketlst::iterator it_c = clients->begin(), ite_c = clients->end();
     std::list<s_request_header>::const_iterator it_r = reqs.begin();
 

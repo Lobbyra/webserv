@@ -45,6 +45,7 @@ void    webserv(std::list<c_server> const &conf) {
         if (g_run == false)
             break ;
         if (is_client_ready(sockets) == true) {
+            requests = get_requests(sockets);
             requests = parse_request(sockets);
             assign_server_to_clients(conf, sockets, requests);
             task_queue.push(requests, sockets);
