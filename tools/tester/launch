@@ -9,12 +9,12 @@
 
 EOC="\e[0m"
 BOLD="\e[1m"
-RED="\e[1;91m"
-GREEN="\e[1;92m"
-YELLOW="\e[1;93m"
-DBLUE="\e[1;94m"
-PURPLE="\e[1;95m"
-CYAN="\e[1;96m"
+RED="\e[91m"
+GREEN="\e[92m"
+YELLOW="\e[93m"
+DBLUE="\e[94m"
+PURPLE="\e[95m"
+CYAN="\e[96m"
 
 # ============================================================================ #
 #                                 Functions                                    #
@@ -66,6 +66,11 @@ function check_one() {
     testtype="$(echo ${pathtestname} | cut -d '/' -f 2)"
     testname="$(echo ${pathtestname} | cut -d '/' -f 3-)"
     tmpfile="${testtype}.${testname}.${RANDOM}.out"
+
+    if ! [ -e "$file_resp" ] || ! [ -s "$file_resp" ]; then
+        echo "${PURPLE}Resp file empty or missing for test: $testname${EOC}";
+        return 1
+    fi
 
     > $tmpfile nc $3 $2 < $1
 
