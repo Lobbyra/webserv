@@ -3,6 +3,11 @@
 #include <arpa/inet.h> // inet_pton
 #include <fcntl.h>
 
+/* INIT_SERVERS
+ * This function will add new sockets in sockets list.
+ * Theses sockets are servers from config file given.
+ */
+
 static int  makeSocketfd(const int &port) {
     int newSocket;
     const int opt = 1;
@@ -34,7 +39,7 @@ static s_socket makeSocket(const c_server *server) {
     return (newSocket);
 }
 
-t_socketlst     init_clients(std::list<c_server> const &conf) {
+t_socketlst     init_servers(std::list<c_server> const &conf) {
     std::list<c_server>::const_iterator it = conf.begin(), ite = conf.end();
     t_socketlst res;
 

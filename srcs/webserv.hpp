@@ -98,7 +98,7 @@ typedef std::list<s_socket>     t_socketlst;
 
 std::list<c_server>     parse_conf(std::string path);
 void                    webserv(std::list<c_server> const &conf);
-t_socketlst             init_clients(std::list<c_server> const &conf);
+t_socketlst             init_servers(std::list<c_server> const &conf);
 void                    ft_select(t_socketlst *const clients);
 
 void    assign_server_to_clients(std::list<c_server> const &conf, \
