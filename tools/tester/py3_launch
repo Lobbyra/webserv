@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+function ft_exit() {
+	>&2 echo $*
+	return 1
+}
+
+function install_brew() {
+	rm -rf $HOME/.brew && \
+	git clone --depth=1 https://github.com/Homebrew/brew $HOME/.brew && \
+	echo 'export PATH=$HOME/.brew/bin:$PATH' >> $HOME/.zshrc && \
+	source $HOME/.zshrc && brew update
+}
+
+function check_prerequisites () {
+	if which python3 &>/dev/null; then
+		echo "Python3 - OK"
+		return 0
+	fi
+	if ! which brew &>/dev/null; then
+		echo "Installing brew ..."
+		install_brew
+	else
+		echo "Installing python3 ..."
+		brew install python3
+	fi
+}
+
+check_prerequisites

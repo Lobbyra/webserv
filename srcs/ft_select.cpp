@@ -10,7 +10,7 @@ static void init_fdsets(t_socketlst const *lst, fd_set *r_set, fd_set *w_set) {
     for (; it != ite; ++it) {
         if (it->client_fd == 0) {
             FD_SET(it->entry_socket, r_set);
-            FD_SET(it->entry_socket, w_set);
+            // FD_SET(it->entry_socket, w_set);
         } else {
             FD_SET(it->client_fd, r_set);
             FD_SET(it->client_fd, w_set);
@@ -25,8 +25,8 @@ static int socket_max(t_socketlst const *const lst) {
     for (; it != ite; ++it) {
         if (it->client_fd == 0 && it->entry_socket > max)
             max = it->entry_socket;
-        // else if (it->client_fd != 0 && it->client_fd > max)
-        //     max = it->client_fd;
+        else if (it->client_fd != 0 && it->client_fd > max)
+            max = it->client_fd;
     }
     return (max);
 }
@@ -39,11 +39,12 @@ static bool update_socketlst(t_socketlst *const lst, fd_set *r_set,
 
     for (; it != ite; ++it) {
         isset_r = FD_ISSET(it->entry_socket, r_set);
-        isset_w = FD_ISSET(it->entry_socket, w_set);
+        isset_w = FD_ISSET(it->client_fd, w_set);
 
-        if (isset_r != it->is_read_ready)
-            it->is_read_ready = isset_r;
+        it->is_read_ready = isset_r;
         it->is_write_ready = isset_w;
+        if (FD_ISSET(it->client_fd, r_set))
+            it->is_read_ready = true;
         if (raised_true == false && isset_r)
             raised_true = true;
     }
@@ -56,7 +57,7 @@ void    ft_select(t_socketlst *const clients) {
     bool    updated_read;
 
     errno = 0;
-    ft_timeval_init(&time, 1);
+    ft_timeval_init(&time, 0);
     init_fdsets(clients, &r_fdset, &w_fdset);
     select(socket_max(clients) + 1, &r_fdset, &w_fdset, NULL, &time);
     updated_read = update_socketlst(clients, &r_fdset, &w_fdset);

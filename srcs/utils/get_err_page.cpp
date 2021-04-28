@@ -1,10 +1,10 @@
 #include "utils.hpp"
 
-#define TEMPLATE "<html>"                                   \
-                 "<head><title>CODE MSG</title></head>"     \
-                 "<body><center><h1>CODE MSG</h1></center>" \
-                 "<hr><center>drunkserv</center></body>"    \
-                 "</html>"
+#define TEMPLATE "<html>\r\n"                                               \
+                 "<head><title>CODE MSG</title></head>\r\n"                 \
+                 "<body><center><h1>CODE MSG</h1></center>\r\n"             \
+                 "<hr><center>Drunk-Architect TEAM</center></body>\r\n"     \
+                 "</html>\r\n"
 #define MSG_LEN 3
 #define CODE_LEN 4
 

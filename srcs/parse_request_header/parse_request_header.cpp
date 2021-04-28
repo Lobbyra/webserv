@@ -6,8 +6,8 @@ static void skip_prefix(std::string const &src,
 
     while (it != ite && sep.find(*it) == std::string::npos)
         ++it;
-    it++;
-    it++;
+    if (it != ite)
+        it++;
 }
 
 static void skip_sep(std::string const &src,
