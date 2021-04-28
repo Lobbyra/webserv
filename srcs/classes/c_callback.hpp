@@ -21,7 +21,7 @@ public:
     virtual ~c_callback();
 
     c_callback(s_socket client, s_request_header request, 
-               std::list<s_socket> **clients);
+               std::list<s_socket> *clients);
 
     //s_socket
     std::list<s_socket>         *clients;

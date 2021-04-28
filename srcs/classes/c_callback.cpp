@@ -5,8 +5,8 @@ c_callback::c_callback(void) {
 }
 
 c_callback::c_callback(s_socket client, s_request_header request,
-                       std::list<s_socket> **clients) {
-    this->clients = *clients;
+                       std::list<s_socket> *clients) {
+    this->clients = clients;
     _init_s_socket(client);
     _init_request_header(request);
     if (this->server)

@@ -66,7 +66,7 @@ void    c_task_queue::push(std::list<s_request_header> &requests,
             ++it_clients;
             continue ;
         }
-        cb_temp = new c_callback(*it_clients, *it_requests, &clients);
+        cb_temp = new c_callback(*it_clients, *it_requests, clients);
         it_clients->is_header_read = true;
         _tasks.push(cb_temp);
         ++it_clients;
