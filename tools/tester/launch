@@ -1,5 +1,8 @@
 #!/usr/bin/env zsh
 
+# This script shall:
+# Compare the status line of a new request with the expected response
+
 # ============================================================================ #
 #                             Global variables                                 #
 # ============================================================================ #
@@ -14,31 +17,13 @@ PURPLE="\e[1;95m"
 CYAN="\e[1;96m"
 
 # ============================================================================ #
-#                               Initialization                                 #
+#                                 Functions                                    #
 # ============================================================================ #
-
-# This script shall:
-# Compare the status line of a new request with the expected response
 
 function ft_exit() {
     >&2 echo $*
-    return 1
+    exit 1
 }
-
-if [ $# -lt 1 ] || [ $# -gt 3 ]; then
-    ft_exit "Usage: $0 <file.req> [port=80] [ip=localhost]"
-elif ! [ -e "$1" ]; then
-    ft_exit "File does not exist"
-elif ! [ -s "$1" ]; then
-    ft_exit "Empty file"
-fi
-
-if [ -z "$2" ]; then 2="80"; fi
-if [ -z "$3" ]; then 3="localhost"; fi
-
-# ============================================================================ #
-#                                 Begin                                        #
-# ============================================================================ #
 
 function emojibool () {
     # 1=bool
@@ -55,22 +40,6 @@ function pline () {
     printf "%-15s: $(emojibool $2)\n" $1
 }
 
-pathtestname="$(echo $1 | cut -d '.' -f1)"
-file_resp="${pathtestname}.resp"
-
-testname="$(echo ${pathtestname} | cut -d '/' -f 2-)"
-tmpfile="${testname}.${RANDOM}.out"
-
-> $tmpfile nc $3 $2 < $1
-
-custom_statusline="$(head -n1 $tmpfile)"
-true_statusline="$(head -n1 $file_resp)"
-
-rm -f $tmpfile
-
-res=$(is_equal "$custom_statusline" "$true_statusline")
-pline $testname $res
-
 function pdiff () {
     # 1=src; 2=color; 3=line
     1="$1:"
@@ -79,7 +48,42 @@ function pdiff () {
     printf "${EOC}\n"
 }
 
-if [ "$res" = "1" ]; then
-    pdiff "HAVE" "$RED" "$custom_statusline"
-    pdiff "EXPECT" "$GREEN" "$true_statusline"
+function check_one() {
+    if [ $# -lt 1 ] || [ $# -gt 3 ]; then
+        ft_exit "Usage: $0 <file.req> [port=80] [ip=localhost]"
+    elif ! [ -e "$1" ]; then
+        ft_exit "File does not exist: $1"
+    elif ! [ -s "$1" ]; then
+        ft_exit "Empty file: $1"
+    fi
+
+    if [ -z "$2" ]; then 2="80"; fi
+    if [ -z "$3" ]; then 3="localhost"; fi
+
+    pathtestname="$(echo $1 | cut -d '.' -f1)" # w/o ext
+    file_resp="${pathtestname}.resp"
+
+    testtype="$(echo ${pathtestname} | cut -d '/' -f 2)"
+    testname="$(echo ${pathtestname} | cut -d '/' -f 3-)"
+    tmpfile="${testtype}.${testname}.${RANDOM}.out"
+
+    > $tmpfile nc $3 $2 < $1
+
+    custom_statusline="$(head -n1 $tmpfile)"
+    true_statusline="$(head -n1 $file_resp)"
+
+    rm -f $tmpfile
+
+    res=$(is_equal "$custom_statusline" "$true_statusline")
+    pline $testname $res
+
+    if [ "$res" = "1" ]; then
+        pdiff "HAVE" "$RED" "$custom_statusline"
+        pdiff "EXPECT" "$GREEN" "$true_statusline"
+    fi
+
+}
+
+if [ "$SHLVL" = "2" ]; then
+    check_one $*
 fi
