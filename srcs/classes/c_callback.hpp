@@ -27,6 +27,9 @@ public:
     c_server                    *server;
     int                         client_fd;
     t_sockaddr                  client_addr;
+    bool                        *is_read_ready;
+    bool                        *is_write_ready;
+    bool                        *is_header_read;
 
     // Variables from server block from config
     int                         client_max_body_size;
@@ -120,6 +123,7 @@ private:
     std::list<t_task_f> _init_recipe_head(void);
     std::list<t_task_f> _init_recipe_delete(void);
     std::list<t_task_f> _init_recipe_put(void);
+    std::list<t_task_f> _init_error_request(void);
 
     /* _RECIPES
      * List of functions to resolve a request.
@@ -130,14 +134,13 @@ private:
     /* _STATUS_MESSAGES
      * Contain relations between all status codes and messages.
      */
-    std::map<int, std::string>  _status_message;
-    void                        _init_map_status_message(void);
     std::string                 _get_status_line(int code);
 
 
     /* _GEN_RESP_HEADERS
      * Generate headers in string form including status line in _headers
      */
+    void  _gen_error_header_and_body(void);
     void  _gen_resp_headers(void);
     std::string _resp_headers;
 
@@ -146,8 +149,8 @@ private:
      */
     int     _fd_body;
 
-    std::string             _bad_request(void);
-    void                    _send_bad_request(void);
+    void    _fd_is_ready_to_send(void);
+    void    _send_respons(void);
 
     // HEAD RECIPE
     void    _meth_head_request_is_valid(void);
@@ -158,7 +161,6 @@ private:
     int      _remove_directory(const char *path);
     void     _meth_delete_request_is_valid(void);
     void     _meth_delete_remove(void);
-    void     _meth_delete_send(void);
 
     // GET RECIPE
     void    _meth_get_open(void);

@@ -1,30 +1,19 @@
 #include "c_callback.hpp"
 
-void                                c_callback::_meth_delete_request_is_valid(void) {
+void                        c_callback::_meth_delete_request_is_valid(void) {
     DIR              *curr_directory = NULL;
     this->path.insert(0, this->root);
 
-    if (this->host.empty() == true)
-        this->status_code = 400;
-    else if ((curr_directory = opendir(this->path.c_str())) == NULL) {
+    if ((curr_directory = opendir(this->path.c_str())) == NULL) {
         this->status_code = 404;
         return ;
     }
     else
-        this->status_code = 204;
+        this->status_code = 200;
     closedir(curr_directory);
 }
 
-void                          c_callback::_meth_delete_send(void) {
-    std::string     response = _response();
-    std::cout << "Response: " << std::endl;
-    std::cout << response << std::endl;
-    if (send(client_fd, response.c_str(), response.length(), 0) == -1) {
-		std::cerr << "error: Respons to client" << std::endl;
-	}
-}
-
-int                           c_callback::_remove_directory(const char *path)
+int                         c_callback::_remove_directory(const char *path)
 {
     int                 ret;
     DIR                 *curr_directory;
@@ -72,6 +61,7 @@ std::list<c_callback::t_task_f>     c_callback::_init_recipe_delete(void) {
 
     tasks.push_back(&c_callback::_meth_delete_request_is_valid);
     tasks.push_back(&c_callback::_meth_delete_remove);
-    tasks.push_back(&c_callback::_meth_delete_send);
+    tasks.push_back(&c_callback::_fd_is_ready_to_send);
+    tasks.push_back(&c_callback::_send_respons);
     return (tasks);
 }
