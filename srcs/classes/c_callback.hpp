@@ -161,7 +161,6 @@ private:
     int      _remove_directory(const char *path);
     void     _meth_delete_request_is_valid(void);
     void     _meth_delete_remove(void);
-    void     _meth_delete_send(void);
 
     // GET RECIPE
     void    _meth_get_open(void);
