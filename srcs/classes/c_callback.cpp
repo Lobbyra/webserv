@@ -12,9 +12,11 @@ c_callback::c_callback(s_socket client, s_request_header request) {
         _init_server_hpp(this->server);
         _server_init_route(this->server->location);
     }
-    _init_map_status_message();
     _init_meth_functions();
     _recipes = _meth_funs[this->method];
+    if (_recipes.empty() == true) {
+        _send_bad_request();
+    }
     _it_recipes = _recipes.begin();
     return ;
 }
@@ -50,26 +52,6 @@ bool    c_callback::is_over(void) {
 /*
  * ####### PRIVATE FUNCTIONS
  */
-void    c_callback::_init_map_status_message(void) {
-    _status_message[200] = "OK";
-    _status_message[201] = "Creapted";
-    _status_message[203] = "Non-Authritative Information";
-    _status_message[204] = "No Content";
-    _status_message[205] = "Reset Content";
-    _status_message[206] = "Partial Content";
-    _status_message[400] = "Bad Request";
-    _status_message[401] = "Unauthorized";
-    _status_message[402] = "Payment Required";
-    _status_message[403] = "Forbidden";
-    _status_message[404] = "Not Found";
-    _status_message[405] = "Method Not Allowed";
-    _status_message[406] = "Not Acceptable";
-    _status_message[408] = "Request Timeout";
-    _status_message[409] = "Conflict";
-    _status_message[410] = "Gone";
-    _status_message[411] = "Length Required";
-    _status_message[500] = "Internal Server Error";
-}
 
 void    c_callback::_init_meth_functions(void) {
     if (this->host.empty() == true) {

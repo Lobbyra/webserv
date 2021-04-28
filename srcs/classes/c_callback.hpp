@@ -122,8 +122,6 @@ private:
     /* _STATUS_MESSAGES
      * Contain relations between all status codes and messages.
      */
-    std::map<int, std::string>  _status_message;
-    void                        _init_map_status_message(void);
     std::string                 _get_status_line(int code);
 
     /* _RESP_HEADERS

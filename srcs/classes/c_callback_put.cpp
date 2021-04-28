@@ -15,8 +15,6 @@ void        c_callback::_meth_put(void) {
     std::string         body_test("Body de test");
     this->path.insert(0, this->root);
 
-    if (this->host.empty() == true)
-        this->status_code = 400;
     if (lstat(this->path.c_str(), &stat) == 0) {
         this->status_code = 204;
     }

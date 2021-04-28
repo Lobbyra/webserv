@@ -5,7 +5,7 @@ std::string                         c_callback::_response(void) {
     std::string endl("\r\n");
     
     sstr << "HTTP/1.1 " << this->status_code << " "                 \
-    << _status_message[this->status_code] << endl                   \
+    << get_status_msg(this->status_code) << endl                   \
     << "Server: " << "Server Drunk Architect TEAM" << endl          \
     << "Date: " << "Mon, 27 Apr 1645 23:59:59 GMT" << endl << endl  \
     << "Body: Congragulation !" ;
@@ -17,9 +17,7 @@ std::string                         c_callback::_response(void) {
 void                                c_callback::_meth_head_request_is_valid(void) {
     this->path.insert(0, this->root);
 
-    if ((this->host.empty()) == true)
-        this->status_code = 400;
-    else if ((open(this->path.c_str(), O_RDONLY)) == -1)
+    if ((open(this->path.c_str(), O_RDONLY)) == -1)
         this->status_code= 404;
     else
         this->status_code = 200;

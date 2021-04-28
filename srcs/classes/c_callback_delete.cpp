@@ -4,9 +4,7 @@ void                                c_callback::_meth_delete_request_is_valid(vo
     DIR              *curr_directory = NULL;
     this->path.insert(0, this->root);
 
-    if (this->host.empty() == true)
-        this->status_code = 400;
-    else if ((curr_directory = opendir(this->path.c_str())) == NULL) {
+    if ((curr_directory = opendir(this->path.c_str())) == NULL) {
         this->status_code = 404;
         return ;
     }
