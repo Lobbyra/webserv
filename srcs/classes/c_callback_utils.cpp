@@ -74,7 +74,8 @@ void    c_callback::_gen_resp_headers(void) {
     headers.push_back(get_status_line(status_code));
     grh_add_headers(headers, *this);
     _resp_headers = lststr_to_strcont(headers, "\r\n");
-    _resp_headers += "\r\n\r\n";
+    _resp_headers += "\r\n\r\n\r\n";
+    // x3 cause lststr_to_strcont remove the ending separator
 }
 
 

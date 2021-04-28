@@ -11,8 +11,9 @@ std::string lststr_to_strcont(std::list<std::string> const &lst,
         concatenate += *it;
         concatenate += sep;
     }
-    if (concatenate.size() > 0)
-        concatenate.erase(concatenate.end() - sep.size(), sep.end());
+    if (concatenate.size() > 0) {
+        concatenate.erase(concatenate.size() - sep.size(), sep.size());
+    }
     return (concatenate);
 }
 
