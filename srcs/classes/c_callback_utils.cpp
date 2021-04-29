@@ -77,17 +77,12 @@ void    c_callback::_gen_resp_headers(void) {
     _resp_headers += "\r\n\r\n";
 }
 
-
 /* FD_IS_READY_TO_SEND()
  * Function which verifies that we can write in the fd
  * If not decrement the iterator it_recipes
  */
 void                    c_callback::_fd_is_ready_to_send(void) {
-<<<<<<< HEAD
-    if (*(this->is_write_ready) == false) {
-=======
     if (*this->is_write_ready == false) {
->>>>>>> dev_jex
         _it_recipes--;
     }
 }
