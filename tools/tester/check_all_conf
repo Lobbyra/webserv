@@ -1,0 +1,67 @@
+#!/usr/bin/env zsh
+
+# This script shall:
+# Compare the status line of all request in sub-dir with the expected response
+# + launch webserv with different config files
+
+# ============================================================================ #
+#                               Initialization                                 #
+# ============================================================================ #
+
+if [ "$SHLVL" = "1" ]; then
+    source ./check_all
+fi
+
+webserv_path="../../"
+webserv_bin="webserv"
+webserv_exec="${webserv_path}/${webserv_bin}"
+config_path="conf"
+ip="localhost"
+log_path="./logs"
+
+# ============================================================================ #
+#                                   Begin                                      #
+# ============================================================================ #
+
+function compile_webserv() {
+    make -j -C $webserv_path || ft_exit "${RED}Can compile webserv${EOC}"
+}
+
+function check_all_conf() {
+    export SHLVL=1
+    source ./check_all
+    compile_webserv
+
+    # ft_exit "Usage: $0 [file/to/test] [...]"
+    if [ $# -ne 0 ]; then
+        config_files=(${@})
+    else
+        config_files=($(ls $config_path/*.conf))
+    fi
+
+    iter=0
+    mkdir -p $log_path
+    for config in ${config_files[@]}; do
+        if ! [ -e "$config" ] || ! [ -s "$config" ]; then
+            echo "${PURPLE}Config file empty or missing: $config${EOC}";
+            continue
+        fi
+        conf_name="$(echo $config | cut -d '/' -f 2)"
+        log_file="$log_path/$conf_name.$iter.log"
+        ((iter++))
+
+        ./$webserv_exec $config &>"$log_file" &
+
+        ports=($(cat $config | grep listen | cut -d ':' -f 2 | cut -d ';' -f 1 | uniq))
+        for port in ${ports[@]}; do
+            printf "${YELLOW}%45s${EOC} on port ${GREEN}%s${EOC}:\n" $conf_name $port
+            check_all "$ip" "$port"
+        done
+
+        pkill $webserv_bin &>/dev/null
+    done
+}
+
+if [ "$SHLVL" = "2" ]; then
+    check_all_conf $*
+fi
