@@ -146,6 +146,8 @@ void        c_callback::_server_init_route(std::list<c_location> location) {
             client_max_body_size = (*it).client_max_body_size;
         if((*it).index.begin() != (*it).index.end())
             index = (*it).index;
+        if ((*it).methods.empty() == false)
+            methods = (*it).methods;
         if ((*it).root.empty() == false)
             root = (*it).root;
         if ((*it).autoindex.empty() == false)
