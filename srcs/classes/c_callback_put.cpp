@@ -23,6 +23,10 @@ void        c_callback::_meth_put_open_fd(void) {
         _fd_to_write = tmp;
         _fd_to_write.client_fd = tmp.client_fd;
         this->clients->push_back(tmp);
+    } else {
+        this->status_code = 500;
+        _recipes = _init_error_request();
+        _it_recipes = --(_recipes.begin());
     }
 }
 
@@ -39,19 +43,19 @@ void       c_callback::_meth_put_write_body(void) {
                     break ;
             }
             clients->erase(it);
-            this->status_code = 201;
+            if (this->status_code != 204)
+                this->status_code = 201;
             return ;
-        }
-        this->status_code = 500;
+    }
 }
 
 std::list<c_callback::t_task_f>         c_callback::_init_recipe_put(void){
     std::list<t_task_f> tasks;
 
     tasks.push_back(&c_callback::_meth_put_open_fd);
-    tasks.push_back(&c_callback::_gen_resp_headers);
     tasks.push_back(&c_callback::_meth_put_fd_is_ready_to_write);
     tasks.push_back(&c_callback::_meth_put_write_body);
+    tasks.push_back(&c_callback::_gen_resp_headers);
     tasks.push_back(&c_callback::_fd_is_ready_to_send);
     tasks.push_back(&c_callback::_send_respons);
     return (tasks);

@@ -1,16 +1,17 @@
 #include "c_callback.hpp"
 
 void                    c_callback::_meth_delete_request_is_valid(void) {
-    DIR              *curr_directory = NULL;
+    struct stat         stat;
     this->path.insert(0, this->root);
 
-    if ((curr_directory = opendir(this->path.c_str())) == NULL) {
-        this->status_code = 404;
-        return ;
+    if (!lstat(this->path.c_str(), &stat)) {
+        if (S_ISREG(stat.st_mode))
+            status_code = 204;
+        else if (S_ISDIR(stat.st_mode))
+            status_code = 200;
     }
     else
-        this->status_code = 200;
-    closedir(curr_directory);
+        this->status_code = 404;
 }
 
 int                     c_callback::_remove_directory(const char *path)
@@ -60,8 +61,8 @@ std::list<c_callback::t_task_f>     c_callback::_init_recipe_delete(void) {
     std::list<t_task_f> tasks;
 
     tasks.push_back(&c_callback::_meth_delete_request_is_valid);
-    tasks.push_back(&c_callback::_gen_resp_headers);
     tasks.push_back(&c_callback::_meth_delete_remove);
+    tasks.push_back(&c_callback::_gen_resp_headers);
     tasks.push_back(&c_callback::_fd_is_ready_to_send);
     tasks.push_back(&c_callback::_send_respons);
     return (tasks);

@@ -7,6 +7,8 @@ std::string get_status_msg(int code) {
             return ("OK");
         case 201:
             return ("Created");
+        case 204:
+            return ("No Content");
         case 403:
             return ("Forbidden");
         case 400:
