@@ -22,7 +22,6 @@ class    c_location {
     std::string     fastcgi_pass;
     t_cgi_param     fastcgi_param;
     t_error_page    error_page;
-
 };
 
 std::ostream    &operator<<(std::ostream &o, c_location const &i);

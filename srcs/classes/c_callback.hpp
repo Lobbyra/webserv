@@ -126,6 +126,7 @@ private:
     std::list<t_task_f> _init_recipe_delete(void);
     std::list<t_task_f> _init_recipe_put(void);
     std::list<t_task_f> _init_error_request(void);
+    std::list<t_task_f> _init_recipe_options(void);
 
     /* _RECIPES
      * List of functions to resolve a request.
@@ -175,6 +176,9 @@ private:
     void     _meth_put_fd_is_ready_to_write(void);
     void     _meth_put_write_body(void);
     s_socket _fd_to_write;
+
+    // OPTIONS RECIPE
+    void    _gen_resp_header_options(void);
 
 };
 
