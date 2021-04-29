@@ -1,0 +1,6 @@
+HTTP/1.1 201 Created
+Server: nginx/1.19.10
+Date: Thu, 29 Apr 2021 15:01:42 GMT
+Content-Length: 0
+Location: http://example.com/new.html
+Connection: keep-alive

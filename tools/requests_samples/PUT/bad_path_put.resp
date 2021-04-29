@@ -1,0 +1,14 @@
+HTTP/1.1 500 Internal Server Error
+Server: nginx/1.19.10
+Date: Thu, 29 Apr 2021 15:08:35 GMT
+Content-Type: text/html
+Content-Length: 178
+Connection: close
+
+<html>
+<head><title>500 Internal Server Error</title></head>
+<body>
+<center><h1>500 Internal Server Error</h1></center>
+<hr><center>nginx/1.19.10</center>
+</body>
+</html>
