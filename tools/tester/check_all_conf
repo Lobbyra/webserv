@@ -32,7 +32,7 @@ function check_all_conf() {
     source ./check_all
     compile_webserv
 
-    # ft_exit "Usage: $0 [file/to/test] [...]"
+    # ft_exit "Usage: $0 [conf/to/test] [...]"
     if [ $# -ne 0 ]; then
         config_files=(${@})
     else
@@ -51,6 +51,7 @@ function check_all_conf() {
         ((iter++))
 
         ./$webserv_exec $config &>"$log_file" &
+        sleep 0.1
 
         ports=($(cat $config | grep listen | cut -d ':' -f 2 | cut -d ';' -f 1 | uniq))
         for port in ${ports[@]}; do
