@@ -60,7 +60,7 @@ void    c_callback::_init_meth_functions(void) {
         this->status_code = 400;
         return ;
     }
-    _meth_funs["GET"] = _init_recipe_dumb();
+    _meth_funs["GET"] = _init_recipe_get();
     _meth_funs["HEAD"] = _init_recipe_head();
     _meth_funs["DELETE"] = _init_recipe_delete();
     _meth_funs["PUT"] = _init_recipe_put();
@@ -92,6 +92,7 @@ void    c_callback::_init_request_header(s_request_header request) {
     this->user_agent = request.user_agent;
     this->content_length = request.content_length;
     this->status_code = request.error;
+    this->_resp_body = false;
     return ;
 }
 

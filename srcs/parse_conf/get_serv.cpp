@@ -1,6 +1,6 @@
 #include "parse_conf.hpp"
 
-/*
+/* GET_SERV
  * This function take a iterator on first letter of a server block. It will
  * create a server structure (c_server -> srcs/data_structures.hpp).
  *
@@ -11,12 +11,20 @@
 #define SRV_KEY_NOT_CONTEXT "server: " + key + " not valid in location"
 #define SRV_NOT_SERVER "server: " + key + " not a server block"
 
+// Init variables need to be inititalized to avoid undefined
+static void init_serv(c_server *srv) {
+    srv->client_max_body_size = 0;
+    srv->srv_id = 0;
+    srv->index.push_back("index.html"); // Default value for index
+}
+
 c_server    get_serv(t_strcit it_conf) {
     c_server    srv;
     std::string key;
     std::map<std::string, void*>    srv_ptr_select;
     std::map<std::string, f_parser> parse_select;
 
+    init_serv(&srv);
     parse_select = init_parsing_select();
     srv_ptr_select = init_srv_ptr_select(&srv);
     if ((key = get_word_it(it_conf)) != "server")

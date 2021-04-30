@@ -23,6 +23,8 @@
 # include "our_typedefs.hpp"
 # include "std_typedefs.hpp"
 # include "s_request_header.hpp"
+# include "../lib/GNL/get_next_line.h"
+# include "../lib/lib.hpp"
 
 class	c_callback
 {
@@ -44,7 +46,7 @@ public:
     int                         entry_socket;
     c_server                    *server;
     int                         client_fd;
-    sockaddr                  client_addr;
+    sockaddr                    client_addr;
     bool                        *is_read_ready;
     bool                        *is_write_ready;
     bool                        *is_header_read;
@@ -138,11 +140,12 @@ private:
      * Get recipe for a specific methods.
      */
     std::list<t_task_f> _init_recipe_dumb(void);
+    std::list<t_task_f> _init_recipe_get(void);
     std::list<t_task_f> _init_recipe_head(void);
     std::list<t_task_f> _init_recipe_delete(void);
     std::list<t_task_f> _init_recipe_put(void);
-    std::list<t_task_f> _init_error_request(void);
     std::list<t_task_f> _init_recipe_options(void);
+    std::list<t_task_f> _init_error_request(void);
 
     /* _RECIPES
      * List of functions to resolve a request.
@@ -163,18 +166,21 @@ private:
     void  _gen_resp_headers(void);
     std::string _resp_headers;
 
+    void    _gen_resp_body(void);
+    bool    _resp_body;
+
     /* _FD_BOD
      * File descriptor that we will be read and write in the client_fd.
      */
     int     _fd_body;
 
     void    _fd_is_ready_to_send(void);
+    void    _send_respons_body(void);
     void    _send_respons(void);
 
-    // HEAD RECIPE
-    void    _meth_head_request_is_valid(void);
-    void    _meth_head_response(void);
-    void    _meth_head_send(void);
+    // GET RECIPE | HEAD RECIPE
+    void            _meth_get_request_is_valid(void);
+    std::string     _find_index_if_exist(void);
 
     // DELETE RECIPE
     int      _remove_directory(const char *path);

@@ -1,5 +1,10 @@
 #include "parse_request.hpp"
 
+static void         init_request(s_request_header *request) {
+    request->content_length = 0;
+    request->error = 0;
+}
+
 s_request_header    read_request_header(int fd) {
     int                                         i = 0;
     int                                         status;
@@ -9,6 +14,7 @@ s_request_header    read_request_header(int fd) {
     std::map<std::string, void *>               request_header;
     std::map<std::string, f_request_header>     parser_request;
 
+    init_request(&request);
     request_header = init_request_header(&request);
     parser_request = init_parser_request();
     while ((status = get_next_line(fd, &line)) == 1) {

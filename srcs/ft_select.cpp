@@ -98,5 +98,5 @@ void    ft_select(t_socketlst *const clients) {
         new_clients.push_back(nclient);
     }
     clients->splice(clients->end(), new_clients);
-    std::cout << "*Toc toc toc*" << std::endl;
+    // std::cout << "*Toc toc toc*" << std::endl;
 }

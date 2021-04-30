@@ -88,11 +88,42 @@ void                    c_callback::_fd_is_ready_to_send(void) {
     }
 }
 
+/* SEND_RESPONS_BODY()
+ * Send the respons body from the server to the client
+ * Open the requested file, read the file, and send line by line
+ */
+void                    c_callback::_send_respons_body(void) {
+    char    *line;
+    char    *tmp;
+    int     file_fd;
+    int     status = -1;
+
+    if ((file_fd = open(this->path.c_str(), O_RDONLY)) != -1) {
+        while ((status = get_next_line(file_fd, &line)) == 1) {
+            if (!line[0]) {
+                free(line);
+                break ;
+            }
+            tmp = ft_strjoin(line, "\n");
+            send(client_fd, tmp, ft_strlen(tmp), 0);
+            free(tmp);
+            free(line);
+        }
+    } else {
+        std::cerr << "Error: open() _gen_resp_body" << std::endl;
+    } if (status == 0)
+        free(line);
+    close(file_fd);
+}
+
 /* SEND_RESPONS()
  * Send the respons from the server to the client
  */
 void                    c_callback::_send_respons(void) {
     if (send(client_fd, _resp_headers.c_str(), _resp_headers.length(), 0) == -1) {
 		std::cerr << "Error: Respons to client" << std::endl;
-	}
+	} if (_resp_body == true) {
+        _send_respons_body();
+    }
 }
+
