@@ -18,6 +18,8 @@ webserv_exec="${webserv_path}/${webserv_bin}"
 config_path="conf"
 ip="localhost"
 log_path="./logs"
+www_path="/tmp/www"
+www_src_path="../docker_nginx/www"
 fill="#########################################################################"
 
 # ============================================================================ #
@@ -26,6 +28,19 @@ fill="#########################################################################"
 
 function compile_webserv() {
     make -j -C $webserv_path || ft_exit "${RED}Can compile webserv${EOC}"
+}
+
+function get_kvalue() {
+    # 1=config; 2=keyword
+    # echoes every value of keyword found, duplicates possible /!\
+
+    values=($(cat "$1" | grep $2 | cut -d ';' -f 1))
+    for word in ${values[@]}; do
+        if [ "$word" = "$2" ]; then
+            continue ;
+        fi
+        echo $word
+    done
 }
 
 function check_all_conf() {
@@ -54,8 +69,11 @@ function check_all_conf() {
         ./$webserv_exec $config &>"$log_file" &
         sleep 0.1
 
-        ports=($(cat $config | grep listen | cut -d ':' -f 2 | cut -d ';' -f 1 | uniq))
+        ports=($(get_kvalue $config listen | cut -d ':' -f 2 | uniq))
+        # roots=($(get_kvalue $config root | uniq))
         for port in ${ports[@]}; do
+            rm -rf $www_path
+            cp -r $www_src_path $www_path
             printf "${DGREY}%.15s${EOC} " "$fill"
             printf "${DBLUE}${conf_name}${EOC} on port ${GREEN}${port}${EOC}:\n"
             check_all "$ip" "$port"
