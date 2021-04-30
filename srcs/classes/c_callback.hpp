@@ -176,14 +176,9 @@ private:
     void    _fd_is_ready_to_send(void);
     void    _send_respons(void);
 
-    // GET RECIPE
+    // GET RECIPE | HEAD RECIPE
     void            _meth_get_request_is_valid(void);
     std::string     _find_index_if_exist(void);
-
-    // HEAD RECIPE
-    void    _meth_head_request_is_valid(void);
-    void    _meth_head_response(void);
-    void    _meth_head_send(void);
 
     // DELETE RECIPE
     int      _remove_directory(const char *path);
