@@ -1,18 +1,25 @@
 #include "parse_conf.hpp"
 
-/*
+#include <algorithm>
+
+/* PARSE_INDEX
  * This function have to parse a list of path. It throw and error only if
  * there isn't value between "index" and ';'.
+ *
+ * find() is used to avoid duplicates.
  */
 
 void    parse_index(std::string::const_iterator it, void *ptr) {
+    std::string file_name;
     std::list<std::string> *index = (std::list<std::string>*)ptr;
 
     it += ft_strlen("index ");
     if (*it == ';')
         throw std::logic_error("Empty value for key: index");
     while (*it != ';') {
-        index->push_back(get_word_it(it, whitespaces + ";"));
+        file_name = get_word_it(it, whitespaces + ";");
+        if (find(index->begin(), index->end(), file_name) == index->end())
+            index->push_back(get_word_it(it, whitespaces + ";"));
         while (*it != ' ' && *it != ';')
             ++it;
         if (*it == ' ')
