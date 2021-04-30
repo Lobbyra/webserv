@@ -23,6 +23,7 @@
 # include "our_typedefs.hpp"
 # include "std_typedefs.hpp"
 # include "s_request_header.hpp"
+# include "../lib/GNL/get_next_line.h"
 
 class	c_callback
 {
@@ -44,7 +45,7 @@ public:
     int                         entry_socket;
     c_server                    *server;
     int                         client_fd;
-    sockaddr                  client_addr;
+    sockaddr                    client_addr;
     bool                        *is_read_ready;
     bool                        *is_write_ready;
     bool                        *is_header_read;
@@ -163,6 +164,9 @@ private:
     void  _gen_error_header_and_body(void);
     void  _gen_resp_headers(void);
     std::string _resp_headers;
+
+    void    _gen_resp_body(void);
+    std::string _resp_body;
 
     /* _FD_BOD
      * File descriptor that we will be read and write in the client_fd.
