@@ -10,8 +10,8 @@ RUN		apt install -y	\
 		php7.3			\
 		php7.3-fpm
 
-COPY    ./www /www
+COPY	./www /tmp/www
 
-RUN		chown nginx /www
+RUN		chown nginx /tmp/www
 
 COPY temp.conf /etc/nginx/conf.d/default.conf
