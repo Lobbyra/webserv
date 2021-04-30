@@ -122,11 +122,12 @@ private:
      * Get recipe for a specific methods.
      */
     std::list<t_task_f> _init_recipe_dumb(void);
+    std::list<t_task_f> _init_recipe_get(void);
     std::list<t_task_f> _init_recipe_head(void);
     std::list<t_task_f> _init_recipe_delete(void);
     std::list<t_task_f> _init_recipe_put(void);
-    std::list<t_task_f> _init_error_request(void);
     std::list<t_task_f> _init_recipe_options(void);
+    std::list<t_task_f> _init_error_request(void);
 
     /* _RECIPES
      * List of functions to resolve a request.
@@ -154,6 +155,10 @@ private:
 
     void    _fd_is_ready_to_send(void);
     void    _send_respons(void);
+
+    // GET RECIPE
+    void            _meth_get_request_is_valid(void);
+    std::string     _find_index_if_exist(void);
 
     // HEAD RECIPE
     void    _meth_head_request_is_valid(void);

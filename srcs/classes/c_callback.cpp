@@ -60,7 +60,7 @@ void    c_callback::_init_meth_functions(void) {
         this->status_code = 400;
         return ;
     }
-    _meth_funs["GET"] = _init_recipe_dumb();
+    _meth_funs["GET"] = _init_recipe_get();
     _meth_funs["HEAD"] = _init_recipe_head();
     _meth_funs["DELETE"] = _init_recipe_delete();
     _meth_funs["PUT"] = _init_recipe_put();
