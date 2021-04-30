@@ -79,6 +79,9 @@ void    ft_select(t_socketlst *const clients) {
     else if (errno != 0)
         ft_error("select");
 
+    if (clients->size() > 250) // Too much open fd protection
+        return ;
+    // Accept new clients and append it to the client list
     t_socketlst new_clients;
     t_socketlst::iterator it = clients->begin(), ite = clients->end();
     socklen_t   socklen = sizeof(sockaddr);
