@@ -52,8 +52,6 @@ bool    operator!=(s_ipport const &a, s_ipport const &b);
 # include "classes/c_server.hpp"
 # include "parse_conf/parse_conf.hpp"
 
-typedef struct sockaddr t_sockaddr;
-typedef struct sockaddr_in t_sockaddr_in;
 typedef std::map<int, bool> t_respmap;
 
 

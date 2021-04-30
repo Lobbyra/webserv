@@ -71,7 +71,7 @@ void    ft_select(t_socketlst *const clients) {
 
     t_socketlst new_clients;
     t_socketlst::iterator it = clients->begin(), ite = clients->end();
-    socklen_t   socklen = sizeof(t_sockaddr);
+    socklen_t   socklen = sizeof(sockaddr);
     for (; it != ite; ++it) {
         if (it->client_fd != 0 || it->is_read_ready == false)
             continue ;
