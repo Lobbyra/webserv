@@ -77,7 +77,7 @@ public:
     void    dumb_coucou(void) {
         std::string resp = "coucour\n";
         std::cout << resp << std::endl;
-        send(client_fd, "", 1, 0); // shit to remove but make curl working idkw
+        //send(client_fd, "", 1, 0); // shit to remove but make curl working idkw
     };
     void    dumb_salut(void) {
         std::string resp = "salut\n";

@@ -30,10 +30,11 @@ s_request_header    read_request_header(int fd) {
         }
         free(line);
     }
-    if (status == -1) {
+    if (status == -1 && errno != EAGAIN) {
         throw std::logic_error(std::string("GNL: ") + strerror(errno));
     } else if (status == 0) {
         free(line);
     }
+    std::cout << request << std::endl;
     return (request);
 }
