@@ -1,12 +1,19 @@
 #include "webserv.hpp"
-#include <sys/socket.h>
-#include <arpa/inet.h> // inet_pton
+
+#include <list>
+
 #include <fcntl.h>
+#include <arpa/inet.h> // inet_pton
+#include <sys/socket.h>
+
+#include "lib.hpp"
+#include "c_server.hpp"
+#include "s_socket.hpp"
 
 static int  makeSocketfd(const int &port) {
     int newSocket;
     const int opt = 1;
-    t_sockaddr_in servaddr;
+    sockaddr_in servaddr;
 
     if ((newSocket = socket(AF_INET, SOCK_STREAM, 0)) < 0)
         ft_error("socket");
@@ -18,7 +25,7 @@ static int  makeSocketfd(const int &port) {
 
     if (setsockopt(newSocket, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)))
         ft_error("setsockopt");
-    if ((bind(newSocket, (t_sockaddr *)&servaddr, sizeof(servaddr))) < 0)
+    if ((bind(newSocket, (sockaddr *)&servaddr, sizeof(servaddr))) < 0)
         ft_error("bind");
     if ((listen(newSocket, 10)) < 0)
         ft_error("listen");

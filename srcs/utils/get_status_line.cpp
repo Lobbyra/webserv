@@ -1,4 +1,5 @@
 #include "utils.hpp"
+#include "lib.hpp"
 
 std::string get_status_line(int code) {
     char *str_code = ft_itoa(code);

@@ -1,3 +1,6 @@
+#include <list>
+#include <string>
+
 #include "utils.hpp"
 
 char    *lststr_to_str(std::list<std::string> const &lst, std::string sep) {

@@ -1,9 +1,13 @@
 #ifndef C_SERVER_HPP
 # define C_SERVER_HPP
 
-# include "../webserv.hpp"
+#include <string>
+#include <list>
+#include <iostream>
 
-class   c_location;
+#include "std_typedefs.hpp"
+#include "s_ipport.hpp"
+#include "c_location.hpp"
 
 class   c_server {
 public:

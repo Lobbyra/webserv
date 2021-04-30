@@ -25,6 +25,7 @@ static std::string get_content_length(int content_length) {
     return (str_cl);
 }
 
+# define HTTP_DATE_FORMAT "%a, %d %b %Y %H:%M:%S %Z"
 
 static std::string get_date(void) {
     struct timeval  curr_time;

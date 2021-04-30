@@ -1,12 +1,28 @@
 #ifndef C_CALLBACK_HPP
 # define C_CALLBACK_HPP
 
-# include "../webserv.hpp"
-# include <sys/types.h>
-# include <sys/stat.h>
 # include <dirent.h>
+# include <fcntl.h>
+# include <sys/stat.h>
+# include <sys/types.h>
+# include <sys/socket.h>
 
-struct s_request_header;
+# include <map>
+# include <list>
+# include <string>
+# include <iostream>
+# include <sstream>
+
+# include "lib.hpp"
+# include "utils.hpp"
+# include "colors.hpp"
+# include "s_socket.hpp"
+# include "s_ipport.hpp"
+# include "c_server.hpp"
+# include "c_location.hpp"
+# include "our_typedefs.hpp"
+# include "std_typedefs.hpp"
+# include "s_request_header.hpp"
 
 class	c_callback
 {
@@ -20,7 +36,7 @@ public:
     // c_callback &operator=(c_callback const &src);
     virtual ~c_callback();
 
-    c_callback(s_socket client, s_request_header request, 
+    c_callback(s_socket client, s_request_header request,
                std::list<s_socket> *clients);
 
     //s_socket
@@ -28,7 +44,7 @@ public:
     int                         entry_socket;
     c_server                    *server;
     int                         client_fd;
-    t_sockaddr                  client_addr;
+    sockaddr                  client_addr;
     bool                        *is_read_ready;
     bool                        *is_write_ready;
     bool                        *is_header_read;

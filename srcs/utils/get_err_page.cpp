@@ -1,3 +1,4 @@
+#include "lib.hpp"
 #include "utils.hpp"
 
 #define TEMPLATE "<html>\r\n"                                               \

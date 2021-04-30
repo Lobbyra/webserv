@@ -1,4 +1,9 @@
-#include "webserv.hpp"
+#include <list>
+
+#include "c_server.hpp"
+#include "std_typedefs.hpp"
+#include "our_typedefs.hpp"
+#include "s_request_header.hpp"
 
 /*
  * Assigns c_server* to clients

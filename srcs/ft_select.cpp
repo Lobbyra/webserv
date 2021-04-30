@@ -1,6 +1,11 @@
 #include <sys/select.h>
 #include <sys/socket.h>
-#include "utils/utils.hpp"
+#include <fcntl.h>
+
+#include "lib.hpp"
+#include "utils.hpp"
+#include "std_typedefs.hpp"
+#include "our_typedefs.hpp"
 
 static void init_fdsets(t_socketlst const *lst, fd_set *r_set, fd_set *w_set) {
     t_socketlst::const_iterator it = lst->begin(), ite = lst->end();
@@ -51,6 +56,11 @@ static bool update_socketlst(t_socketlst *const lst, fd_set *r_set,
     return (raised_true);
 }
 
+static void ft_timeval_init(struct timeval *const time, int sec) {
+    ft_bzero(time, sizeof(*time));
+    time->tv_sec = sec;
+}
+
 void    ft_select(t_socketlst *const clients) {
     fd_set  r_fdset, w_fdset;
     struct timeval time;
@@ -69,9 +79,12 @@ void    ft_select(t_socketlst *const clients) {
     else if (errno != 0)
         ft_error("select");
 
+    if (clients->size() > 250) // Too much open fd protection
+        return ;
+    // Accept new clients and append it to the client list
     t_socketlst new_clients;
     t_socketlst::iterator it = clients->begin(), ite = clients->end();
-    socklen_t   socklen = sizeof(t_sockaddr);
+    socklen_t   socklen = sizeof(sockaddr);
     for (; it != ite; ++it) {
         if (it->client_fd != 0 || it->is_read_ready == false)
             continue ;

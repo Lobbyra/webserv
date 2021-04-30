@@ -1,6 +1,7 @@
 #include <string>
-#include <stdlib.h>
 #include <iostream>
+
+#include <stdlib.h>
 
 /* STRCONT_TO_STR
  * This function transform a string container and alloc it in heap.

@@ -4,9 +4,17 @@
 # include <list>
 # include <string>
 # include <iostream>
+
 # include "webserv.hpp"
+# include "c_server.hpp"
+# include "c_location.hpp"
+# include "s_request_header.hpp"
+# include "our_typedefs.hpp"
+# include "std_typedefs.hpp"
 
 typedef void (*f_parser)(t_strcit, void*);
+
+std::list<c_server>     parse_conf(std::string path);
 
 c_server        get_serv(t_strcit it_conf);
 std::string     get_conf(const char *const path);

@@ -18,6 +18,7 @@ webserv_exec="${webserv_path}/${webserv_bin}"
 config_path="conf"
 ip="localhost"
 log_path="./logs"
+fill="#########################################################################"
 
 # ============================================================================ #
 #                                   Begin                                      #
@@ -55,7 +56,8 @@ function check_all_conf() {
 
         ports=($(cat $config | grep listen | cut -d ':' -f 2 | cut -d ';' -f 1 | uniq))
         for port in ${ports[@]}; do
-            printf "${YELLOW}%45s${EOC} on port ${GREEN}%s${EOC}:\n" $conf_name $port
+            printf "${DGREY}%.15s${EOC} " "$fill"
+            printf "${DBLUE}${conf_name}${EOC} on port ${GREEN}${port}${EOC}:\n"
             check_all "$ip" "$port"
         done
 

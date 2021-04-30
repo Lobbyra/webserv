@@ -3,7 +3,7 @@
 std::string                         c_callback::_response(void) {
     std::stringstream sstr;
     std::string endl("\r\n");
-    
+
     sstr << "HTTP/1.1 " << this->status_code << " "                 \
     << get_status_msg(this->status_code) << endl                   \
     << "Server: " << "Server Drunk Architect TEAM" << endl          \

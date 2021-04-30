@@ -35,6 +35,5 @@ s_request_header    read_request_header(int fd) {
     } else if (status == 0) {
         free(line);
     }
-    std::cout << request << std::endl;
     return (request);
 }

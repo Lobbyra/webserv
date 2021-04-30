@@ -9,7 +9,8 @@
 # include <list>
 # include <vector>
 # include <iostream>
-# include "webserv.hpp"
+
+extern int indent_lvl;
 
 template <typename Tkey, typename Tvalue>
 std::ostream    &operator<<(std::ostream &o, std::pair<Tkey, Tvalue> const &i)
