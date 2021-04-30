@@ -4,7 +4,10 @@
 # include <list>
 # include <string>
 # include <iostream>
+
 # include "webserv.hpp"
+# include "c_server.hpp"
+# include "c_location.hpp"
 
 typedef void (*f_parser)(t_strcit, void*);
 

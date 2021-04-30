@@ -1,9 +1,14 @@
 #ifndef C_TASK_QUEUE_HPP
 # define C_TASK_QUEUE_HPP
 
-# include "webserv.hpp"
+//# include "webserv.hpp"
+# include <list>
+# include <queue>
 
-class c_callback;
+# include "lib.hpp"
+# include "s_socket.hpp"
+# include "c_callback.hpp"
+# include "s_request_header.hpp"
 
 class    c_task_queue {
  public:
@@ -21,7 +26,7 @@ class    c_task_queue {
 
  private:
     std::queue<c_callback*> _tasks;
-    std::list<s_socket>     *_clients; 
+    std::list<s_socket>     *_clients;
 
 };
 

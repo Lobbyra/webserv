@@ -7,6 +7,7 @@
 #include <iostream> // operator<<
 
 #include <sys/types.h> // sockaddr
+#include <sys/socket.h>
 
 struct s_socket {
     int             entry_socket;

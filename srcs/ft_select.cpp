@@ -1,6 +1,11 @@
 #include <sys/select.h>
 #include <sys/socket.h>
-#include "utils/utils.hpp"
+#include <fcntl.h>
+
+#include "lib.hpp"
+#include "utils.hpp"
+#include "std_typedefs.hpp"
+#include "our_typedefs.hpp"
 
 static void init_fdsets(t_socketlst const *lst, fd_set *r_set, fd_set *w_set) {
     t_socketlst::const_iterator it = lst->begin(), ite = lst->end();

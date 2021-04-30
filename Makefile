@@ -94,7 +94,9 @@ INCL_PATHS = ${SRCS_PATH}/. \
 			 ${SRCS_PATH}/${UTILS_PATH}							\
 			 ${SRCS_PATH}/${PARSE_REQUEST_HEADER_PATH}			\
 			 ${SRCS_PATH}/${CLASSES_PATH}						\
+			 ${LIB_PATH}										\
 			 ${SRCS_PATH}/${DATA_STRUCTURES_PATH}
+
 
 INCL_FLAGS = ${addprefix -I, ${INCL_PATHS}}
 

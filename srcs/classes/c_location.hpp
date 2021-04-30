@@ -1,9 +1,12 @@
 #ifndef C_LOCATION_HPP
 # define C_LOCATION_HPP
 
-#include "../webserv.hpp"
+#include <string>
+#include <iostream> // operator<<
 
-class   c_server;
+//#include "../webserv.hpp"
+#include "std_typedefs.hpp"
+#include "insert_stream_cont.hpp"
 
 class    c_location {
  public:
