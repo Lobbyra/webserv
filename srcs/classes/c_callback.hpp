@@ -24,6 +24,7 @@
 # include "std_typedefs.hpp"
 # include "s_request_header.hpp"
 # include "../lib/GNL/get_next_line.h"
+# include "../lib/lib.hpp"
 
 class	c_callback
 {
@@ -166,7 +167,7 @@ private:
     std::string _resp_headers;
 
     void    _gen_resp_body(void);
-    std::string _resp_body;
+    bool    _resp_body;
 
     /* _FD_BOD
      * File descriptor that we will be read and write in the client_fd.
@@ -174,6 +175,7 @@ private:
     int     _fd_body;
 
     void    _fd_is_ready_to_send(void);
+    void    _send_respons_body(void);
     void    _send_respons(void);
 
     // GET RECIPE | HEAD RECIPE

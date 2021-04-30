@@ -92,6 +92,7 @@ void    c_callback::_init_request_header(s_request_header request) {
     this->user_agent = request.user_agent;
     this->content_length = request.content_length;
     this->status_code = request.error;
+    this->_resp_body = false;
     return ;
 }
 

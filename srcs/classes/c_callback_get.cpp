@@ -29,19 +29,18 @@ void                c_callback::_meth_get_request_is_valid(void) {
         this->status_code = 404;
     } else {
         this->status_code = 200;
-        if (S_ISDIR(stat.st_mode))
-            if (this->index.empty() == false)
-                if ((this->path = _find_index_if_exist()) == tmp_path)
-                    this->status_code = 403; 
+        if (S_ISDIR(stat.st_mode) && this->index.empty() == false)
+            if ((this->path = _find_index_if_exist()) == tmp_path)
+                this->status_code = 403; 
     }
 }
 
 std::list<c_callback::t_task_f>     c_callback::_init_recipe_get(void) {
     std::list<t_task_f>     tasks;
 
+    this->_resp_body = true;
     tasks.push_back(&c_callback::_meth_get_request_is_valid);
     tasks.push_back(&c_callback::_gen_resp_headers);
-    tasks.push_back(&c_callback::_gen_resp_body);
     tasks.push_back(&c_callback::_fd_is_ready_to_send);
     tasks.push_back(&c_callback::_send_respons);
     return tasks;
