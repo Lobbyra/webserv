@@ -41,10 +41,7 @@ extern int indent_lvl;
 # define COLOR_WHITE_(str) COLOR_WHITE << str << COLOR_RESET
 # define COLOR_YELLOW_(str) COLOR_YELLOW << str << COLOR_RESET
 
-struct  s_ipport {
-    int             port;
-    std::string     ip;
-};
+#include "s_ipport.hpp"
 
 bool    operator==(s_ipport const &a, s_ipport const &b);
 bool    operator!=(s_ipport const &a, s_ipport const &b);
@@ -59,35 +56,10 @@ typedef struct sockaddr t_sockaddr;
 typedef struct sockaddr_in t_sockaddr_in;
 typedef std::map<int, bool> t_respmap;
 
-struct s_request_header {
-        std::string                 method;
-        std::string                 path;
-        std::string                 protocol;
-        std::string                 date;
-        std::string                 host;
-        std::string                 referer;
-        std::string                 transfer_encoding;
-        std::list<std::string>      accept_charset;
-        std::list<std::string>      accept_language;
-        std::list<std::string>      authorization;
-        std::list<std::string>      content_type;
-        std::list<std::string>      user_agent;
-        size_t                      content_length;
-        size_t                      error;
-};
 
-struct s_socket {
-    int             entry_socket;
-    s_ipport const  *ipport;
-    c_server const  *server;
-    int             client_fd;
-    t_sockaddr      client_addr;
-    bool            is_read_ready;
-    bool            is_write_ready;
-    bool            is_header_read;
-};
+# include "s_request_header.hpp" // Our std typedefs
 
-std::ostream    &operator<<(std::ostream &o, s_socket const &i);
+#include "s_socket.hpp"
 
 typedef std::list<s_socket>     t_socketlst;
 

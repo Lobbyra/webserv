@@ -30,6 +30,8 @@ ROOT_FILES  = main.cpp webserv.cpp init_clients.cpp ft_select.cpp \
 			  assign_server_to_clients.cpp
 ROOT_HEADER = webserv.hpp
 
+DATA_STRUCTURES_PATH = data_structures/
+
 CLASSES_PATH	= classes/
 CLASSES_FILES	= c_task_queue.cpp c_callback.cpp c_location.cpp c_server.cpp \
 				  c_callback_head.cpp c_callback_delete.cpp					\
@@ -87,11 +89,13 @@ OBJS_PATHS = ${OBJS_PATH} \
 OBJS	   = ${addprefix ${OBJS_PATH}, ${SRCS_FILES:.cpp=.o}}
 
 INCL_PATHS = ${SRCS_PATH}/. \
-			 ${SRCS_PATH}/${PARSE_CONF_PATH} \
+			 ${SRCS_PATH}/${PARSE_CONF_PATH}					\
 			 ${SRCS_PATH}/${PARSE_CONF_PATH}/${PARSE_FUNS_PATH} \
-			 ${SRCS_PATH}/${UTILS_PATH} \
-			 ${SRCS_PATH}/${PARSE_REQUEST_HEADER_PATH} \
-			 ${SRCS_PATH}/${CLASSES_PATH}
+			 ${SRCS_PATH}/${UTILS_PATH}							\
+			 ${SRCS_PATH}/${PARSE_REQUEST_HEADER_PATH}			\
+			 ${SRCS_PATH}/${CLASSES_PATH}						\
+			 ${SRCS_PATH}/${DATA_STRUCTURES_PATH}
+
 INCL_FLAGS = ${addprefix -I, ${INCL_PATHS}}
 
 all: ${LIBS}
