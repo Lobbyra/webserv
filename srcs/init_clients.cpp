@@ -1,7 +1,14 @@
 #include "webserv.hpp"
-#include <sys/socket.h>
-#include <arpa/inet.h> // inet_pton
+
+#include <list>
+
 #include <fcntl.h>
+#include <arpa/inet.h> // inet_pton
+#include <sys/socket.h>
+
+#include "lib.hpp"
+#include "c_server.hpp"
+#include "s_socket.hpp"
 
 static int  makeSocketfd(const int &port) {
     int newSocket;

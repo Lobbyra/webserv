@@ -56,6 +56,11 @@ static bool update_socketlst(t_socketlst *const lst, fd_set *r_set,
     return (raised_true);
 }
 
+static void ft_timeval_init(struct timeval *const time, int sec) {
+    ft_bzero(time, sizeof(*time));
+    time->tv_sec = sec;
+}
+
 void    ft_select(t_socketlst *const clients) {
     fd_set  r_fdset, w_fdset;
     struct timeval time;

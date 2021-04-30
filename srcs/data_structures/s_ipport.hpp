@@ -8,4 +8,7 @@ struct  s_ipport {
     std::string     ip;
 };
 
+bool    operator==(s_ipport const &a, s_ipport const &b);
+bool    operator!=(s_ipport const &a, s_ipport const &b);
+
 #endif

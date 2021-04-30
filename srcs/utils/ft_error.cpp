@@ -1,6 +1,5 @@
 #include <iostream>
 #include <string>
-#include "utils.hpp"
 
 /*
  * Prints an error and exit,

@@ -1,4 +1,4 @@
-#include "webserv.hpp"
+#include "s_socket.hpp"
 
 std::ostream    &operator<<(std::ostream &o, s_socket const &i) {
     o <<                                                                      \
