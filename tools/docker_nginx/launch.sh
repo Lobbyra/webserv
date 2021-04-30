@@ -22,10 +22,10 @@ NGINX_IMG="fresh-nginx"
 #
 # --- Create default website directory and its index
 #
-if [ ! -d "./www/" ]
-then
-    mkdir www
-    echo "! Default website !" > www/index.html
+ROOT_DIR="/tmp/www"
+if [ ! -d "${ROOT_DIR}" ]; then
+    mkdir ${ROOT_DIR}
+    echo "! Default website !" > ${ROOT_DIR}/index.html
 fi
 
 # ============================================================================ #
