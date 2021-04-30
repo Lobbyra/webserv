@@ -49,12 +49,7 @@ struct  s_ipport {
 bool    operator==(s_ipport const &a, s_ipport const &b);
 bool    operator!=(s_ipport const &a, s_ipport const &b);
 
-typedef std::string::iterator               t_strit;
-typedef std::string::const_iterator         t_strcit;
-typedef std::list<std::string>              t_strlst;
-typedef std::list<int>                      t_fdlst;
-typedef std::map<int, std::string>          t_error_page;
-typedef std::map<std::string, std::string>  t_cgi_param;
+# include "typedefs.hpp" // Our std typedefs
 
 # include "classes/c_location.hpp"
 # include "classes/c_server.hpp"
