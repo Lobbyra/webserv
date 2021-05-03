@@ -1,5 +1,7 @@
-#include <iostream>
 #include <string>
+#include <iostream>
+
+#include <stdlib.h>
 
 /*
  * Prints an error and exit,

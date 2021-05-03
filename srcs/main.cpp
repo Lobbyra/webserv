@@ -12,12 +12,14 @@ static void ft_signalhandler_enable(void) {
 }
 
 static int  print_usage(char const *const prog_name) {
-    std::cerr << "Usage: " << prog_name << " <nginx.conf>" << std::endl;
+    std::cerr << "Usage: " << prog_name << " [nginx.conf]" << std::endl;
     return (1);
 }
 
-int     main(int argc, char **argv) {
-    if (argc != 2)
+int     main(int argc, const char **argv) {
+    if (argc == 1)
+        argv[1] = "config_files/ok_basic.conf";
+    else if (argc != 2)
         return (print_usage(argv[0]));
     std::list<c_server> conf;
 
