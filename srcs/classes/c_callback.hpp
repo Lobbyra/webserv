@@ -52,17 +52,18 @@ public:
     bool                        *is_header_read;
 
     // Variables from server block from config
-    int                         client_max_body_size;
-    int                         srv_id;
-    t_strlst                    index;
-    t_strlst                    methods;
-    s_ipport                    listen;
-    t_strlst                    server_name;
-    std::string                 root;
-    std::string                 autoindex;
-    t_cgi_param                 fastcgi_param;
-    t_error_page                error_page;
-    std::list<c_location>       location;
+    int                   client_max_body_size;
+    int                   srv_id;
+    t_strlst              index;
+    t_strlst              methods;
+    s_ipport              listen;
+    t_strlst              server_name;
+    std::string           root;
+    std::string           autoindex;
+    std::string           fastcgi_pass;
+    t_cgi_param           fastcgi_param;
+    t_error_page          error_page;
+    std::list<c_location> location;
 
     // Variables from client request
     std::string                 method;
@@ -95,7 +96,6 @@ public:
     void    dumb_coucou(void) {
         std::string resp = "coucour\n";
         std::cout << resp << std::endl;
-        //send(client_fd, "", 1, 0); // shit to remove but make curl working idkw
     };
     void    dumb_salut(void) {
         std::string resp = "salut\n";
@@ -139,11 +139,12 @@ private:
     /* _INIT_RECIPES_*
      * Get recipe for a specific methods.
      */
-    std::list<t_task_f> _init_recipe_dumb(void);
     std::list<t_task_f> _init_recipe_get(void);
+    std::list<t_task_f> _init_recipe_put(void);
+    std::list<t_task_f> _init_recipe_cgi(void);
+    std::list<t_task_f> _init_recipe_dumb(void);
     std::list<t_task_f> _init_recipe_head(void);
     std::list<t_task_f> _init_recipe_delete(void);
-    std::list<t_task_f> _init_recipe_put(void);
     std::list<t_task_f> _init_recipe_options(void);
     std::list<t_task_f> _init_error_request(void);
 
@@ -169,7 +170,7 @@ private:
     void    _gen_resp_body(void);
     bool    _resp_body;
 
-    /* _FD_BOD
+    /* _FD_BODY
      * File descriptor that we will be read and write in the client_fd.
      */
     int     _fd_body;
@@ -201,6 +202,9 @@ private:
 
     // OPTIONS RECIPE
     void    _gen_resp_header_options(void);
+
+    // GGI RECIPE
+    void    _meth_cgi_launch(void);
 
 };
 

@@ -31,7 +31,7 @@ void                c_callback::_meth_get_request_is_valid(void) {
         this->status_code = 200;
         if (S_ISDIR(stat.st_mode) && this->index.empty() == false)
             if ((this->path = _find_index_if_exist()) == tmp_path)
-                this->status_code = 403; 
+                this->status_code = 403;
     }
 }
 

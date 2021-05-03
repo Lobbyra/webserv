@@ -9,14 +9,17 @@ c_callback::c_callback(s_socket client, s_request_header request,
     this->clients = clients;
     _init_s_socket(client);
     _init_request_header(request);
-    if (this->server)
-    {
+    if (this->server) { // Init server variables
         _init_server_hpp(this->server);
         _server_init_route(this->server->location);
     }
-    _init_meth_functions();
-    _recipes = _meth_funs[this->method];
-    if (_recipes.empty() == true) {
+    if (this->fastcgi_pass != "") { // CGI case
+        _recipes = _init_recipe_cgi();
+    } else { // Init recipes
+        _init_meth_functions();
+        _recipes = _meth_funs[this->method];
+    }
+    if (_recipes.empty() == true) { // Case when methods is not known
         _recipes = _init_error_request();
     }
     _it_recipes = _recipes.begin();
@@ -141,8 +144,7 @@ void        c_callback::_server_init_route(std::list<c_location> location) {
     it = location.begin();
     ite = location.end();
     it = _server_find_route(it, ite);
-    if (it != ite)
-    {
+    if (it != ite) {
         if((*it).client_max_body_size)
             client_max_body_size = (*it).client_max_body_size;
         if((*it).index.begin() != (*it).index.end())
@@ -157,6 +159,8 @@ void        c_callback::_server_init_route(std::list<c_location> location) {
             fastcgi_param = (*it).fastcgi_param;
         if ((*it).error_page.empty() == false)
             error_page = (*it).error_page;
+        if ((*it).fastcgi_pass.empty() == false)
+            fastcgi_pass = (*it).fastcgi_pass;
     }
 }
 
