@@ -93,9 +93,9 @@ void                    c_callback::_fd_is_ready_to_send(void) {
  * Open the requested file, read the file, and send line by line
  */
 void                    c_callback::_send_respons_body(void) {
-    char    buf[512];
-    int     file_fd;
-    int     status;
+    char            buf[512];
+    int             file_fd;
+    int             status;
 
     ft_bzero(buf, 512);
     if ((file_fd = open(this->path.c_str(), O_RDONLY)) != -1) {
@@ -116,7 +116,7 @@ void                    c_callback::_send_respons(void) {
     if (send(client_fd, _resp_headers.c_str(), _resp_headers.length(), 0) == -1) {
 		std::cerr << "Error: Respons to client" << std::endl;
 	} if (_resp_body == true) {
-            _send_respons_body();
+        _send_respons_body();
     }
 }
 

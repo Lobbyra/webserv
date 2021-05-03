@@ -42,7 +42,8 @@ c_callback::~c_callback(void) {
 
 void    c_callback::exec(void) {
     if (this->is_over() == false) {
-        if (this->status_code != 0 && this->status_code / 100 != 2 && _recipes != _init_error_request()) {
+        if (this->status_code != 0 && this->status_code / 100 != 2 &&
+            _recipes != _init_error_request()) {
             _recipes = _init_error_request();
             _it_recipes = _recipes.begin();
         } else {
