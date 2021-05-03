@@ -95,7 +95,7 @@ void                    c_callback::_fd_is_ready_to_send(void) {
 void                    c_callback::_send_respons_body(void) {
     char    buf[512];
     int     file_fd;
-    int     status = -1;
+    int     status;
 
     ft_bzero(buf, 512);
     if ((file_fd = open(this->path.c_str(), O_RDONLY)) != -1) {

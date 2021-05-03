@@ -45,10 +45,10 @@ void    c_callback::exec(void) {
         if (this->status_code != 0 && this->status_code / 100 != 2 && _recipes != _init_error_request()) {
             _recipes = _init_error_request();
             _it_recipes = _recipes.begin();
-            std::cout << "ERROR METHOD" << std::endl;
+        } else {
+            (this->*(*_it_recipes))();
+            ++_it_recipes;
         }
-        (this->*(*_it_recipes))();
-        ++_it_recipes;
     }
 }
 

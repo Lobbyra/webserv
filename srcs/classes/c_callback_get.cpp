@@ -32,14 +32,13 @@ void                c_callback::_meth_get_request_is_valid(void) {
         if (S_ISDIR(stat.st_mode) && this->index.empty() == false)
             if ((this->path = _find_index_if_exist()) == tmp_path)
                 this->status_code = 403;
-        if (this->status_code != 0 && this->status_code / 100 == 2)
-            this->_resp_body = true;
     }
 }
 
 std::list<c_callback::t_task_f>     c_callback::_init_recipe_get(void) {
     std::list<t_task_f>     tasks;
 
+    this->_resp_body = true;
     tasks.push_back(&c_callback::_meth_get_request_is_valid);
     tasks.push_back(&c_callback::_gen_resp_headers);
     tasks.push_back(&c_callback::_fd_is_ready_to_send);
