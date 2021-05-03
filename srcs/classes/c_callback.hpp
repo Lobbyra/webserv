@@ -1,17 +1,20 @@
 #ifndef C_CALLBACK_HPP
 # define C_CALLBACK_HPP
 
-# include <dirent.h>
 # include <fcntl.h>
+# include <dirent.h>
 # include <sys/stat.h>
 # include <sys/types.h>
+# include <arpa/inet.h>
 # include <sys/socket.h>
+# include <netinet/ip.h>
 
 # include <map>
 # include <list>
 # include <string>
-# include <iostream>
 # include <sstream>
+# include <iostream>
+# include <algorithm>
 
 # include "lib.hpp"
 # include "utils.hpp"
@@ -204,7 +207,11 @@ private:
     void    _gen_resp_header_options(void);
 
     // GGI RECIPE
-    void    _meth_cgi_launch(void);
+    std::list<std::string> cgi_env_variables;
+
+    void    _meth_cgi_init_meta(void); // Init specific var of CGI
+    void    _meth_cgi_init_http(void); // Init additionnal headers from request
+    void    _meth_cgi_launch(void);    // Launch binary in child by fork()
 
 };
 

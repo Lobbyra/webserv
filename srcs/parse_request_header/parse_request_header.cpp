@@ -78,14 +78,13 @@ void    parse_field_list_string(std::string line, void *p) {
     }
 }
 
-void    parse_request_header(std::string line, 
-                             std::map<std::string, void *> request_header,
-                             std::map<std::string, f_request_header> 
-                             parser_request) {
+void    parse_request_header(std::string line,
+                    std::map<std::string, void *> request_header,
+                    std::map<std::string, f_request_header> parser_request) {
     std::string     prefix;
     std::string     sep(":");
 
-    prefix =  get_word(line, line.begin(), sep);
+    prefix = get_word(line, line.begin(), sep);
     if (parser_request.find(prefix) != parser_request.end())
         parser_request[prefix](line, request_header[prefix]);
 }
