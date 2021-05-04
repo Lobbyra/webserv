@@ -1,4 +1,5 @@
-#include <c_callback.hpp>
+#include "lib.hpp"
+#include "c_callback.hpp"
 
 /* C_CALLBACK_CGI
  * Recipe that will init all meta-variables and exec CGI.
@@ -11,6 +12,7 @@ std::list<c_callback::t_task_f> c_callback::_init_recipe_cgi(void) {
     recipe.push_back(&c_callback::_meth_cgi_init_meta);
     recipe.push_back(&c_callback::_meth_cgi_init_http);
     recipe.push_back(&c_callback::_meth_cgi_launch);
+    recipe.push_back(&c_callback::_meth_cgi_wait);
     return (recipe);
 }
 
@@ -47,7 +49,7 @@ void    c_callback::_meth_cgi_init_meta(void) {
     tmp = "GATEWAY_INTERFACE=CGI/1.1";
     this->cgi_env_variables.push_back(tmp);
     // PATH_INFO
-    tmp = "PATH_INFO=" + this->fastcgi_pass;
+    tmp = "PATH_INFO=" + this->path;
     this->cgi_env_variables.push_back(tmp);
     // PATH_TRANSLATED
     tmp = "PATH_TRANSLATED=" + this->root + this->path;
@@ -108,6 +110,7 @@ void    c_callback::_meth_cgi_init_meta(void) {
     this->cgi_env_variables.push_back("SERVER_SOFTWARE=drunkserv");
     std::cout << "cgi_env_varibles: " << std::endl;
     std::cout << this->cgi_env_variables << std::endl;
+    _continue();
 }
 
 // Init additionnal var of from http request in cgi_env_variables.
@@ -131,14 +134,49 @@ void    c_callback::_meth_cgi_init_http(void) {
         *it = "HTTP_" + *it;
     }
     cgi_env_variables.insert(this->cgi_env_variables.begin(),
-                             this->saved_headers.begin(),
-                             this->saved_headers.end());
+                    this->saved_headers.begin(), this->saved_headers.end());
     std::cout << "saved_headers:" << std::endl;
     std::cout << this->saved_headers << std::endl;
     std::cout << "cgi_env_variables:" << std::endl;
     std::cout << this->cgi_env_variables << std::endl;
+    _continue();
 }
 
 void    c_callback::_meth_cgi_launch(void) {
     std::cout << "_meth_cgi_launch" << std::endl;
+    int  pid;
+    char *bin_path = NULL;
+    char **envp = NULL;
+
+    errno = 0;
+    if ((pid = fork()) == 0) { // CHILD
+        bin_path = ft_strdup(this->fastcgi_pass.c_str());
+        envp = lststr_to_strs(this->cgi_env_variables);
+        // TODO : DESTROY C_TASK_QUEUE
+        if (bin_path == NULL || envp == NULL) {
+            if (bin_path != NULL)
+                free(bin_path);
+            if (envp != NULL)
+                ft_freestrs(envp);
+            exit(1);
+        }
+        if (dup2(client_fd, 0) == -1 || dup2(client_fd, 1) == -1) {
+            free(bin_path);
+            ft_freestrs(envp);
+            std::cerr << "cgi_launch : dup2 : " << strerror(errno) << std::endl;
+        }
+        if (execve(bin_path, envp, envp) == -1) {
+            free(bin_path);
+            ft_freestrs(envp);
+            std::cerr << "cgi_launch : execv : " << strerror(errno) << std::endl;
+            exit(1);
+        }
+    } else if (pid == -1) { // ERROR
+        std::cerr << "cgi_launch : fork : " << strerror(errno) << std::endl;
+        this->status_code = 500;
+    }
+}
+
+void    c_callback::_meth_cgi_wait(void) {
+    std::cout << "TASK : meth_cgi_wait" << std::endl;
 }

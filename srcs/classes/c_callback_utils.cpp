@@ -21,7 +21,7 @@ static std::string get_content_length(int content_length) {
     if (str_content_length == NULL)
         throw std::logic_error("gen_resp_headers : memory allocation failed");
     str_cl = str_content_length;
-    free (str_content_length);
+    free(str_content_length);
     return (str_cl);
 }
 
@@ -36,8 +36,8 @@ static std::string get_date(void) {
     if (gettimeofday(&curr_time, NULL) == -1) {
         throw std::logic_error("get_time_of_day() failed");
     }
-    if (strftime(result, 100, HTTP_DATE_FORMAT, localtime(&(curr_time.tv_sec)))
-           == 0) {
+    strftime(result, 100, HTTP_DATE_FORMAT, localtime(&(curr_time.tv_sec)));
+    if (errno != 0) {
         throw std::logic_error("strftime() failed");
     }
     return (result);
@@ -85,7 +85,7 @@ void    c_callback::_gen_resp_headers(void) {
  */
 void                    c_callback::_fd_is_ready_to_send(void) {
     std::cout << "TASK : _fd_is_ready_to_send" << std::endl;
-    if (*this->is_write_ready == false) {
+    if (*(this->is_write_ready) == false) {
         _it_recipes--;
     }
 }
