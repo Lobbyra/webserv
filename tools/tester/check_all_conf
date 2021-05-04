@@ -70,7 +70,6 @@ function check_all_conf() {
         ports=($(get_kvalue $config listen | cut -d ':' -f 2 | uniq))
         # roots=($(get_kvalue $config root | uniq))
         for port in ${ports[@]}; do
-            rm -rf $www_path
             printf "${DGREY}%.15s${EOC} " "$fill"
             printf "${DBLUE}${conf_name}${EOC} on port ${GREEN}${port}${EOC}:\n"
             check_all "$ip" "$port"

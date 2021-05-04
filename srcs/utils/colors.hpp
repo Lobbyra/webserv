@@ -15,5 +15,6 @@
 # define COLOR_GREEN_(str) COLOR_GREEN << str << COLOR_RESET
 # define COLOR_WHITE_(str) COLOR_WHITE << str << COLOR_RESET
 # define COLOR_YELLOW_(str) COLOR_YELLOW << str << COLOR_RESET
+# define COLOR_BOOL_(str) (str ? COLOR_GREEN : COLOR_RED) << str << COLOR_RESET
 
 #endif
