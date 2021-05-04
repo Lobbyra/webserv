@@ -39,14 +39,13 @@ s_request_header    read_request_header(int client_fd) {
             break;
         if (line[ft_strlen(line) - 1] == '\r')  // Remove trailing \r
             line[ft_strlen(line) - 1] = '\0';
-        if (parse_request_header(line, request_header, parser_request) == 0)
-            request.ignored_headers.push_back(line);
+        parse_request_header(line, request_header, parser_request);
+        request.saved_headers.push_back(line);
         free(line);
         line = NULL;
     }
     if (line != NULL)
         free(line);
-    std::cout << request << std::endl;
     return (request);
 }
 

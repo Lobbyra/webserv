@@ -19,7 +19,7 @@ struct s_request_header {
     std::list<std::string> authorization;
     std::list<std::string> content_type;
     std::list<std::string> user_agent;
-    std::list<std::string> ignored_headers;
+    std::list<std::string> saved_headers;
 };
 
 std::ostream& operator<<(std::ostream& os, s_request_header const &src);

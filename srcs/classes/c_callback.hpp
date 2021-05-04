@@ -81,6 +81,7 @@ public:
     std::list<std::string>      authorization;
     std::list<std::string>      content_type;
     std::list<std::string>      user_agent;
+    std::list<std::string>      saved_headers;
     size_t                      content_length;
     size_t                      status_code;
 

@@ -102,6 +102,7 @@ void    c_callback::_init_request_header(s_request_header request) {
     this->content_length = request.content_length;
     this->status_code = request.error;
     this->_resp_body = false;
+    this->saved_headers = request.saved_headers;
     return ;
 }
 
