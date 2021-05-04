@@ -16,3 +16,13 @@ std::ostream    &operator<<(std::ostream &o, s_socket const &i) {
     o << "}" << std::endl;
     return (o);
 }
+
+std::ostream    &operator<<(std::ostream& os, const std::list<s_socket>& v)
+{
+    std::list<s_socket>::const_iterator it;
+
+    os << COLOR_YELLOW_("Clients:") << std::endl;
+    for (it = v.begin(); it != v.end(); ++it)
+        os << *it;
+    return os;
+}
