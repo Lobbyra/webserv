@@ -45,8 +45,14 @@ c_callback::~c_callback(void) {
 
 void    c_callback::exec(void) {
     if (this->is_over() == false) {
-        (this->*(*_it_recipes))();
-        ++_it_recipes;
+        if (this->status_code != 0 && this->status_code / 100 != 2 &&
+            _recipes != _init_error_request()) {
+            _recipes = _init_error_request();
+            _it_recipes = _recipes.begin();
+        } else {
+            (this->*(*_it_recipes))();
+            ++_it_recipes;
+        }
     }
 }
 
@@ -130,8 +136,8 @@ std::list<c_location>::iterator        c_callback::_server_find_route(
     it_find = ite;
     for (; it != ite; ++it)
     {
-        if ((ft_strncmp(this->path.c_str(), (*it).route.c_str(), 
-                        this->path.length())) == 0 && 
+        if ((ft_strncmp(this->path.c_str(), (*it).route.c_str(),
+                        this->path.length())) == 0 &&
                         (this->path.length() == (*it).route.length()))
             it_find = it;
     }

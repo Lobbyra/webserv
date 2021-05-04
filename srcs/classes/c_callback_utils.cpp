@@ -93,26 +93,19 @@ void                    c_callback::_fd_is_ready_to_send(void) {
  * Open the requested file, read the file, and send line by line
  */
 void                    c_callback::_send_respons_body(void) {
-    char    *line;
-    char    *tmp;
-    int     file_fd;
-    int     status = -1;
+    char            buf[512];
+    int             file_fd;
+    int             status;
 
+    ft_bzero(buf, 512);
     if ((file_fd = open(this->path.c_str(), O_RDONLY)) != -1) {
-        while ((status = get_next_line(file_fd, &line)) == 1) {
-            if (!line[0]) {
-                free(line);
-                break ;
-            }
-            tmp = ft_strjoin(line, "\n");
-            send(client_fd, tmp, ft_strlen(tmp), 0);
-            free(tmp);
-            free(line);
+        while ((status = read(file_fd, buf, 511)) > 0) {
+            send(client_fd, buf, ft_strlen(buf), 0);
+            ft_bzero(buf, 512);
         }
     } else {
         std::cerr << "Error: open() _gen_resp_body" << std::endl;
-    } if (status == 0)
-        free(line);
+    }
     close(file_fd);
 }
 

@@ -170,6 +170,7 @@ private:
     void  _gen_resp_headers(void);
     std::string _resp_headers;
 
+    bool    _if_error_page_exist(void);
     void    _gen_resp_body(void);
     bool    _resp_body;
 
