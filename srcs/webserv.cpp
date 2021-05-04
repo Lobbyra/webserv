@@ -1,5 +1,7 @@
 #include "webserv.hpp"
 
+#include <unistd.h>
+
 volatile bool g_run = 1;
 
 static void set_reuse_port(t_socketlst const *const lst) {

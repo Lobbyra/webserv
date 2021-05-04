@@ -1,17 +1,20 @@
 #ifndef C_CALLBACK_HPP
 # define C_CALLBACK_HPP
 
-# include <dirent.h>
 # include <fcntl.h>
+# include <dirent.h>
 # include <sys/stat.h>
 # include <sys/types.h>
+# include <arpa/inet.h>
 # include <sys/socket.h>
+# include <netinet/ip.h>
 
 # include <map>
 # include <list>
 # include <string>
-# include <iostream>
 # include <sstream>
+# include <iostream>
+# include <algorithm>
 
 # include "lib.hpp"
 # include "utils.hpp"
@@ -38,7 +41,7 @@ public:
     // c_callback &operator=(c_callback const &src);
     virtual ~c_callback();
 
-    c_callback(s_socket client, s_request_header request,
+    c_callback(s_socket *client, s_request_header request,
                std::list<s_socket> *clients);
 
     //s_socket
@@ -52,17 +55,18 @@ public:
     bool                        *is_header_read;
 
     // Variables from server block from config
-    int                         client_max_body_size;
-    int                         srv_id;
-    t_strlst                    index;
-    t_strlst                    methods;
-    s_ipport                    listen;
-    t_strlst                    server_name;
-    std::string                 root;
-    std::string                 autoindex;
-    t_cgi_param                 fastcgi_param;
-    t_error_page                error_page;
-    std::list<c_location>       location;
+    int                   client_max_body_size;
+    int                   srv_id;
+    t_strlst              index;
+    t_strlst              methods;
+    s_ipport              listen;
+    t_strlst              server_name;
+    std::string           root;
+    std::string           autoindex;
+    std::string           fastcgi_pass;
+    t_cgi_param           fastcgi_param;
+    t_error_page          error_page;
+    std::list<c_location> location;
 
     // Variables from client request
     std::string                 method;
@@ -77,6 +81,7 @@ public:
     std::list<std::string>      authorization;
     std::list<std::string>      content_type;
     std::list<std::string>      user_agent;
+    std::list<std::string>      saved_headers;
     size_t                      content_length;
     size_t                      status_code;
 
@@ -95,7 +100,6 @@ public:
     void    dumb_coucou(void) {
         std::string resp = "coucour\n";
         std::cout << resp << std::endl;
-        //send(client_fd, "", 1, 0); // shit to remove but make curl working idkw
     };
     void    dumb_salut(void) {
         std::string resp = "salut\n";
@@ -120,7 +124,7 @@ private:
      * Function used in construction to init attributs
      */
     void    _init_request_header(s_request_header request);
-    void    _init_s_socket(s_socket client);
+    void    _init_s_socket(s_socket *client);
     void    _init_server_hpp(c_server const *server);
     void    _server_init_route(std::list<c_location> location);
 
@@ -139,11 +143,12 @@ private:
     /* _INIT_RECIPES_*
      * Get recipe for a specific methods.
      */
-    std::list<t_task_f> _init_recipe_dumb(void);
     std::list<t_task_f> _init_recipe_get(void);
+    std::list<t_task_f> _init_recipe_put(void);
+    std::list<t_task_f> _init_recipe_cgi(void);
+    std::list<t_task_f> _init_recipe_dumb(void);
     std::list<t_task_f> _init_recipe_head(void);
     std::list<t_task_f> _init_recipe_delete(void);
-    std::list<t_task_f> _init_recipe_put(void);
     std::list<t_task_f> _init_recipe_options(void);
     std::list<t_task_f> _init_error_request(void);
 
@@ -170,7 +175,7 @@ private:
     void    _gen_resp_body(void);
     bool    _resp_body;
 
-    /* _FD_BOD
+    /* _FD_BODY
      * File descriptor that we will be read and write in the client_fd.
      */
     int     _fd_body;
@@ -202,6 +207,13 @@ private:
 
     // OPTIONS RECIPE
     void    _gen_resp_header_options(void);
+
+    // GGI RECIPE
+    std::list<std::string> cgi_env_variables;
+
+    void    _meth_cgi_init_meta(void); // Init specific var of CGI
+    void    _meth_cgi_init_http(void); // Init additionnal headers from request
+    void    _meth_cgi_launch(void);    // Launch binary in child by fork()
 
 };
 

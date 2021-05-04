@@ -9,7 +9,6 @@ std::list<std::string>      init_prefix_method(void)
     lst.push_back("POST");
     lst.push_back("PUT");
     lst.push_back("DELETE");
-    lst.push_back("CONNECT");
     lst.push_back("OPTIONS");
     lst.push_back("TRACE");
     return lst;

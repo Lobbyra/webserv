@@ -4,19 +4,22 @@ c_callback::c_callback(void) {
     return ;
 }
 
-c_callback::c_callback(s_socket client, s_request_header request,
+c_callback::c_callback(s_socket *client, s_request_header request,
                        std::list<s_socket> *clients) {
     this->clients = clients;
     _init_s_socket(client);
     _init_request_header(request);
-    if (this->server)
-    {
+    if (this->server) { // Init server variables
         _init_server_hpp(this->server);
         _server_init_route(this->server->location);
     }
-    _init_meth_functions();
-    _recipes = _meth_funs[this->method];
-    if (_recipes.empty() == true) {
+    if (this->fastcgi_pass != "") { // CGI case
+        _recipes = _init_recipe_cgi();
+    } else { // Init recipes
+        _init_meth_functions();
+        _recipes = _meth_funs[this->method];
+    }
+    if (_recipes.empty() == true) { // Case when methods is not known
         _recipes = _init_error_request();
     }
     _it_recipes = _recipes.begin();
@@ -99,17 +102,18 @@ void    c_callback::_init_request_header(s_request_header request) {
     this->content_length = request.content_length;
     this->status_code = request.error;
     this->_resp_body = false;
+    this->saved_headers = request.saved_headers;
     return ;
 }
 
-void        c_callback::_init_s_socket(s_socket client) {
-    this->entry_socket = client.entry_socket;
-    this->server = (c_server *)client.server;
-    this->client_fd = client.client_fd;
-    this->client_addr = client.client_addr;
-    this->is_read_ready = &client.is_read_ready;
-    this->is_write_ready = &client.is_write_ready;
-    this->is_header_read = &client.is_header_read;
+void        c_callback::_init_s_socket(s_socket *client) {
+    this->entry_socket = client->entry_socket;
+    this->server = (c_server*)client->server;
+    this->client_fd = client->client_fd;
+    this->client_addr = client->client_addr;
+    this->is_read_ready = &(client->is_read_ready);
+    this->is_write_ready = &(client->is_write_ready);
+    this->is_header_read = &(client->is_header_read);
     this->content_length_h = 0;
 }
 
@@ -147,8 +151,7 @@ void        c_callback::_server_init_route(std::list<c_location> location) {
     it = location.begin();
     ite = location.end();
     it = _server_find_route(it, ite);
-    if (it != ite)
-    {
+    if (it != ite) {
         if((*it).client_max_body_size)
             client_max_body_size = (*it).client_max_body_size;
         if((*it).index.begin() != (*it).index.end())
@@ -163,6 +166,8 @@ void        c_callback::_server_init_route(std::list<c_location> location) {
             fastcgi_param = (*it).fastcgi_param;
         if ((*it).error_page.empty() == false)
             error_page = (*it).error_page;
+        if ((*it).fastcgi_pass.empty() == false)
+            fastcgi_pass = (*it).fastcgi_pass;
     }
 }
 

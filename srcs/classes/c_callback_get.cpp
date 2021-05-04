@@ -22,6 +22,7 @@ std::string         c_callback::_find_index_if_exist(void) {
 }
 
 void                c_callback::_meth_get_request_is_valid(void) {
+    std::cout << "TASK : _meth_get_request_is_valid" << std::endl;
     struct stat     stat;
     std::string     tmp_path;
     this->path.insert(0, this->root);

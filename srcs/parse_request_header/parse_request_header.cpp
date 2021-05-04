@@ -1,7 +1,7 @@
 #include "parse_request.hpp"
 
 static void skip_prefix(std::string const &src,
-                        std::string::const_iterator &it, const std::string sep){
+                    std::string::const_iterator &it, const std::string sep){
     std::string::const_iterator ite = src.end();
 
     while (it != ite && sep.find(*it) == std::string::npos)
@@ -11,15 +11,15 @@ static void skip_prefix(std::string const &src,
 }
 
 static void skip_sep(std::string const &src,
-                        std::string::const_iterator &it, const std::string sep){
+                     std::string::const_iterator &it, const std::string sep){
     std::string::const_iterator ite = src.end();
 
     while (it != ite && sep.find(*it) != std::string::npos)
         ++it;
 }
 
-static std::string get_param(std::string const &src, 
-                             std::string::const_iterator &it, std::string sep) {
+static std::string get_param(std::string const &src,
+                    std::string::const_iterator &it, std::string sep) {
     std::string::const_iterator ite = it;
 
     while (it != src.end() && sep.find(*it) == std::string::npos)
@@ -78,14 +78,23 @@ void    parse_field_list_string(std::string line, void *p) {
     }
 }
 
-void    parse_request_header(std::string line, 
-                             std::map<std::string, void *> request_header,
-                             std::map<std::string, f_request_header> 
-                             parser_request) {
+/* PARSE_REQUEST_HEADER()
+ * This function parse the header in line and edit the variable in
+ * s_request_header from calling function read_request_header().
+ *
+ * It return 1 if the line given contain an HTTP header. Return 0 else
+ */
+int    parse_request_header(std::string line,
+                    std::map<std::string, void *> request_header,
+                    std::map<std::string, f_request_header> parser_request) {
     std::string     prefix;
     std::string     sep(":");
 
-    prefix =  get_word(line, line.begin(), sep);
-    if (parser_request.find(prefix) != parser_request.end())
+    prefix = get_word(line, line.begin(), sep);
+    if (parser_request.find(prefix) != parser_request.end()) {
         parser_request[prefix](line, request_header[prefix]);
+    } else {
+        return (0);
+    }
+    return (1);
 }
