@@ -16,7 +16,7 @@ std::list<c_callback::t_task_f> c_callback::_init_recipe_cgi(void) {
 
 // Init specific var of CGI (meta-variables) in cgi_env_variables.
 void    c_callback::_meth_cgi_init_meta(void) {
-    std::cout << "_meth_cgi_init_meta" << std::endl;
+    std::cout << "TASK : _meth_cgi_init_meta()" << std::endl;
     char        *c_tmp;
     std::string tmp;
     std::string::iterator it_tmp;
@@ -106,13 +106,37 @@ void    c_callback::_meth_cgi_init_meta(void) {
     this->cgi_env_variables.push_back("SERVER_PROTOCOL=HTTP/1.1");
     // SERVER_SOFTWARE
     this->cgi_env_variables.push_back("SERVER_SOFTWARE=drunkserv");
-    std::cout << "_meth_cgi_init_meta : " << std::endl;
+    std::cout << "cgi_env_varibles: " << std::endl;
     std::cout << this->cgi_env_variables << std::endl;
 }
 
 // Init additionnal var of from http request in cgi_env_variables.
 void    c_callback::_meth_cgi_init_http(void) {
-    std::cout << "_meth_cgi_init_http" << std::endl;
+    std::cout << "TASK : _meth_cgi_init_http()" << std::endl;
+    std::string::iterator cursor;
+
+    for (std::list<std::string>::iterator it = this->saved_headers.begin();
+         it != this->saved_headers.end(); ++it) {
+        if ((cursor = find(it->begin(), it->end(), ':')) != it->end()) {
+            it->replace(cursor, cursor + 2, "=");
+        }
+        cursor = it->begin();
+        while (cursor != it->end() && *cursor != '=') { // key prepare
+            if (*cursor >= 'a' && *cursor <= 'z') // UPPERCASE KEY
+                *cursor -= 32;
+            if (*cursor == '-') // - to _
+                *cursor = '_';
+            ++cursor;
+        }
+        *it = "HTTP_" + *it;
+    }
+    cgi_env_variables.insert(this->cgi_env_variables.begin(),
+                             this->saved_headers.begin(),
+                             this->saved_headers.end());
+    std::cout << "saved_headers:" << std::endl;
+    std::cout << this->saved_headers << std::endl;
+    std::cout << "cgi_env_variables:" << std::endl;
+    std::cout << this->cgi_env_variables << std::endl;
 }
 
 void    c_callback::_meth_cgi_launch(void) {
