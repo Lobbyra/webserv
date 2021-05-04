@@ -51,7 +51,6 @@ void    webserv(std::list<c_server> const &conf) {
             task_queue.push(requests, clients);
         }
         task_queue.exec_task();
-        usleep(100);
     }
     set_reuse_port(clients);
     delete clients;
