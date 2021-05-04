@@ -4,7 +4,7 @@ c_callback::c_callback(void) {
     return ;
 }
 
-c_callback::c_callback(s_socket client, s_request_header request,
+c_callback::c_callback(s_socket *client, s_request_header request,
                        std::list<s_socket> *clients) {
     this->clients = clients;
     _init_s_socket(client);
@@ -106,14 +106,14 @@ void    c_callback::_init_request_header(s_request_header request) {
     return ;
 }
 
-void        c_callback::_init_s_socket(s_socket client) {
-    this->entry_socket = client.entry_socket;
-    this->server = (c_server *)client.server;
-    this->client_fd = client.client_fd;
-    this->client_addr = client.client_addr;
-    this->is_read_ready = &client.is_read_ready;
-    this->is_write_ready = &client.is_write_ready;
-    this->is_header_read = &client.is_header_read;
+void        c_callback::_init_s_socket(s_socket *client) {
+    this->entry_socket = client->entry_socket;
+    this->server = (c_server*)client->server;
+    this->client_fd = client->client_fd;
+    this->client_addr = client->client_addr;
+    this->is_read_ready = &(client->is_read_ready);
+    this->is_write_ready = &(client->is_write_ready);
+    this->is_header_read = &(client->is_header_read);
     this->content_length_h = 0;
 }
 
