@@ -27,7 +27,8 @@ LIBFT_FILES = ft_memset.cpp ft_bzero.cpp ft_strlen.cpp ft_toupper.cpp		\
 			  ft_memchr.cpp ft_memcmp.cpp ft_calloc.cpp ft_substr.cpp		\
 			  ft_strtrim.cpp ft_strjoin.cpp ft_split.cpp ft_itoa.cpp		\
 			  ft_strmapi.cpp ft_strcmp.cpp ft_memalloc.cpp ft_free.cpp		\
-			  ft_atoi_ptr.cpp ft_nbrlen.cpp ft_abs.cpp ft_itoa_lbase.cpp
+			  ft_atoi_ptr.cpp ft_nbrlen.cpp ft_abs.cpp ft_itoa_lbase.cpp	\
+			  ft_strdup.cpp
 LIBFT_HEADER = libft.h
 
 GNL_PATH = ./GNL/

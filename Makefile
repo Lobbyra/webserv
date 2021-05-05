@@ -65,7 +65,9 @@ UTILS_PATH	 = utils/
 UTILS_FILES	 = get_keys.cpp is_space.cpp get_word_it.cpp skip_it.cpp	  \
 			   is_str_num.cpp ft_isin.cpp ft_error.cpp get_word.cpp		  \
 			   get_status_msg.cpp get_err_page.cpp get_status_line.cpp	  \
-			   strcont_to_str.cpp lststr_to_str.cpp lststr_to_strcont.cpp
+			   strcont_to_str.cpp lststr_to_str.cpp lststr_to_strcont.cpp \
+			   ft_freestrs.cpp print_strs.cpp lststr_to_strs.cpp
+
 UTILS_HEADER = utils.hpp insert_stream_cont.hpp
 
 SRCS_FILES = ${ROOT_FILES} \
