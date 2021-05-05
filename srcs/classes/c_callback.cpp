@@ -45,13 +45,15 @@ c_callback::~c_callback(void) {
 
 void    c_callback::exec(void) {
     if (this->is_over() == false) {
-        if (this->status_code != 0 && this->status_code / 100 != 2 &&
-            _recipes != _init_error_request()) {
+        if (this->status_code / 100 != 2 &&
+                _recipes != _init_error_request()) {
             _recipes = _init_error_request();
             _it_recipes = _recipes.begin();
         } else {
             (this->*(*_it_recipes))();
-            ++_it_recipes;
+            if (this->status_code / 100 == 2 ||
+                    _recipes == _init_error_request())
+                ++_it_recipes;
         }
     }
 }
@@ -63,6 +65,17 @@ bool    c_callback::is_over(void) {
 /*
  * ####### PRIVATE FUNCTIONS
  */
+
+/* _CONTINUE()
+ * This function is created to be called at the end of a task to avoid
+ * uselessly stop the request resolving and do all the tasks if possible.
+ */
+void    c_callback::_continue() {
+    this->_it_recipes++;
+    if (this->is_over() == false) {
+        (this->*(*_it_recipes))();
+    }
+}
 
 void    c_callback::_init_meth_functions(void) {
     if (this->host.empty() == true) {

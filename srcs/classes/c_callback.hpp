@@ -2,6 +2,7 @@
 # define C_CALLBACK_HPP
 
 # include <fcntl.h>
+# include <unistd.h>
 # include <dirent.h>
 # include <sys/stat.h>
 # include <sys/types.h>
@@ -27,7 +28,6 @@
 # include "std_typedefs.hpp"
 # include "s_request_header.hpp"
 # include "../lib/GNL/get_next_line.h"
-# include "../lib/lib.hpp"
 
 class	c_callback
 {
@@ -157,6 +157,7 @@ private:
      */
     t_recipes                   _recipes;
     t_recipes_it                _it_recipes;
+    void _continue(void);
 
     /* _STATUS_MESSAGES
      * Contain relations between all status codes and messages.
@@ -214,6 +215,7 @@ private:
     void    _meth_cgi_init_meta(void); // Init specific var of CGI
     void    _meth_cgi_init_http(void); // Init additionnal headers from request
     void    _meth_cgi_launch(void);    // Launch binary in child by fork()
+    void    _meth_cgi_wait(void);       // Wait until child death for error 500
 
 };
 
