@@ -35,9 +35,11 @@ s_request_header    read_request_header(int client_fd) {
     if (request.error != 200)
         return (request);
     while ((status = get_next_line(client_fd, &line)) == 1) {
-        if (line[ft_strlen(line) - 1] == '\r')  // Remove trailing \r
-            line[ft_strlen(line) - 1] = '\0';
-        if (ft_strlen(line) == 0 || request.error != 200)
+        int len = ft_strlen(line);
+
+        if (len != 0 && line[len - 1] == '\r')  // Remove trailing \r
+            line[--len] = '\0';
+        if (len == 0 || request.error != 200)
             break;
         parse_request_header(line, request_header, parser_request);
         request.saved_headers.push_back(line);
