@@ -39,8 +39,9 @@ CLASSES_FILES	= c_task_queue.cpp c_callback.cpp c_location.cpp c_server.cpp \
 				  c_callback_head.cpp c_callback_delete.cpp					\
 				  c_callback_put.cpp c_callback_utils.cpp					\
 				  c_callback_error_request.cpp c_callback_options.cpp		\
-				  c_callback_get.cpp c_callback_cgi.cpp
-CLASSES_HEADERS	= c_task_queue.hpp c_callback.hpp c_location.hpp c_server.hpp
+				  c_callback_get.cpp c_callback_cgi.cpp c_tmpfile.cpp
+CLASSES_HEADERS	= c_task_queue.hpp c_callback.hpp c_location.hpp c_server.hpp \
+				  c_tmpfile.hpp
 
 PARSE_FUNS_PATH	 = parse_funs/
 PARSE_FUNS_FILES = parse_autoindex.cpp parse_listen.cpp						  \
