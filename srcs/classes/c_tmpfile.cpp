@@ -10,8 +10,9 @@ c_tmpfile::c_tmpfile(void) : _fd(-1) {
     if (errno != 0 && errno != EEXIST)
         ft_error("c_tmpfile: mkdir");
     errno = 0;
-    this->_filename = c_tmpfile::_path + c_tmpfile::_nextnameprefix + ".tmp";
-    c_tmpfile::_update_nextnameprefix();
+    while (c_tmpfile::_does_nextfile_exist())
+        c_tmpfile::_update_nextnameprefix();
+    this->_filename = c_tmpfile::_get_next_name();
     this->_fd = open(_filename.c_str(), O_CREAT | O_TRUNC | O_RDWR, S_IRWXU);
     if (errno != 0)
         ft_error("c_tmpfile: open");
@@ -98,5 +99,38 @@ void    c_tmpfile::_update_nextnameprefix(void) {
         ++(*last);
 }
 
+bool    c_tmpfile::_does_nextfile_exist(void) {
+    struct stat     buff;
+    std::string     nextfile = c_tmpfile::_get_next_name();
+
+    stat(nextfile.c_str(), &buff);
+    if (errno == 0)
+        return (true);
+    if (errno != ENOENT)
+        ft_error("stat");
+    errno = 0;
+    return (false);
+}
+
+std::string c_tmpfile::_get_next_name(void) {
+    return (c_tmpfile::_path + c_tmpfile::_nextnameprefix + ".tmp");
+}
+
 const char *const   c_tmpfile::_path = "/tmp/webserv_tmp/";
 std::string         c_tmpfile::_nextnameprefix = "A";
+
+/*
+int     main(void)
+{
+    while (1) {
+        {
+            std::cout << "c_tmpfile exist" << std::endl;
+            c_tmpfile hey;
+            sleep(3);
+        }
+        std::cout << "c_tmpfile deleted" << std::endl;
+        sleep(3);
+    }
+    return (0);
+}
+*/

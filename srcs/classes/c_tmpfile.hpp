@@ -10,6 +10,8 @@ class c_tmpfile {
         static const char *const    _path;
         static std::string          _nextnameprefix;
         static void                 _update_nextnameprefix(void);
+        static std::string          _get_next_name(void);
+        static bool                 _does_nextfile_exist(void);
         std::string                 _filename;
         int                         _fd;
         int                         _select(void) const;
