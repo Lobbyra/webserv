@@ -137,6 +137,7 @@ private:
      */
     void                _init_meth_functions(void);
     std::map<std::string, std::list<t_task_f> > _meth_funs;
+    bool                _method_allow(void);
 
     std::string _response(void);
 
