@@ -5,6 +5,7 @@
 # include <unistd.h>
 # include <dirent.h>
 # include <sys/stat.h>
+# include <sys/wait.h>
 # include <sys/types.h>
 # include <arpa/inet.h>
 # include <sys/socket.h>
@@ -23,6 +24,7 @@
 # include "s_socket.hpp"
 # include "s_ipport.hpp"
 # include "c_server.hpp"
+# include "c_tmpfile.hpp"
 # include "c_location.hpp"
 # include "our_typedefs.hpp"
 # include "std_typedefs.hpp"
@@ -176,6 +178,20 @@ private:
     void    _gen_resp_body(void);
     bool    _resp_body;
 
+    /* TMPFILE
+     * Temporary file class to save output of CGI or anything we want.
+     * It's a pointer to not construct the class in case we do not need of temp
+     * file.
+     */
+    c_tmpfile *_tmpfile;
+
+    /* CHUNK TASK
+     * Tasks to read chunk from client_fd.
+     */
+    int     _chunk_size;
+    void    _chunk_reading_size(void);  // Read the size of the chunk.
+    void    _chunk_reading_chunk(void); // Read the chunk in stack and save it
+
     /* _FD_BODY
      * File descriptor that we will be read and write in the client_fd.
      */
@@ -202,20 +218,22 @@ private:
 
     // PUT RECIPE
     void     _meth_put_open_fd(void);
-    void     _meth_put_fd_is_ready_to_write(void);
     void     _meth_put_write_body(void);
-    s_socket _fd_to_write;
+    int      _fd_to_write;
 
     // OPTIONS RECIPE
     void    _gen_resp_header_options(void);
 
     // GGI RECIPE
+    pid_t _pid; // pid of CGI child
+    c_tmpfile *_out_tmpfile;
     std::list<std::string> cgi_env_variables;
 
     void    _meth_cgi_init_meta(void); // Init specific var of CGI
     void    _meth_cgi_init_http(void); // Init additionnal headers from request
     void    _meth_cgi_launch(void);    // Launch binary in child by fork()
-    void    _meth_cgi_wait(void);       // Wait until child death for error 500
+    void    _meth_cgi_wait(void);      // Wait until child death for error 500
+    void    _meth_cgi_send_resp(void); // Will translate and send the response
 
 };
 

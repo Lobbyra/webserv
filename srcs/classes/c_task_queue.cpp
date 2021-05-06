@@ -37,6 +37,7 @@ static void    remove_clients(std::list<s_socket> *clients, int client_fd) {
 void    c_task_queue::exec_task(void) {
     c_callback *front;
 
+    std::cout << "C_TASK_QUEUE : exec_task()" << std::endl;
     if (_tasks.size() == 0)
         return;
     front = _tasks.front();

@@ -35,7 +35,7 @@ s_request_header    read_request_header(int client_fd) {
     if (request.error != 200)
         return (request);
     while ((status = get_next_line(client_fd, &line)) == 1) {
-        if (line[ft_strlen(line) - 1] == '\r')  // Remove trailing \r
+        if (ft_strlen(line) > 0 && line[ft_strlen(line) - 1] == '\r')
             line[ft_strlen(line) - 1] = '\0';
         if (ft_strlen(line) == 0 || request.error != 200)
             break;

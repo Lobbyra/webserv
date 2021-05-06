@@ -27,6 +27,8 @@ std::string get_word(std::string const &src, std::string::const_iterator it,
 bool    ft_isin(const char &c, const std::string &str);
 bool    is_space(char c);
 bool    is_str_num(std::string str);
+bool    is_fd_read_ready(int fd);
+bool    is_fd_write_ready(int fd);
 
 std::list<std::string> get_keys(void);
 
