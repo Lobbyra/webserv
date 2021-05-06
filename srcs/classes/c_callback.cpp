@@ -150,6 +150,8 @@ std::list<c_location>::iterator        c_callback::_server_find_route(
     it_find = ite;
     for (; it != ite; ++it)
     {
+        if (ft_strcmp((*it).route.c_str(), "/") == 0)
+            it_find = it;
         if ((ft_strncmp(this->path.c_str(), (*it).route.c_str(),
                         this->path.length())) == 0 &&
                         (this->path.length() == (*it).route.length()))
