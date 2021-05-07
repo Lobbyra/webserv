@@ -1,7 +1,6 @@
 #include "c_tmpfile.hpp"
 #include "colors.hpp"
 #include "utils.hpp"
-#include <sys/select.h>
 #include <sys/stat.h>
 #include <fcntl.h>
 
@@ -50,28 +49,6 @@ std::ostream    &operator<<(std::ostream &o, c_tmpfile const &i) {
     return (o);
 }
 
-/* Returns:
- * 0 no operation ready
- * 1 if read_ready
- * 2 if write_ready
- * 3 if both ready
- */
-int         c_tmpfile::_select(void) const {
-    fd_set r_fdset, w_fdset;
-    int res = 0;
-
-    FD_ZERO(&r_fdset); FD_ZERO(&w_fdset);
-    FD_SET(this->_fd, &r_fdset); FD_SET(this->_fd, &w_fdset);
-    select(this->_fd + 1, &r_fdset, &w_fdset, NULL, NULL);
-    if (errno != 0 && errno != EAGAIN && errno != EINTR)
-        ft_error("select");
-    if (FD_ISSET(this->_fd, &r_fdset))
-        res |= 1;
-    if (FD_ISSET(this->_fd, &w_fdset))
-        res |= 2;
-    return (res);
-}
-
 int const   &c_tmpfile::get_fd(void) const { return (this->_fd); }
 
 std::string const   &c_tmpfile::get_filename(void) const {
@@ -79,11 +56,11 @@ std::string const   &c_tmpfile::get_filename(void) const {
 }
 
 bool    c_tmpfile::is_read_ready(void) const {
-    return (this->_select() & 1);
+    return (is_fd_read_ready(this->_fd));
 }
 
 bool    c_tmpfile::is_write_ready(void) const {
-    return (this->_select() & 2);
+    return (is_fd_write_ready(this->_fd));
 }
 
 void    c_tmpfile::reset_cursor(void) {
