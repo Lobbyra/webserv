@@ -39,7 +39,7 @@ CLASSES_FILES	= c_task_queue.cpp c_callback.cpp c_location.cpp c_server.cpp \
 				  c_callback_head.cpp c_callback_delete.cpp					\
 				  c_callback_put.cpp c_callback_utils.cpp					\
 				  c_callback_error_request.cpp c_callback_options.cpp		\
-				  c_callback_trace.cpp										\
+				  c_callback_trace.cpp c_callback_chunk.cpp					\
 				  c_callback_get.cpp c_callback_cgi.cpp c_tmpfile.cpp
 CLASSES_HEADERS	= c_task_queue.hpp c_callback.hpp c_location.hpp c_server.hpp \
 				  c_tmpfile.hpp
@@ -67,7 +67,8 @@ UTILS_FILES	 = get_keys.cpp is_space.cpp get_word_it.cpp skip_it.cpp	  \
 			   is_str_num.cpp ft_isin.cpp ft_error.cpp get_word.cpp		  \
 			   get_status_msg.cpp get_err_page.cpp get_status_line.cpp	  \
 			   strcont_to_str.cpp lststr_to_str.cpp lststr_to_strcont.cpp \
-			   ft_freestrs.cpp print_strs.cpp lststr_to_strs.cpp
+			   ft_freestrs.cpp print_strs.cpp lststr_to_strs.cpp		  \
+			   is_fd_ready.cpp
 
 UTILS_HEADER = utils.hpp insert_stream_cont.hpp
 

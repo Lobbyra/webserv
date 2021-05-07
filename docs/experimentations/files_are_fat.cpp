@@ -94,6 +94,7 @@ void    non_blocking_fd(void) {
     gettimeofday(&curr, NULL);
     fd = open(path.c_str(), O_CREAT | O_WRONLY);
     fcntl(fd, F_SETFL, O_NONBLOCK);
+    write(fd, path.c_str(), path.size());
     result_in_ms = get_time(curr);
     std::cout << result_in_ms << "ms" << std::endl;
     close(fd);
