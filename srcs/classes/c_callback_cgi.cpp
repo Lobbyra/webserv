@@ -151,6 +151,8 @@ void    c_callback::_meth_cgi_launch(void) {
     int  fd_in;
     char *bin_path = NULL;
     char **envp = NULL;
+    char **args = NULL;
+    std::list<std::string> lst_args;
 
     errno = 0;
     if (_out_tmpfile == NULL) {
@@ -169,22 +171,30 @@ void    c_callback::_meth_cgi_launch(void) {
     if ((_pid = fork()) == 0) { // CHILD
         bin_path = ft_strdup(this->fastcgi_pass.c_str());
         envp = lststr_to_strs(this->cgi_env_variables);
+        lst_args.push_back(bin_path);
+        args = lststr_to_strs(lst_args);
         // TODO : DESTROY C_TASK_QUEUE
-        if (bin_path == NULL || envp == NULL) {
+        if (bin_path == NULL || envp == NULL || args == NULL) {
             if (bin_path != NULL)
                 free(bin_path);
             if (envp != NULL)
                 ft_freestrs(envp);
+            if (args != NULL)
+                ft_freestrs(args);
             exit(1);
         }
         if (dup2(fd_in, 0) == -1 || dup2(_out_tmpfile->get_fd(), 1) == -1) {
             free(bin_path);
             ft_freestrs(envp);
+            ft_freestrs(args);
             std::cerr << "cgi_launch : dup2 : " << strerror(errno) << std::endl;
+            exit(1);
         }
-        if (execve(bin_path, envp, envp) == -1) {
+        close(fd_in);
+        if (execve(bin_path, args, envp) == -1) {
             free(bin_path);
             ft_freestrs(envp);
+            ft_freestrs(args);
             std::cerr << "cgi_launch : execv : " << strerror(errno) << std::endl;
             exit(1);
         }
@@ -219,6 +229,7 @@ void    c_callback::_meth_cgi_wait(void) {
 void    c_callback::_meth_cgi_send_resp(void) {
     std::cout << "TASK : _meth_cgi_send_resp" << std::endl;
     char *buf;
+    char *prepared;
 
     if (_out_tmpfile->is_read_ready() == false ||
             this->is_write_ready == false) {
@@ -226,9 +237,14 @@ void    c_callback::_meth_cgi_send_resp(void) {
         return ;
     }
     while (get_next_line(_out_tmpfile->get_fd(), &buf) == 1) {
-        send(this->client_fd, buf, ft_strlen(buf), 0);
+        prepared = ft_strjoin(buf, "\n");
+        std::cout << "DEBUG : prepared : [" << prepared << "]" << std::endl;
+        send(this->client_fd, prepared, ft_strlen(buf), 0);
         free(buf);
+        free(prepared);
     }
+    if (buf)
+        send(this->client_fd, buf, ft_strlen(buf), 0);
     free(buf);
     delete _out_tmpfile;
 }
