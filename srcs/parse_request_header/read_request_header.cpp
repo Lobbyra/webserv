@@ -20,11 +20,12 @@ static void         parse_req_line(int client_fd,
  * header to create the s_request_header structure.
  */
 s_request_header    read_request_header(int client_fd) {
-    int                                         status;
-    char                                        *line;
-    s_request_header                            request;
-    std::map<std::string, void *>               request_header;
-    std::map<std::string, f_request_header>     parser_request;
+    int                                     status;
+    int                                     line_len;
+    char                                    *line;
+    s_request_header                        request;
+    std::map<std::string, void *>           request_header;
+    std::map<std::string, f_request_header> parser_request;
 
     line = NULL;
     request.error = 200;
@@ -35,11 +36,10 @@ s_request_header    read_request_header(int client_fd) {
     if (request.error != 200)
         return (request);
     while ((status = get_next_line(client_fd, &line)) == 1) {
-        int len = ft_strlen(line);
-
-        if (len != 0 && line[len - 1] == '\r')  // Remove trailing \r
-            line[--len] = '\0';
-        if (len == 0 || request.error != 200)
+        line_len = ft_strlen(line);
+        if (line_len != 0 && line[line_len - 1] == '\r')  // Remove trailing \r
+            line[--line_len] = '\0';
+        if (line_len == 0 || request.error != 200)
             break;
         parse_request_header(line, request_header, parser_request);
         request.saved_headers.push_back(line);

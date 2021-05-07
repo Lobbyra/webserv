@@ -6,6 +6,8 @@ c_callback::c_callback(void) {
 
 c_callback::c_callback(s_socket *client, s_request_header request,
                        std::list<s_socket> *clients) {
+    this->_tmpfile = NULL;
+    this->_out_tmpfile = NULL;
     this->clients = clients;
     _init_s_socket(client);
     _init_request_header(request);
@@ -44,12 +46,15 @@ c_callback::~c_callback(void) {
  */
 
 void    c_callback::exec(void) {
+    std::cout << "C_CALLBACK : exec()" << std::endl;
     if (this->is_over() == false) {
         if (this->status_code / 100 != 2 &&
                 _recipes != _init_error_request()) {
+            std::cout << "C_CALLBACK : turn recipe in error" << std::endl;
             _recipes = _init_error_request();
             _it_recipes = _recipes.begin();
         } else {
+            std::cout << "C_CALLBACK : calling the task" << std::endl;
             (this->*(*_it_recipes))();
             if (this->status_code / 100 == 2 ||
                     _recipes == _init_error_request())
