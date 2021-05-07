@@ -200,6 +200,7 @@ private:
     int     _fd_body;
 
     void    _fd_is_ready_to_send(void);
+    void    _fd_is_ready_to_read(void);
     void    _send_respons_body(void);
     void    _send_respons(void);
 
@@ -225,6 +226,10 @@ private:
 
     // OPTIONS RECIPE
     void    _gen_resp_header_options(void);
+
+    // TRACE RECIPE
+    void    _read_client_to_tmpfile(void);
+    void    _write_request_line(void);
 
     // GGI RECIPE
     pid_t _pid; // pid of CGI child
