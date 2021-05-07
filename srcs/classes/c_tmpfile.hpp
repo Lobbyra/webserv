@@ -21,11 +21,12 @@ class c_tmpfile {
         c_tmpfile(c_tmpfile const &src);
         virtual ~c_tmpfile(void);
 
-        c_tmpfile   &operator=(c_tmpfile const &rhs);
-        int const   &get_fd(void) const;
-        bool        is_read_ready(void) const;
-        bool        is_write_ready(void) const;
-        void        reset_cursor(void);
+        c_tmpfile           &operator=(c_tmpfile const &rhs);
+        int const           &get_fd(void) const;
+        std::string const   &get_filename(void) const;
+        bool                is_read_ready(void) const;
+        bool                is_write_ready(void) const;
+        void                reset_cursor(void);
 };
 
 std::ostream    &operator<<(std::ostream &o, c_tmpfile const &i);

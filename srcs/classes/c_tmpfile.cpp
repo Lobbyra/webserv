@@ -74,6 +74,10 @@ int         c_tmpfile::_select(void) const {
 
 int const   &c_tmpfile::get_fd(void) const { return (this->_fd); }
 
+std::string const   &c_tmpfile::get_filename(void) const {
+    return (this->_filename);
+}
+
 bool    c_tmpfile::is_read_ready(void) const {
     return (this->_select() & 1);
 }
