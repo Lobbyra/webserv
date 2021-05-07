@@ -14,7 +14,6 @@ class c_tmpfile {
         static bool                 _does_nextfile_exist(void);
         std::string                 _filename;
         int                         _fd;
-        int                         _select(void) const;
 
     public:
         c_tmpfile(void);
