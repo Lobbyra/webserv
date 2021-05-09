@@ -1,5 +1,9 @@
 #include "get_next_line.h"
 
+/* Warning:
+ * The separator `sep` have to be smaller than BUFFER_SIZE
+ */
+
 static int		ft_lstsize_gnl(t_gnl *lst)
 {
 	int i;
@@ -13,25 +17,35 @@ static int		ft_lstsize_gnl(t_gnl *lst)
 	return (i);
 }
 
-static int		ft_sentence(t_gnl **alist, int min, int max)
+static int	ft_sentence(t_gnl const *const *alist, const char *const sep)
 {
 	int		size;
-	char	*tab;
-	t_gnl	*lst;
+	int		j = 0;
+	t_gnl	tmp;
+	t_gnl const	*lst;
 
-	size = 0;
+	size = 1;
 	lst = *alist;
-	while (lst->next)
+	while (lst->next && lst->next->next)
 	{
 		size += lst->max - lst->min;
 		lst = lst->next;
 	}
-	tab = lst->tab;
-	while (min < max)
+	tmp = *lst;
+	while (tmp.next != NULL || tmp.min < tmp.max)
 	{
-		size++;
-		if (tab[min++] == '\n')
-			return (size);
+		if (tmp.min >= tmp.max)
+			tmp = *tmp.next;
+		if (tmp.tab[tmp.min] == sep[j])
+			++j;
+		else if (j != 0) {
+			j = 0;
+			continue ;
+		}
+		++tmp.min;
+		++size;
+		if (sep[j] == '\0')
+			return (size - j);
 	}
 	return (0);
 }
@@ -49,7 +63,7 @@ static void		ft_lstclear_gnl(t_gnl **alst)
 	}
 }
 
-static int		ft_found(t_gnl **alist, char **line, int size)
+static int		ft_found(t_gnl **alist, char **line, int size, int seplen)
 {
 	int		i;
 	char	*src;
@@ -69,21 +83,23 @@ static int		ft_found(t_gnl **alist, char **line, int size)
 		}
 		line[0][i++] = src[(lst->min)++];
 	}
-	if (lst->min >= lst->max && lst->next)
-		lst = lst->next;
 	line[0][i] = '\0';
-	(lst->min)++;
+	while (seplen--) {
+		if (lst->min >= lst->max && lst->next)
+			lst = lst->next;
+		++lst->min;
+	}
 	ft_lstclear_gnl(alist);
 	return (1);
 }
 
-int		ft_gnl(int fd, char **line, t_gnl **alist)
+int		ft_gnl(int fd, char **line, t_gnl **alist, const char *const sep)
 {
 	int		size;
 	t_gnl	*list;
 
 	list = *alist;
-	while (((size = ft_sentence(alist, list->min, list->max)) == 0) &&
+	while (((size = ft_sentence(alist, sep)) == 0) &&
 			(list->max == BUFFER_SIZE || (fd == 0 && list->max > 0)))
 	{
 		if (!(list->next = ft_lstnew_gnl(fd)))
@@ -91,7 +107,7 @@ int		ft_gnl(int fd, char **line, t_gnl **alist)
 		list = list->next;
 	}
 	size = (size > 0 ? size : ft_lstsize_gnl(*alist));
-	if (ft_found(alist, line, size) == 0)
+	if (ft_found(alist, line, size, ft_strlen(sep)) == 0)
 		return (-1);
 	return ((size > 0 ? 1 : 0));
 }

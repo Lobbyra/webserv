@@ -69,7 +69,7 @@ static void	ft_total_remove_fd(t_gnlfdlst **begin_fd, t_gnlfdlst *to_delete_fd)
 	free(to_delete_fd);
 }
 
-int			get_next_line(int fd, char **line)
+int			get_next(int fd, char **line, const char *const sep)
 {
 	int						return_value;
 	static t_gnlfdlst		*begin_fd = NULL;
@@ -91,8 +91,13 @@ int			get_next_line(int fd, char **line)
 			return (-1);
 		right_fd = begin_fd;
 	}
-	return_value = ft_gnl(fd, line, &(right_fd->list));
+	return_value = ft_gnl(fd, line, &(right_fd->list), sep);
 	if (return_value == 0 || return_value == (-1))
 		ft_total_remove_fd(&begin_fd, right_fd);
 	return (return_value);
+}
+
+int			get_next_line(int fd, char **line)
+{
+	return (get_next(fd, line, "\n"));
 }
