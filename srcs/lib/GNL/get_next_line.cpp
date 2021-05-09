@@ -1,18 +1,6 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: mli <mli@student.42.fr>                    +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/12/02 23:32:08 by mli               #+#    #+#             */
-/*   Updated: 2020/01/06 18:18:52 by mli              ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "get_next_line.h"
 
-int		ft_lstsize_gnl(t_gnl *lst)
+static int		ft_lstsize_gnl(t_gnl *lst)
 {
 	int i;
 
@@ -25,7 +13,7 @@ int		ft_lstsize_gnl(t_gnl *lst)
 	return (i);
 }
 
-int		ft_sentence(t_gnl **alist, int min, int max)
+static int		ft_sentence(t_gnl **alist, int min, int max)
 {
 	int		size;
 	char	*tab;
@@ -48,7 +36,20 @@ int		ft_sentence(t_gnl **alist, int min, int max)
 	return (0);
 }
 
-int		ft_found(t_gnl **alist, char **line, int size)
+static void		ft_lstclear_gnl(t_gnl **alst)
+{
+	t_gnl	*tmp;
+
+	while ((*alst)->next)
+	{
+		tmp = (*alst);
+		*alst = (*alst)->next;
+		free(tmp->tab);
+		free(tmp);
+	}
+}
+
+static int		ft_found(t_gnl **alist, char **line, int size)
 {
 	int		i;
 	char	*src;

@@ -1,18 +1,5 @@
 #include "get_next_line.h"
 
-void		ft_lstclear_gnl(t_gnl **alst)
-{
-	t_gnl	*tmp;
-
-	while ((*alst)->next)
-	{
-		tmp = (*alst);
-		*alst = (*alst)->next;
-		free(tmp->tab);
-		free(tmp);
-	}
-}
-
 t_gnl		*ft_lstnew_gnl(int fd)
 {
 	t_gnl	*newNode;
@@ -36,7 +23,7 @@ t_gnl		*ft_lstnew_gnl(int fd)
 	return (newNode);
 }
 
-t_gnlfdlst		*ft_addfront_fd(t_gnlfdlst **astruct, int fd)
+static t_gnlfdlst	*ft_addfront_fd(t_gnlfdlst **astruct, int fd)
 {
 	t_gnlfdlst	*newNode;
 
@@ -53,7 +40,7 @@ t_gnlfdlst		*ft_addfront_fd(t_gnlfdlst **astruct, int fd)
 	return (newNode);
 }
 
-void		ft_total_remove_fd(t_gnlfdlst **begin_fd, t_gnlfdlst *to_delete_fd)
+static void	ft_total_remove_fd(t_gnlfdlst **begin_fd, t_gnlfdlst *to_delete_fd)
 {
 	t_gnl		*current;
 	t_gnl		*then;

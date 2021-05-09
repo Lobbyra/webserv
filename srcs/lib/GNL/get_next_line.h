@@ -25,8 +25,6 @@ typedef struct	s_gnlfdlst
 
 int				get_next_line(int fd, char **line);
 int				ft_gnl(int fd, char **line, t_gnl **alst);
-t_gnlfdlst		*ft_addfront_fd(t_gnlfdlst **astruct, int fd);
 t_gnl			*ft_lstnew_gnl(int fd);
-void			ft_lstclear_gnl(t_gnl **alst);
 
 #endif
