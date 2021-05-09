@@ -7,11 +7,14 @@
 static int		ft_lstsize_gnl(t_gnl *lst)
 {
 	int i;
+	int diff;
 
 	i = 1;
 	while (lst)
 	{
-		i += lst->max - lst->min;
+		if ((diff = lst->max - lst->min) < 0)
+			return (0);
+		i += diff;
 		lst = lst->next;
 	}
 	return (i);
