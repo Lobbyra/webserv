@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
 
 if [ $# -lt 1 ] || [ $# -gt 3 ]; then
-    echo "Usage: $0 <file.req> [port=80] [ip=localhost]"
+    >&2 echo "Usage: $0 <file.req> [port=80] [ip=localhost]"
     return 1
 fi
 
@@ -14,15 +14,15 @@ if [ -z "$3" ]; then
 fi
 
 if ! [ -e "$1" ]; then
-    echo "File does not exist"
+    >&2 echo "File does not exist"
     return 1
 fi
 
 if ! [ -s "$1" ]; then
-    echo "Empty file"
+    >&2 echo "Empty file"
     return 1
 fi
 
-echo "RUN: cat $1 | nc $3 $2"
-echo "__________________________________________"
+>&2 echo "RUN: cat $1 | nc $3 $2"
+>&2 echo "__________________________________________"
 cat $1 | nc $3 $2
