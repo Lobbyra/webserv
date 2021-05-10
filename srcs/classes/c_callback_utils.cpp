@@ -21,7 +21,7 @@ static std::string get_content_length(int content_length) {
     if (str_content_length == NULL)
         throw std::logic_error("gen_resp_headers : memory allocation failed");
     str_cl = str_content_length;
-    free (str_content_length);
+    free(str_content_length);
     return (str_cl);
 }
 
@@ -36,8 +36,8 @@ static std::string get_date(void) {
     if (gettimeofday(&curr_time, NULL) == -1) {
         throw std::logic_error("get_time_of_day() failed");
     }
-    if (strftime(result, 100, HTTP_DATE_FORMAT, localtime(&(curr_time.tv_sec)))
-           == 0) {
+    strftime(result, 100, HTTP_DATE_FORMAT, localtime(&(curr_time.tv_sec)));
+    if (errno != 0) {
         throw std::logic_error("strftime() failed");
     }
     return (result);
@@ -70,6 +70,7 @@ static void grh_add_headers(std::list<std::string> &headers, c_callback &cb) {
 }
 
 void    c_callback::_gen_resp_headers(void) {
+    std::cout << "TASK : _gen_resp_headers()" << std::endl;
     std::list<std::string> headers;
 
     headers.push_back(get_status_line(status_code));
@@ -78,12 +79,24 @@ void    c_callback::_gen_resp_headers(void) {
     _resp_headers += "\r\n\r\n";
 }
 
+/* FD_IS_READY_TO_READ()
+ * Function which verifies that we can read in the fd
+ * If not decrement the iterator it_recipes
+ */
+void                    c_callback::_fd_is_ready_to_read(void) {
+    std::cout << "TASK : _fd_is_ready_to_read()" << std::endl;
+    if (*(this->is_read_ready) == false) {
+        _it_recipes--;
+    }
+}
+
 /* FD_IS_READY_TO_SEND()
  * Function which verifies that we can write in the fd
  * If not decrement the iterator it_recipes
  */
 void                    c_callback::_fd_is_ready_to_send(void) {
-    if (*this->is_write_ready == false) {
+    std::cout << "TASK : _fd_is_ready_to_send()" << std::endl;
+    if (*(this->is_write_ready) == false) {
         _it_recipes--;
     }
 }
@@ -93,33 +106,29 @@ void                    c_callback::_fd_is_ready_to_send(void) {
  * Open the requested file, read the file, and send line by line
  */
 void                    c_callback::_send_respons_body(void) {
-    char    *line;
-    char    *tmp;
-    int     file_fd;
-    int     status = -1;
+    char            buf[512];
+    int             file_fd;
+    int             status;
 
+    ft_bzero(buf, 512);
     if ((file_fd = open(this->path.c_str(), O_RDONLY)) != -1) {
-        while ((status = get_next_line(file_fd, &line)) == 1) {
-            if (!line[0]) {
-                free(line);
-                break ;
-            }
-            tmp = ft_strjoin(line, "\n");
-            send(client_fd, tmp, ft_strlen(tmp), 0);
-            free(tmp);
-            free(line);
+        while ((status = read(file_fd, buf, 511)) > 0) {
+            send(client_fd, buf, ft_strlen(buf), 0);
+            ft_bzero(buf, 512);
         }
     } else {
         std::cerr << "Error: open() _gen_resp_body" << std::endl;
-    } if (status == 0)
-        free(line);
+    }
     close(file_fd);
+    if (_tmpfile)
+        delete _tmpfile;
 }
 
 /* SEND_RESPONS()
  * Send the respons from the server to the client
  */
 void                    c_callback::_send_respons(void) {
+    std::cout << "TASK : _send_respons()" << std::endl;
     if (send(client_fd, _resp_headers.c_str(), _resp_headers.length(), 0) == -1) {
 		std::cerr << "Error: Respons to client" << std::endl;
 	} if (_resp_body == true) {

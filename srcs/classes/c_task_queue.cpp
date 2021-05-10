@@ -37,6 +37,7 @@ static void    remove_clients(std::list<s_socket> *clients, int client_fd) {
 void    c_task_queue::exec_task(void) {
     c_callback *front;
 
+    std::cout << "C_TASK_QUEUE : exec_task()" << std::endl;
     if (_tasks.size() == 0)
         return;
     front = _tasks.front();
@@ -66,7 +67,7 @@ void    c_task_queue::push(std::list<s_request_header> &requests,
             ++it_clients;
             continue ;
         }
-        cb_temp = new c_callback(*it_clients, *it_requests, clients);
+        cb_temp = new c_callback(&(*it_clients), *it_requests, clients);
         it_clients->is_header_read = true;
         _tasks.push(cb_temp);
         ++it_clients;

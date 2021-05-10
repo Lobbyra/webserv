@@ -4,6 +4,7 @@
 # include <list>
 # include <iostream>
 
+# include <signal.h>
 # include <sys/socket.h>
 
 # include "c_server.hpp"

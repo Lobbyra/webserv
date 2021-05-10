@@ -4,6 +4,9 @@
 # include <list>
 # include <string>
 # include <iostream>
+
+# include <errno.h>
+# include <string.h>
 # include <stdlib.h>
 
 # include "insert_stream_cont.hpp"
@@ -24,6 +27,8 @@ std::string get_word(std::string const &src, std::string::const_iterator it,
 bool    ft_isin(const char &c, const std::string &str);
 bool    is_space(char c);
 bool    is_str_num(std::string str);
+bool    is_fd_read_ready(int fd);
+bool    is_fd_write_ready(int fd);
 
 std::list<std::string> get_keys(void);
 
@@ -45,4 +50,9 @@ std::string get_err_page(int code);
 std::string get_status_msg(int code);
 std::string get_status_line(int code);
 
-#endif // ***************************************************** UTILS_HPP end //
+// C SHIT
+void    ft_freestrs(char **strs);
+void    print_strs(char **strs, std::string sep);
+char    **lststr_to_strs(std::list<std::string> lst);
+
+#endif

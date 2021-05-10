@@ -11,15 +11,7 @@ std::list<s_request_header>     parse_request(t_socketlst *const clients) {
             continue;
         s_request_header new_request_header;
 
-        try {
-            new_request_header = read_request_header(it->client_fd);
-        }
-        catch (const std::exception &e) {
-            std::cerr << "Request header: " << e.what() << std::endl;
-            clients->erase(it++);
-            --it;
-            continue ;
-        }
+        new_request_header = read_request_header(it->client_fd);
         std::cout << new_request_header;
         list_requests.push_back(new_request_header);
     }

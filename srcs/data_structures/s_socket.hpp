@@ -21,5 +21,6 @@ struct s_socket {
 };
 
 std::ostream    &operator<<(std::ostream &o, s_socket const &i);
+std::ostream    &operator<<(std::ostream& os, const std::list<s_socket>& v);
 
 #endif

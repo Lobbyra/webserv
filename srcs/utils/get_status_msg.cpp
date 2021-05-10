@@ -15,6 +15,10 @@ std::string get_status_msg(int code) {
             return ("Bad Request");
         case 404:
             return ("Not Found");
+        case 405:
+            return ("Not Allowed");
+        case 409:
+            return ("Conflict");
         case 500:
             return ("Internal Server Error");
     }

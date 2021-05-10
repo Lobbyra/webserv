@@ -1,51 +1,46 @@
 #include "c_callback.hpp"
 
-void                    c_callback::_meth_put_fd_is_ready_to_write(void) {
-    if ( _fd_to_write.is_write_ready == false) {
-        _it_recipes--;
-    }
-}
+#define PUT_OPEN_FLAGS (O_WRONLY | O_TRUNC)
+#define PUT_OPEN_CREAT_FLAGS (O_WRONLY | O_TRUNC | O_CREAT)
 
 void        c_callback::_meth_put_open_fd(void) {
-    struct stat         stat;
-    int                 file_fd;
+    std::cout << "TASK : _meth_put_open_fd()" << std::endl;
+    int         flags;
+    mode_t      mode;
+    struct stat stat;
+
+    errno = 0;
     this->path.insert(0, this->root);
-
-    if (lstat(this->path.c_str(), &stat) == 0) {
+    if (lstat(this->path.c_str(), &stat) == 0 &&
+            S_ISDIR(stat.st_mode) == false) {
         this->status_code = 204;
+        flags = PUT_OPEN_FLAGS;
+        mode = 0;
+    } else if (S_ISDIR(stat.st_mode) == true) {
+        this->status_code = 409;
+        return ;
+    } else {                                     // File does not exist
+        this->status_code = 201;
+        flags = PUT_OPEN_CREAT_FLAGS;
+        mode = S_IRWXU;
     }
-    if ((file_fd = open(path.c_str(), O_WRONLY | O_TRUNC | O_CREAT, S_IRWXU)) != -1) {
-        s_socket tmp;
-
-        tmp.entry_socket = 0;
-        tmp.client_fd = file_fd;
-        tmp.is_header_read = true;
-        _fd_to_write = tmp;
-        _fd_to_write.client_fd = tmp.client_fd;
-        this->clients->push_back(tmp);
-    } else {
+    if ((_fd_to_write = open(path.c_str(), flags, mode)) == -1) {
+        std::cerr << "open() : " << strerror(errno) << std::endl;
         this->status_code = 500;
-        _recipes = _init_error_request();
-        _it_recipes = --(_recipes.begin());
     }
 }
 
 void       c_callback::_meth_put_write_body(void) {
+    std::cout << "TASK : _meth_put_write_body()" << std::endl;
     std::string     body_test("Bonjour ! Body testing.\nHappy test");
 
-    if (write(_fd_to_write.client_fd, body_test.c_str(), body_test.length()) != -1) {
-            close(_fd_to_write.client_fd);
-
-            std::list<s_socket>::iterator   it = clients->begin();
-            std::list<s_socket>::iterator   ite = clients->end();
-            for (; it != ite; ++it) {
-                if ((*it).client_fd == _fd_to_write.client_fd)
-                    break ;
-            }
-            clients->erase(it);
-            if (this->status_code != 204)
-                this->status_code = 201;
-            return ;
+    if (is_fd_write_ready(_fd_to_write) == false) {
+        _it_recipes--;
+        return ;
+    }
+    if (write(_fd_to_write, body_test.c_str(), body_test.length()) == -1) {
+        std::cerr << "write() : " << strerror(errno) << std::endl;
+        this->status_code = 500;
     }
 }
 
@@ -53,7 +48,6 @@ std::list<c_callback::t_task_f>         c_callback::_init_recipe_put(void){
     std::list<t_task_f> tasks;
 
     tasks.push_back(&c_callback::_meth_put_open_fd);
-    tasks.push_back(&c_callback::_meth_put_fd_is_ready_to_write);
     tasks.push_back(&c_callback::_meth_put_write_body);
     tasks.push_back(&c_callback::_gen_resp_headers);
     tasks.push_back(&c_callback::_fd_is_ready_to_send);

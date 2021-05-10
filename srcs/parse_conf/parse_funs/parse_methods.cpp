@@ -1,3 +1,5 @@
+#include <algorithm>
+
 #include "parse_conf.hpp"
 
 static bool is_method(std::string method) {

@@ -20,5 +20,5 @@ char	*ft_strdup(const char *s1)
 	src_len = ft_strlen(s1);
 	if ((newcpy = (char *)ft_calloc(src_len + 1, sizeof(*newcpy))) == NULL)
 		return (NULL);
-	return (ft_memcpy(newcpy, s1, src_len));
+	return ((char*)ft_memcpy(newcpy, s1, src_len));
 }

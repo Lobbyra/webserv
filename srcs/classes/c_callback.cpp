@@ -4,19 +4,24 @@ c_callback::c_callback(void) {
     return ;
 }
 
-c_callback::c_callback(s_socket client, s_request_header request,
+c_callback::c_callback(s_socket *client, s_request_header request,
                        std::list<s_socket> *clients) {
+    this->_tmpfile = NULL;
+    this->_out_tmpfile = NULL;
     this->clients = clients;
     _init_s_socket(client);
     _init_request_header(request);
-    if (this->server)
-    {
+    if (this->server) { // Init server variables
         _init_server_hpp(this->server);
         _server_init_route(this->server->location);
     }
-    _init_meth_functions();
-    _recipes = _meth_funs[this->method];
-    if (_recipes.empty() == true) {
+    if (this->fastcgi_pass != "") { // CGI case
+        _recipes = _init_recipe_cgi();
+    } else { // Init recipes
+        _init_meth_functions();
+        _recipes = _meth_funs[this->method];
+    }
+    if (_recipes.empty() == true) { // Case when methods is not known
         _recipes = _init_error_request();
     }
     _it_recipes = _recipes.begin();
@@ -41,9 +46,20 @@ c_callback::~c_callback(void) {
  */
 
 void    c_callback::exec(void) {
+    std::cout << "C_CALLBACK : exec()" << std::endl;
     if (this->is_over() == false) {
-        (this->*(*_it_recipes))();
-        ++_it_recipes;
+        if (this->status_code / 100 != 2 &&
+                _recipes != _init_error_request()) {
+            std::cout << "C_CALLBACK : turn recipe in error" << std::endl;
+            _recipes = _init_error_request();
+            _it_recipes = _recipes.begin();
+        } else {
+            std::cout << "C_CALLBACK : calling the task" << std::endl;
+            (this->*(*_it_recipes))();
+            if (this->status_code / 100 == 2 ||
+                    _recipes == _init_error_request())
+                ++_it_recipes;
+        }
     }
 }
 
@@ -55,17 +71,46 @@ bool    c_callback::is_over(void) {
  * ####### PRIVATE FUNCTIONS
  */
 
+/* _CONTINUE()
+ * This function is created to be called at the end of a task to avoid
+ * uselessly stop the request resolving and do all the tasks if possible.
+ */
+void    c_callback::_continue() {
+    this->_it_recipes++;
+    if (this->is_over() == false) {
+        (this->*(*_it_recipes))();
+    }
+}
+
+bool    c_callback::_method_allow(void) {
+    t_strlst::iterator it, ite;
+    bool               allow;
+
+    it = this->methods.begin();
+    ite = this->methods.end();
+    allow = false;
+    for (; it != ite; ++it)
+        if (method == *it)
+            allow = true;
+    if (allow == false)
+        this->status_code = 405;
+    return (allow);
+}
+
 void    c_callback::_init_meth_functions(void) {
     if (this->host.empty() == true) {
         this->status_code = 400;
         return ;
     }
+    if (_method_allow() == false)
+        return ;
     _meth_funs["GET"] = _init_recipe_get();
     _meth_funs["HEAD"] = _init_recipe_head();
     _meth_funs["DELETE"] = _init_recipe_delete();
     _meth_funs["PUT"] = _init_recipe_put();
     _meth_funs["OPTIONS"] = _init_recipe_options();
     _meth_funs["POST"] = _init_recipe_post();
+    _meth_funs["TRACE"] = _init_recipe_trace();
 }
 
 std::list<c_callback::t_task_f>     c_callback::_init_recipe_dumb(void) {
@@ -94,17 +139,18 @@ void    c_callback::_init_request_header(s_request_header request) {
     this->content_length = request.content_length;
     this->status_code = request.error;
     this->_resp_body = false;
+    this->saved_headers = request.saved_headers;
     return ;
 }
 
-void        c_callback::_init_s_socket(s_socket client) {
-    this->entry_socket = client.entry_socket;
-    this->server = (c_server *)client.server;
-    this->client_fd = client.client_fd;
-    this->client_addr = client.client_addr;
-    this->is_read_ready = &client.is_read_ready;
-    this->is_write_ready = &client.is_write_ready;
-    this->is_header_read = &client.is_header_read;
+void        c_callback::_init_s_socket(s_socket *client) {
+    this->entry_socket = client->entry_socket;
+    this->server = (c_server*)client->server;
+    this->client_fd = client->client_fd;
+    this->client_addr = client->client_addr;
+    this->is_read_ready = &(client->is_read_ready);
+    this->is_write_ready = &(client->is_write_ready);
+    this->is_header_read = &(client->is_header_read);
     this->content_length_h = 0;
 }
 
@@ -128,8 +174,10 @@ std::list<c_location>::iterator        c_callback::_server_find_route(
     it_find = ite;
     for (; it != ite; ++it)
     {
-        if ((ft_strncmp(this->path.c_str(), (*it).route.c_str(), 
-                        this->path.length())) == 0 && 
+        if (ft_strcmp((*it).route.c_str(), "/") == 0)
+            it_find = it;
+        if ((ft_strncmp(this->path.c_str(), (*it).route.c_str(),
+                        this->path.length())) == 0 &&
                         (this->path.length() == (*it).route.length()))
             it_find = it;
     }
@@ -142,8 +190,7 @@ void        c_callback::_server_init_route(std::list<c_location> location) {
     it = location.begin();
     ite = location.end();
     it = _server_find_route(it, ite);
-    if (it != ite)
-    {
+    if (it != ite) {
         if((*it).client_max_body_size)
             client_max_body_size = (*it).client_max_body_size;
         if((*it).index.begin() != (*it).index.end())
@@ -158,6 +205,8 @@ void        c_callback::_server_init_route(std::list<c_location> location) {
             fastcgi_param = (*it).fastcgi_param;
         if ((*it).error_page.empty() == false)
             error_page = (*it).error_page;
+        if ((*it).fastcgi_pass.empty() == false)
+            fastcgi_pass = (*it).fastcgi_pass;
     }
 }
 

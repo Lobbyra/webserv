@@ -31,6 +31,7 @@ function check_all() {
 
     ip="$1"
     port="$2"
+    rm -rf $www_path
 
     for method in ${test_methods[@]}; do
         if ! [ -d "${req_dir}/${method}" ]; then

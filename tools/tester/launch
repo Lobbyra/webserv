@@ -17,6 +17,9 @@ PURPLE="\e[95m"
 CYAN="\e[96m"
 DGREY="\e[1;90m"
 
+www_path="/tmp/www"
+www_src_path="../docker_nginx/www"
+
 # ============================================================================ #
 #                                 Functions                                    #
 # ============================================================================ #
@@ -38,7 +41,7 @@ function is_equal () {
 
 function pline () {
     # 1=testname; 2=bool
-    printf "%-15s: $(emojibool $2)\n" $1
+    printf "%-18s: $(emojibool $2)\n" $1
 }
 
 function pdiff () {
@@ -72,6 +75,11 @@ function check_one() {
         echo "${PURPLE}Resp file empty or missing for test: $testname${EOC}";
         return 1
     fi
+
+    if ! [ -d "$www_path" ]; then
+        rm -rf $www_path && mkdir $www_path
+    fi
+    cp -r $www_src_path/* $www_path
 
     > $tmpfile nc $3 $2 < $1
 

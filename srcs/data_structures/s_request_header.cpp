@@ -31,5 +31,7 @@ std::ostream& operator<<(std::ostream& os, s_request_header const &src)
         os << "Referer: " << src.referer << std::endl;
     if (src.transfer_encoding != "")
         os << "Transfer-Encoding: " << src.transfer_encoding << std::endl;
+    if (src.saved_headers.size() > 0)
+        os << "saved headers: " << src.saved_headers << std::endl;
     return os;
 };

@@ -1,5 +1,7 @@
 #include "webserv.hpp"
 
+#include <unistd.h>
+
 volatile bool g_run = 1;
 
 static void set_reuse_port(t_socketlst const *const lst) {
@@ -44,6 +46,7 @@ void    webserv(std::list<c_server> const &conf) {
         if (g_run == false)
             break ;
         if (is_client_ready(clients) == true) {
+            std::cout << "WEBSERV_CPP : IS_CLIENT_READY" << std::endl;
             requests = parse_request(clients);
             assign_server_to_clients(conf, clients, requests);
             task_queue.push(requests, clients);

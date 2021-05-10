@@ -32,14 +32,18 @@ ROOT_HEADER = webserv.hpp
 
 DATA_STRUCTURES_PATH  = data_structures/
 DATA_STRUCTURES_FILES = s_request_header.cpp s_ipport.cpp s_socket.cpp
+DATA_STRUCTURES_HEADERS = s_request_header.hpp s_ipport.hpp s_socket.hpp
 
 CLASSES_PATH	= classes/
 CLASSES_FILES	= c_task_queue.cpp c_callback.cpp c_location.cpp c_server.cpp \
 				  c_callback_head.cpp c_callback_delete.cpp					\
 				  c_callback_put.cpp c_callback_utils.cpp					\
 				  c_callback_error_request.cpp c_callback_options.cpp		\
-				  c_callback_get.cpp c_callback_post.cpp
-CLASSES_HEADERS	= c_task_queue.hpp c_callback.hpp c_location.hpp c_server.hpp
+				  c_callback_trace.cpp c_callback_chunk.cpp					\
+				  c_callback_get.cpp c_callback_cgi.cpp c_tmpfile.cpp		\
+				  c_callback_post.cpp
+CLASSES_HEADERS	= c_task_queue.hpp c_callback.hpp c_location.hpp c_server.hpp \
+				  c_tmpfile.hpp
 
 PARSE_FUNS_PATH	 = parse_funs/
 PARSE_FUNS_FILES = parse_autoindex.cpp parse_listen.cpp						  \
@@ -63,7 +67,9 @@ UTILS_PATH	 = utils/
 UTILS_FILES	 = get_keys.cpp is_space.cpp get_word_it.cpp skip_it.cpp	  \
 			   is_str_num.cpp ft_isin.cpp ft_error.cpp get_word.cpp		  \
 			   get_status_msg.cpp get_err_page.cpp get_status_line.cpp	  \
-			   strcont_to_str.cpp lststr_to_str.cpp lststr_to_strcont.cpp
+			   strcont_to_str.cpp lststr_to_str.cpp lststr_to_strcont.cpp \
+			   ft_freestrs.cpp print_strs.cpp lststr_to_strs.cpp		  \
+			   is_fd_ready.cpp
 
 UTILS_HEADER = utils.hpp insert_stream_cont.hpp
 
@@ -76,9 +82,10 @@ SRCS_FILES = ${ROOT_FILES} \
 
 HEADER_FILES = ${ROOT_HEADER} \
 			   ${addprefix ${PARSE_CONF_PATH}, ${PARSE_CONF_HEADER}} \
-			   ${addprefix ${UTILS_PATH}, ${UTILS_HEADER}}	\
+			   ${addprefix ${UTILS_PATH}, ${UTILS_HEADER}} \
 			   ${addprefix ${PARSE_REQUEST_HEADER_PATH}, ${PARSE_REQUEST_HEADER_HEADER}} \
-			   ${addprefix ${CLASSES_PATH}, ${CLASSES_HEADERS}}
+			   ${addprefix ${CLASSES_PATH}, ${CLASSES_HEADERS}} \
+			   ${addprefix ${DATA_STRUCTURES_PATH}, ${DATA_STRUCTURES_HEADERS}}
 
 HEADER_FULL = ${addprefix ${SRCS_PATH}, ${HEADER_FILES}}
 
@@ -93,12 +100,12 @@ OBJS_PATHS = ${OBJS_PATH} \
 OBJS	   = ${addprefix ${OBJS_PATH}, ${SRCS_FILES:.cpp=.o}}
 
 INCL_PATHS = ${SRCS_PATH}/. \
+			 ${LIB_PATH}										\
 			 ${SRCS_PATH}/${PARSE_CONF_PATH}					\
 			 ${SRCS_PATH}/${PARSE_CONF_PATH}/${PARSE_FUNS_PATH} \
 			 ${SRCS_PATH}/${UTILS_PATH}							\
 			 ${SRCS_PATH}/${PARSE_REQUEST_HEADER_PATH}			\
 			 ${SRCS_PATH}/${CLASSES_PATH}						\
-			 ${LIB_PATH}										\
 			 ${SRCS_PATH}/${DATA_STRUCTURES_PATH}
 
 

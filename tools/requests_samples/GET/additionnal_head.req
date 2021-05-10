@@ -1,0 +1,8 @@
+GET / HTTP/1.1
+Host: localhost:8000
+User-Agent: curl/7.54.0
+Salut: coucou
+cookie_manger: 6f7gsdf678s89fsdfg7s687
+ouiallo: aluile
+Accept: */*
+
