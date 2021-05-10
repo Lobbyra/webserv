@@ -71,13 +71,9 @@ void    c_callback::_meth_put_write_body(void) {
         --_it_recipes;
         return ;
     }
-    while ((bytes_read = get_next_line(_put_fd_in, &buf)) == 1) {
-        std::cout << "buf = " << buf << std::endl;
+    while ((bytes_read = get_next(_put_fd_in, &buf, "\r\n")) == 1) {
         line_len = ft_strlen(buf);
-        if (line_len > 0 && buf[line_len - 1] == '\r')
-            buf[--line_len] = '\0';
         write(_fd_to_write, buf, line_len);
-        write(_fd_to_write, "\n", 1);
         free(buf);
         buf = NULL;
     }
@@ -86,9 +82,10 @@ void    c_callback::_meth_put_write_body(void) {
         free(buf);
         buf = NULL;
     }
-    std::cout << bytes_read << std::endl;
-    if (transfer_encoding == "chunked")
+    if (transfer_encoding == "chunked") {
         delete _tmpfile;
+        _tmpfile = NULL;
+    }
     _continue();
 }
 

@@ -27,6 +27,8 @@ void                c_callback::_meth_get_request_is_valid(void) {
     std::string     tmp_path;
     this->path.insert(0, this->root);
 
+    if (this->method == "GET")
+        this->_resp_body = true;
     tmp_path = this->path;
     if (lstat(this->path.c_str(), &stat) == -1) {
         this->status_code = 404;
@@ -44,7 +46,6 @@ void                c_callback::_meth_get_request_is_valid(void) {
 std::list<c_callback::t_task_f>     c_callback::_init_recipe_get(void) {
     std::list<t_task_f>     tasks;
 
-    this->_resp_body = true;
     tasks.push_back(&c_callback::_meth_get_request_is_valid);
     tasks.push_back(&c_callback::_gen_resp_headers);
     tasks.push_back(&c_callback::_fd_is_ready_to_send);

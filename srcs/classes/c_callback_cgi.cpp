@@ -238,7 +238,6 @@ void    c_callback::_meth_cgi_send_resp(void) {
     }
     while (get_next_line(_out_tmpfile->get_fd(), &buf) == 1) {
         prepared = ft_strjoin(buf, "\n");
-        std::cout << "DEBUG : prepared : [" << prepared << "]" << std::endl;
         send(this->client_fd, prepared, ft_strlen(buf), 0);
         free(buf);
         free(prepared);

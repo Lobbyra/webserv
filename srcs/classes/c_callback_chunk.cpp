@@ -31,16 +31,16 @@ void    c_callback::_chunk_reading_size(void) {
         _it_recipes--;
         return ;
     }
-    get_next_line(this->client_fd, &line);
-    if (line[ft_strlen(line) - 1] == '\r')
-        line[ft_strlen(line) - 1] = '\0';
-    std::cout << "line = [" << line << "]" << std::endl << std::flush;
-    if (is_str_hex(line) == false) { // Bad chunk size
+    if (get_next(this->client_fd, &line, "\r\n") == -1) { // Ending chunk miss
+        this->status_code = 400;
+        return ;
+    }
+    if (is_str_hex(line) == false) { // Non hexad chunk size
         status_code = 400;
         free(line);
         return ;
     }
-    _chunk_size = ft_atoi(line);
+    _chunk_size = hextodec(line);
     if (_chunk_size == 0) {
         _tmpfile->reset_cursor();
         ++_it_recipes;
@@ -62,31 +62,16 @@ void    c_callback::_chunk_reading_chunk(void) {
         return ;
     }
     tmp_len = 0;
-    bytes_read = 0;
     buf = NULL;
-    while (get_next_line(this->client_fd, &buf) == 1 && // Read the chunk
-            bytes_read < _chunk_size) {
-        tmp_len = ft_strlen(buf);
-        if (buf[tmp_len - 1] == '\r') {
-            bytes_read += tmp_len - 1;
-            buf[tmp_len - 1] = '\0';
-            std::cout << "chunk = [" << buf << "]" << std::endl;
-            write(_tmpfile->get_fd(), buf, tmp_len - 1);
-            free(buf);
-            break ;
-        } else {
-            bytes_read += tmp_len;
-            std::cout << "chunk = [" << buf << "]" << std::endl;
-            write(_tmpfile->get_fd(), buf, tmp_len);
-            free(buf);
-        }
-    }
-    if (bytes_read != _chunk_size) { // Chunk real size != _chunk_size
-        std::cout << "bytes_read = " << bytes_read << std::endl;
-        std::cout << "chunk_size = " << _chunk_size << std::endl;
+    get_next(this->client_fd, &buf, "\r\n");
+    bytes_read = ft_strlen(buf);
+    if (bytes_read != _chunk_size) {
+        std::cerr << \
+        "ERROR : chunk_len != chunk gived" << bytes_read << std::endl;
         status_code = 400;
-    } else {                                // Chunk well read n ok to save it
-        --_it_recipes;
-        --_it_recipes;
+        return ;
     }
+    write(_tmpfile->get_fd(), buf, bytes_read);
+    --_it_recipes;
+    --_it_recipes; // Go to chunk read size
 }
