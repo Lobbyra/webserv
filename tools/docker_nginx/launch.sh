@@ -48,7 +48,7 @@ function is_port_in_use () {
     fi
 }
 
-PORT=$(($RANDOM % 60000))
+PORT=8080
 while is_port_in_use $PORT; do
     PORT=$(($RANDOM % 60000))
 done
