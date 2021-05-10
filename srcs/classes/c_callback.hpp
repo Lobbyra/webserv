@@ -139,6 +139,7 @@ private:
      */
     void                _init_meth_functions(void);
     std::map<std::string, std::list<t_task_f> > _meth_funs;
+    bool                _method_allow(void);
 
     std::string _response(void);
 
@@ -152,6 +153,7 @@ private:
     std::list<t_task_f> _init_recipe_head(void);
     std::list<t_task_f> _init_recipe_delete(void);
     std::list<t_task_f> _init_recipe_options(void);
+    std::list<t_task_f> _init_recipe_trace(void);
     std::list<t_task_f> _init_error_request(void);
 
     /* _RECIPES
@@ -198,6 +200,7 @@ private:
     int     _fd_body;
 
     void    _fd_is_ready_to_send(void);
+    void    _fd_is_ready_to_read(void);
     void    _send_respons_body(void);
     void    _send_respons(void);
 
@@ -225,6 +228,10 @@ private:
 
     // OPTIONS RECIPE
     void    _gen_resp_header_options(void);
+
+    // TRACE RECIPE
+    void    _read_client_to_tmpfile(void);
+    void    _write_request_line(void);
 
     // GGI RECIPE
     pid_t _pid; // pid of CGI child

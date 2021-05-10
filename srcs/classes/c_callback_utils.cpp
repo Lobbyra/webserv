@@ -79,6 +79,17 @@ void    c_callback::_gen_resp_headers(void) {
     _resp_headers += "\r\n\r\n";
 }
 
+/* FD_IS_READY_TO_READ()
+ * Function which verifies that we can read in the fd
+ * If not decrement the iterator it_recipes
+ */
+void                    c_callback::_fd_is_ready_to_read(void) {
+    std::cout << "TASK : _fd_is_ready_to_read()" << std::endl;
+    if (*(this->is_read_ready) == false) {
+        _it_recipes--;
+    }
+}
+
 /* FD_IS_READY_TO_SEND()
  * Function which verifies that we can write in the fd
  * If not decrement the iterator it_recipes
@@ -109,6 +120,8 @@ void                    c_callback::_send_respons_body(void) {
         std::cerr << "Error: open() _gen_resp_body" << std::endl;
     }
     close(file_fd);
+    if (_tmpfile)
+        delete _tmpfile;
 }
 
 /* SEND_RESPONS()

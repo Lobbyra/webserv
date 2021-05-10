@@ -33,8 +33,11 @@ s_request_header    read_request_header(int client_fd) {
     request_header = init_request_header(&request);
     parser_request = init_parser_request();
     parse_req_line(client_fd, request_header);
-    if (request.error != 200)
+    if (request.error != 200 || request.method == "TRACE") {
+        if (request.method == "TRACE")
+            request.host = "tmp";
         return (request);
+    }
     while ((status = get_next_line(client_fd, &line)) == 1) {
         line_len = ft_strlen(line);
         if (line_len != 0 && line[line_len - 1] == '\r')  // Remove trailing \r

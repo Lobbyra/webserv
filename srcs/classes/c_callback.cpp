@@ -82,16 +82,34 @@ void    c_callback::_continue() {
     }
 }
 
+bool    c_callback::_method_allow(void) {
+    t_strlst::iterator it, ite;
+    bool               allow;
+
+    it = this->methods.begin();
+    ite = this->methods.end();
+    allow = false;
+    for (; it != ite; ++it)
+        if (method == *it)
+            allow = true;
+    if (allow == false)
+        this->status_code = 405;
+    return (allow);
+}
+
 void    c_callback::_init_meth_functions(void) {
     if (this->host.empty() == true) {
         this->status_code = 400;
         return ;
     }
+    if (_method_allow() == false)
+        return ;
     _meth_funs["GET"] = _init_recipe_get();
     _meth_funs["HEAD"] = _init_recipe_head();
     _meth_funs["DELETE"] = _init_recipe_delete();
     _meth_funs["PUT"] = _init_recipe_put();
     _meth_funs["OPTIONS"] = _init_recipe_options();
+    _meth_funs["TRACE"] = _init_recipe_trace();
 }
 
 std::list<c_callback::t_task_f>     c_callback::_init_recipe_dumb(void) {
@@ -155,6 +173,8 @@ std::list<c_location>::iterator        c_callback::_server_find_route(
     it_find = ite;
     for (; it != ite; ++it)
     {
+        if (ft_strcmp((*it).route.c_str(), "/") == 0)
+            it_find = it;
         if ((ft_strncmp(this->path.c_str(), (*it).route.c_str(),
                         this->path.length())) == 0 &&
                         (this->path.length() == (*it).route.length()))
