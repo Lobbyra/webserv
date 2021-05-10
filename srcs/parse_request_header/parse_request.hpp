@@ -13,6 +13,8 @@ typedef void (*f_request_header)(std::string line, void * p);
 
 std::ostream& operator<<(std::ostream& os, s_request_header const &src);
 
+std::string get_param(std::string const &src,
+                      std::string::const_iterator &it, std::string sep);
 s_request_header                 read_request_header(int fd);
 
 std::list<std::string>           init_prefix_method(void);

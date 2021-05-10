@@ -18,7 +18,7 @@ static void skip_sep(std::string const &src,
         ++it;
 }
 
-static std::string get_param(std::string const &src,
+std::string get_param(std::string const &src,
                     std::string::const_iterator &it, std::string sep) {
     std::string::const_iterator ite = it;
 

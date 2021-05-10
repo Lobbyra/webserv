@@ -12,6 +12,8 @@ static void     check_request_line(std::map<std::string,void *> req_header) {
         *error_code = 400;
     } else if (protocol->empty() == true) {
         *error_code = 400;
+    } else if (ft_strcmp(protocol->c_str(), "HTTP/1.1") != 0) {
+        *error_code = 505;
     }
 }
 
@@ -19,9 +21,8 @@ static void    parse_protocol(std::string const &line,
                        std::string::const_iterator &it,
                        std::map<std::string, void *> request_header) {
     std::string     protocol;
-    std::string     sep(" ");
 
-    protocol =  get_word(line, it, sep);
+    protocol =  get_param(line, it, " \r");
     std::string * ptr = static_cast<std::string *>(request_header["Protocol"]);
     *ptr = protocol;
 }

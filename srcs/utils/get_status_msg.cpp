@@ -21,6 +21,8 @@ std::string get_status_msg(int code) {
             return ("Conflict");
         case 500:
             return ("Internal Server Error");
+        case 505:
+            return ("HTTP Version Not Supported");
     }
     return ("");
 }
