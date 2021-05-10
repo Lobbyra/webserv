@@ -8,7 +8,8 @@ static void     check_request_line(std::map<std::string,void *> req_header) {
 
     if (method->empty() == true) {
         *error_code = 400;
-    } else if (path->empty() == true) {
+    } else if (path->empty() == true ||
+              (ft_strncmp(path->c_str(), "/", 1) != 0)) {
         *error_code = 400;
     } else if (protocol->empty() == true) {
         *error_code = 400;
@@ -21,8 +22,16 @@ static void    parse_protocol(std::string const &line,
                        std::string::const_iterator &it,
                        std::map<std::string, void *> request_header) {
     std::string     protocol;
+    std::string     sep(" ");
 
-    protocol =  get_param(line, it, " \r");
+    protocol =  get_word(line, it, sep);
+    for (; it != line.end(); ++it)
+        if (sep.find(*it) != std::string::npos)
+            break ;
+    if (it != line.end()) {
+        size_t *error_code = static_cast<size_t *>(request_header["Error"]);
+        *error_code = 400;
+    }
     std::string * ptr = static_cast<std::string *>(request_header["Protocol"]);
     *ptr = protocol;
 }

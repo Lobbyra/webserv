@@ -8,7 +8,7 @@ static void         parse_req_line(int client_fd,
     int status;
     char *buf;
 
-    status = get_next_line(client_fd, &buf);
+    status = get_next(client_fd, &buf, "\r\n");
     if (status != -1) {
         parse_method(buf, req_headers);
         free(buf);
