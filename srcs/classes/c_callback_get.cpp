@@ -30,6 +30,10 @@ void                c_callback::_meth_get_request_is_valid(void) {
     tmp_path = this->path;
     if (lstat(this->path.c_str(), &stat) == -1) {
         this->status_code = 404;
+    } else if ((stat.st_mode & S_IRUSR) == false) {
+        std::cout << "Error: no reading rights" << std::endl;
+        this->status_code = 403;
+        this->content_length_h = 0;
     } else {
         this->status_code = 200;
         this->content_length_h = stat.st_size;
@@ -37,7 +41,7 @@ void                c_callback::_meth_get_request_is_valid(void) {
             if ((this->path = _find_index_if_exist()) == tmp_path) {
                 this->status_code = 403;
                 this->content_length_h = 0;
-            }
+        }
     }
 }
 

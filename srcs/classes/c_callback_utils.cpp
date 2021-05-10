@@ -112,10 +112,13 @@ void                    c_callback::_send_respons_body(void) {
 
     ft_bzero(buf, 512);
     if ((file_fd = open(this->path.c_str(), O_RDONLY)) != -1) {
-        while ((status = read(file_fd, buf, 511)) > 0) {
-            send(client_fd, buf, ft_strlen(buf), 0);
-            ft_bzero(buf, 512);
-        }
+        if (is_fd_read_ready(file_fd) == true) {
+            while ((status = read(file_fd, buf, 511)) > 0) {
+                send(client_fd, buf, ft_strlen(buf), 0);
+                ft_bzero(buf, 512);
+            }
+        } else
+            std::cerr << "Error: body not ready to read" << std::endl;
     } else {
         std::cerr << "Error: open() _gen_resp_body" << std::endl;
     }
