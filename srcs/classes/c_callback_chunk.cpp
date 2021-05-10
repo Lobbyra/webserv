@@ -42,6 +42,7 @@ void    c_callback::_chunk_reading_size(void) {
     }
     _chunk_size = ft_atoi(line);
     if (_chunk_size == 0) {
+        _tmpfile->reset_cursor();
         ++_it_recipes;
     }
     free(line);

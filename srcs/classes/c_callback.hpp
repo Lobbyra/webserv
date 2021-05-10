@@ -217,9 +217,11 @@ private:
     void    _meth_get_read(void);
 
     // PUT RECIPE
-    void     _meth_put_open_fd(void);
-    void     _meth_put_write_body(void);
-    int      _fd_to_write;
+    void     _meth_put_open_fd(void);    // Create/open targeted ressource
+    void     _meth_put_choose_in(void);  // Choose input fd (client_fd|chunk)
+    void     _meth_put_write_body(void); // Loop to read/write from in/out fds
+    int      _put_fd_in;                 // == tmpfile for chunk or client_fd
+    int      _fd_to_write;               // == fd of targeted file
 
     // OPTIONS RECIPE
     void    _gen_resp_header_options(void);

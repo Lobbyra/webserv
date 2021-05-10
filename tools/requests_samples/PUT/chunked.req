@@ -1,0 +1,9 @@
+PUT /coucou.html HTTP/1.1
+Host: example.com
+Transfer-Encoding: chunked
+
+6
+Coucou
+10
+les amis !
+0
