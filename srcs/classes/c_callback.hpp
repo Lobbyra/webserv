@@ -145,6 +145,7 @@ private:
     std::list<t_task_f> _init_recipe_delete(void);
     std::list<t_task_f> _init_recipe_put(void);
     std::list<t_task_f> _init_recipe_options(void);
+    std::list<t_task_f> _init_recipe_post(void);
     std::list<t_task_f> _init_error_request(void);
 
     /* _RECIPES

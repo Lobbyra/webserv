@@ -65,6 +65,7 @@ void    c_callback::_init_meth_functions(void) {
     _meth_funs["DELETE"] = _init_recipe_delete();
     _meth_funs["PUT"] = _init_recipe_put();
     _meth_funs["OPTIONS"] = _init_recipe_options();
+    _meth_funs["POST"] = _init_recipe_post();
 }
 
 std::list<c_callback::t_task_f>     c_callback::_init_recipe_dumb(void) {
