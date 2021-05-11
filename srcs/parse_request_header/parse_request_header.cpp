@@ -78,6 +78,15 @@ void    parse_field_list_string(std::string line, void *p) {
     }
 }
 
+static int  check_if_host_exist(std::string prefix, void *p) {
+    if (prefix == "Host") {
+        std::string *ptr = static_cast<std::string*>(p);
+        if (ptr->empty() == false)
+            return (1);
+    }
+    return (0);
+}
+
 /* PARSE_REQUEST_HEADER()
  * This function parse the header in line and edit the variable in
  * s_request_header from calling function read_request_header().
@@ -92,9 +101,10 @@ int    parse_request_header(std::string line,
 
     prefix = get_word(line, line.begin(), sep);
     if (parser_request.find(prefix) != parser_request.end()) {
-        parser_request[prefix](line, request_header[prefix]);
-    } else {
-        return (0);
+        if ((check_if_host_exist(prefix, request_header[prefix]) == 1))
+            return (1);
+        else
+            parser_request[prefix](line, request_header[prefix]);
     }
-    return (1);
+    return (0);
 }

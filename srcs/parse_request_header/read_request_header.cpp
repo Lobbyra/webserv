@@ -42,7 +42,8 @@ s_request_header    read_request_header(int client_fd) {
         line_len = ft_strlen(line);
         if (line_len == 0 || request.error != 200)
             break;
-        parse_request_header(line, request_header, parser_request);
+        if (parse_request_header(line, request_header, parser_request) == 1)
+            request.error = 400;
         request.saved_headers.push_back(line);
         free(line);
         line = NULL;
