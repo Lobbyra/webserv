@@ -170,15 +170,22 @@ void        c_callback::_init_server_hpp(c_server const *server) {
 std::list<c_location>::iterator        c_callback::_server_find_route(
     std::list<c_location>::iterator &it, std::list<c_location>::iterator &ite) {
     std::list<c_location>::iterator     it_find;
+    std::string                         tmp_path;
+    size_t                              i = 0;
 
     it_find = ite;
+    i = this->path.find_first_of("/", 1);
+    if (i != std::string::npos)
+        tmp_path.insert(0, this->path, 0, i);
+    else
+        tmp_path = this->path;
     for (; it != ite; ++it)
     {
         if (ft_strcmp((*it).route.c_str(), "/") == 0)
             it_find = it;
-        if ((ft_strncmp(this->path.c_str(), (*it).route.c_str(),
-                        this->path.length())) == 0 &&
-                        (this->path.length() == (*it).route.length()))
+        if ((ft_strncmp(tmp_path.c_str(), (*it).route.c_str(),
+                        tmp_path.length())) == 0 &&
+                        (tmp_path.length() == (*it).route.length()))
             it_find = it;
     }
     return (it_find);

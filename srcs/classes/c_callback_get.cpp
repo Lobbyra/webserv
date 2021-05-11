@@ -9,6 +9,8 @@ std::string         c_callback::_find_index_if_exist(void) {
     it = this->index.begin();
     ite = this->index.end();
     it_path = tmp_path.end();
+    if (tmp_path.back() != '/')
+        tmp_path.insert(tmp_path.end(), '/');
     for (; it != ite ; ++it)
     {
         tmp_path.insert(tmp_path.length(), *it);
