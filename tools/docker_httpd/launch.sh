@@ -116,7 +116,7 @@ rm temp.conf
 
 echo "${BOLD}Container starting...${EOC}\n"
 
-docker run --name $HTTPD_IMG -d -p $PORT:80 $HTTPD_IMG > /dev/null
+docker run --name $HTTPD_IMG -d -p $PORT:80 -v $ROOT_DIR:$ROOT_DIR $HTTPD_IMG > /dev/null
 sleep 1.25
 
 echo "Container launched and listening at port ${GREEN}${PORT}${EOC}\n"

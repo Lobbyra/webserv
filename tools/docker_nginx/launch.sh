@@ -48,7 +48,7 @@ function is_port_in_use () {
     fi
 }
 
-PORT=$(($RANDOM % 60000))
+PORT=8080
 while is_port_in_use $PORT; do
     PORT=$(($RANDOM % 60000))
 done
@@ -116,7 +116,7 @@ rm temp.conf
 
 echo "${BOLD}Container starting...${EOC}\n"
 
-docker run --name $NGINX_IMG -d -p $PORT:80 $NGINX_IMG > /dev/null
+docker run --name $NGINX_IMG -d -p $PORT:80 -v $ROOT_DIR:$ROOT_DIR $NGINX_IMG > /dev/null
 sleep 1.25
 
 echo "Container launched and listening at port $GREEN$PORT$EOC\n"
