@@ -38,10 +38,8 @@ s_request_header    read_request_header(int client_fd) {
             request.host = "tmp";
         return (request);
     }
-    while ((status = get_next_line(client_fd, &line)) == 1) {
+    while ((status = get_next(client_fd, &line, "\r\n")) == 1) {
         line_len = ft_strlen(line);
-        if (line_len != 0 && line[line_len - 1] == '\r')  // Remove trailing \r
-            line[--line_len] = '\0';
         if (line_len == 0 || request.error != 200)
             break;
         parse_request_header(line, request_header, parser_request);

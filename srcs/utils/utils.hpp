@@ -54,5 +54,6 @@ std::string get_status_line(int code);
 void    ft_freestrs(char **strs);
 void    print_strs(char **strs, std::string sep);
 char    **lststr_to_strs(std::list<std::string> lst);
+unsigned int     hextodec(char const *hexa);
 
 #endif

@@ -1,6 +1,7 @@
 #include "c_callback.hpp"
 
 bool                    c_callback::_if_error_page_exist(void) {
+    std::cout << "TASK : _if_error_page_exist()" << std::endl;
     std::string                 path_error_page(this->root);
     t_error_page::iterator      it;
     struct stat                 stat;
@@ -20,7 +21,8 @@ bool                    c_callback::_if_error_page_exist(void) {
 }
 
 void                    c_callback::_gen_error_header_and_body(void) {
-    std::cout << "Errors: " << this->status_code << std::endl;
+    std::cout << "TASK : _gen_error_header_and_body()" << std::endl;
+
     if (_if_error_page_exist() == false) {
         std::string     tmp = get_err_page(this->status_code);
         this->content_length_h = tmp.length();

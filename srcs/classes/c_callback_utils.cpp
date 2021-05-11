@@ -123,8 +123,10 @@ void                    c_callback::_send_respons_body(void) {
         std::cerr << "Error: open() _gen_resp_body" << std::endl;
     }
     close(file_fd);
-    if (_tmpfile)
+    if (_tmpfile) {
         delete _tmpfile;
+        _tmpfile = NULL;
+    }
 }
 
 /* SEND_RESPONS()
@@ -133,8 +135,9 @@ void                    c_callback::_send_respons_body(void) {
 void                    c_callback::_send_respons(void) {
     std::cout << "TASK : _send_respons()" << std::endl;
     if (send(client_fd, _resp_headers.c_str(), _resp_headers.length(), 0) == -1) {
-		std::cerr << "Error: Respons to client" << std::endl;
-	} if (_resp_body == true) {
+        std::cerr << "Error: Respons to client" << std::endl;
+    }
+    if (_resp_body == true) {
         _send_respons_body();
     }
 }
