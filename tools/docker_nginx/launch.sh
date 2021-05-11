@@ -23,10 +23,8 @@ NGINX_IMG="fresh-nginx"
 # --- Create default website directory and its index
 #
 ROOT_DIR="/tmp/www"
-if [ ! -d "${ROOT_DIR}" ]; then
-    mkdir ${ROOT_DIR}
-    echo "! Default website !" > ${ROOT_DIR}/index.html
-fi
+rm -rf $ROOT_DIR;
+cp -r www $ROOT_DIR;
 
 # ============================================================================ #
 #                       Docker verif and port select                           #

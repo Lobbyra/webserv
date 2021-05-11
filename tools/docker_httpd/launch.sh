@@ -23,10 +23,8 @@ HTTPD_IMG="fresh-httpd"
 # --- Create default website directory and its index
 #
 ROOT_DIR="/tmp/www"
-if [ ! -d "${ROOT_DIR}" ]; then
-    mkdir ${ROOT_DIR}
-    echo "! Default website !" > ${ROOT_DIR}/index.html
-fi
+rm -rf $ROOT_DIR;
+cp -r ../docker_nginx/www $ROOT_DIR
 
 # ============================================================================ #
 #                       Docker verif and port select                           #
@@ -87,8 +85,6 @@ else
 fi
 
 echo "Using: ${YELLOW}${1}${EOC}. Which contains:"
-echo "___________________________________________"
-cat  $HTTPD_CONFIG_PATH
 echo "___________________________________________\n"
 
 # ============================================================================ #
@@ -116,7 +112,8 @@ rm temp.conf
 
 echo "${BOLD}Container starting...${EOC}\n"
 
-docker run --name $HTTPD_IMG -d -p $PORT:80 -v $ROOT_DIR:$ROOT_DIR $HTTPD_IMG > /dev/null
+docker run --name $HTTPD_IMG -d -p $PORT:80 \
+    -v $ROOT_DIR:/usr/local/apache2/htdocs $HTTPD_IMG > /dev/null
 sleep 1.25
 
 echo "Container launched and listening at port ${GREEN}${PORT}${EOC}\n"
