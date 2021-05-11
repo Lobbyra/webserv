@@ -1,4 +1,4 @@
-PUT /new.html HTTP/1.1
+PUT /no_path/new.html HTTP/1.1
 Host: example.com
 Content-type: text/html
 Content-length: 16
