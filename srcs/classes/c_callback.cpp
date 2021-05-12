@@ -172,6 +172,7 @@ std::list<c_location>::iterator        c_callback::_server_find_route(
     std::list<c_location>::iterator     it_find;
     std::string                         tmp_path;
     size_t                              i = 0;
+    int                                 status = 0;
 
     it_find = ite;
     i = this->path.find_first_of("/", 1);
@@ -179,15 +180,20 @@ std::list<c_location>::iterator        c_callback::_server_find_route(
         tmp_path.insert(0, this->path, 0, i);
     else
         tmp_path = this->path;
+    std::cout << "PATH: " << tmp_path << std::endl;
     for (; it != ite; ++it)
     {
         if (ft_strcmp((*it).route.c_str(), "/") == 0)
             it_find = it;
         if ((ft_strncmp(tmp_path.c_str(), (*it).route.c_str(),
                         tmp_path.length())) == 0 &&
-                        (tmp_path.length() == (*it).route.length()))
+                        (tmp_path.length() == (*it).route.length())) {
             it_find = it;
+            status = 1;
+        }
     }
+    if (status == 1 && i != std::string::npos) 
+        this->path.erase(0, i);
     return (it_find);
 }
 
