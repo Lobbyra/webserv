@@ -70,7 +70,7 @@ UTILS_FILES	 = get_keys.cpp is_space.cpp get_word_it.cpp skip_it.cpp		  \
 			   strcont_to_str.cpp lststr_to_str.cpp lststr_to_strcont.cpp	  \
 			   ft_freestrs.cpp print_strs.cpp lststr_to_strs.cpp			  \
 			   is_fd_ready.cpp hextodec.cpp gen_listening.cpp ft_basename.cpp \
-			   lststr_len.cpp
+			   lststr_len.cpp ft_dirname.cpp
 
 UTILS_HEADER = utils.hpp insert_stream_cont.hpp
 
