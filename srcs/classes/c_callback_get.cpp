@@ -48,7 +48,7 @@ void                c_callback::_meth_get_request_is_valid(void) {
                 _resp_body = false;
                 content_length_h = lststr_len(_dir_listening_page, "\r\n");
             } else {                                // No solution to get a dir
-                this->status_code = 403;
+                this->status_code = 404;
             }
         } else {
             this->content_length_h = stat.st_size;
