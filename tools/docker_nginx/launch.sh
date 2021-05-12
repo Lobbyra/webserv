@@ -24,7 +24,8 @@ NGINX_IMG="fresh-nginx"
 #
 ROOT_DIR="/tmp/www"
 rm -rf $ROOT_DIR;
-cp -r www $ROOT_DIR;
+cp -rf www $ROOT_DIR;
+$ROOT_DIR/run.sh $ROOT_DIR
 
 # ============================================================================ #
 #                       Docker verif and port select                           #

@@ -24,7 +24,8 @@ HTTPD_IMG="fresh-httpd"
 #
 ROOT_DIR="/tmp/www"
 rm -rf $ROOT_DIR;
-cp -r ../docker_nginx/www $ROOT_DIR
+cp -rf ../docker_nginx/www $ROOT_DIR
+$ROOT_DIR/run.sh $ROOT_DIR
 
 # ============================================================================ #
 #                       Docker verif and port select                           #
