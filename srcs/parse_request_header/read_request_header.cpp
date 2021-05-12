@@ -33,14 +33,14 @@ s_request_header    read_request_header(int client_fd) {
     request_header = init_request_header(&request);
     parser_request = init_parser_request();
     parse_req_line(client_fd, request_header);
-    if (request.error != 200 || request.method == "TRACE") {
+    if (request.error >= 400 || request.method == "TRACE") {
         if (request.method == "TRACE")
             request.host = "tmp";
         return (request);
     }
     while ((status = get_next(client_fd, &line, "\r\n")) == 1) {
         line_len = ft_strlen(line);
-        if (line_len == 0 || request.error != 200)
+        if (line_len == 0 || request.error >= 400)
             break;
         if (parse_request_header(line, request_header, parser_request) == 1)
             request.error = 400;

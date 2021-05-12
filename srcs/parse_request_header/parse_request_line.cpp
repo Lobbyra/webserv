@@ -16,6 +16,8 @@ static void     check_request_line(std::map<std::string,void *> req_header) {
     } else if (ft_strcmp(protocol->c_str(), "HTTP/1.1") != 0) {
         *error_code = 505;
     }
+    if (method->find("POST") != std::string::npos)
+        *error_code = 204;
 }
 
 static void    parse_protocol(std::string const &line,
