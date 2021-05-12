@@ -10,7 +10,6 @@ std::list<s_request_header>     parse_request(t_socketlst *const clients) {
         if (it->is_read_ready == false || it->is_header_read || !it->client_fd)
             continue;
         s_request_header new_request_header;
-
         new_request_header = read_request_header(it->client_fd);
         std::cout << new_request_header;
         list_requests.push_back(new_request_header);

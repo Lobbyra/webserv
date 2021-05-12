@@ -88,7 +88,7 @@ public:
     size_t                      status_code;
 
     // Response variable that will dump in string to response
-    int         content_length_h;
+    size_t      content_length_h;
     std::string location_h;
     std::string last_modified_h;
     // [date] this header will be generated at response creation
@@ -206,6 +206,7 @@ private:
     void    _send_respons(void);
 
     // GET RECIPE | HEAD RECIPE
+    std::list<std::string> _dir_listening_page;
     void            _meth_get_request_is_valid(void);
     std::string     _find_index_if_exist(void);
 

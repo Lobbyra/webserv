@@ -45,7 +45,7 @@ static std::string get_date(void) {
 
 static void grh_add_headers(std::list<std::string> &headers, c_callback &cb) {
     // SERVER
-    headers.push_back("Server: Drunk-Architect TEAM");
+    headers.push_back("Server: Drunkserv v6.66");
     // DATE
     try {
         headers.push_back("Date: " + get_date());
@@ -75,8 +75,12 @@ void    c_callback::_gen_resp_headers(void) {
 
     headers.push_back(get_status_line(status_code));
     grh_add_headers(headers, *this);
+    headers.push_back("\r\n");
+    if (_dir_listening_page.size() > 0) {
+        headers.insert(headers.end(), _dir_listening_page.begin(),
+                                      _dir_listening_page.end());
+    }
     _resp_headers = lststr_to_strcont(headers, "\r\n");
-    _resp_headers += "\r\n\r\n";
 }
 
 /* FD_IS_READY_TO_READ()
@@ -134,8 +138,12 @@ void                    c_callback::_send_respons_body(void) {
  */
 void                    c_callback::_send_respons(void) {
     std::cout << "TASK : _send_respons()" << std::endl;
-    if (send(client_fd, _resp_headers.c_str(), _resp_headers.length(), 0) == -1) {
+
+    std::cout << _resp_headers.c_str() << std::endl;
+    if (send(client_fd, _resp_headers.c_str(), _resp_headers.length(), 0)
+            == -1) {
         std::cerr << "Error: Respons to client" << std::endl;
+        this->status_code = 500;
     }
     if (_resp_body == true) {
         _send_respons_body();
