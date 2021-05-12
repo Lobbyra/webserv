@@ -11,6 +11,4 @@ RUN		apt install -y	\
 
 ARG		APACHE_ROOT="/usr/local/apache2"
 
-COPY	www/* ${APACHE_ROOT}/htdocs
-
 COPY	temp.conf ${APACHE_ROOT}/conf/httpd.conf

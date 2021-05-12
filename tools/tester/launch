@@ -79,7 +79,8 @@ function check_one() {
     if ! [ -d "$www_path" ]; then
         rm -rf $www_path && mkdir $www_path
     fi
-    cp -r $www_src_path/* $www_path
+    cp -rf $www_src_path/* $www_path
+    $www_path/run.sh $www_path
 
     > $tmpfile nc $3 $2 < $1
 
