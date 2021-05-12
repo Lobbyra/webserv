@@ -2,14 +2,13 @@
 
 bool                    c_callback::_if_error_page_exist(void) {
     std::cout << "TASK : _if_error_page_exist()" << std::endl;
-    std::string                 path_error_page(this->root);
+    std::string                 path_error_page;
     t_error_page::iterator      it;
     struct stat                 stat;
 
-    path_error_page.insert(path_error_page.length(), this->path);
     it = this->error_page.find(this->status_code);
     if (it != this->error_page.end()) {
-        path_error_page.insert(path_error_page.length(), (*it).second);
+        path_error_page.insert(0, (*it).second);
         if (lstat(path_error_page.c_str(), &stat) == 0)
             if (S_ISREG(stat.st_mode)) {
                 this->path = path_error_page;
