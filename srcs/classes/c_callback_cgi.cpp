@@ -42,7 +42,7 @@ void    c_callback::_meth_cgi_init_meta(void) {
     if (this->content_type.size() > 0) {
         tmp = "CONTENT_TYPE=";
         for (std::list<std::string>::iterator it = this->content_type.begin();
-             it != this->content_type.end(); ++it) {
+                it != this->content_type.end(); ++it) {
             tmp += *it;
             if (it != this->content_type.end())
                 tmp += ";";
@@ -123,7 +123,7 @@ void    c_callback::_meth_cgi_init_http(void) {
     std::string::iterator cursor;
 
     for (std::list<std::string>::iterator it = this->saved_headers.begin();
-         it != this->saved_headers.end(); ++it) {
+            it != this->saved_headers.end(); ++it) {
         if ((cursor = find(it->begin(), it->end(), ':')) != it->end()) {
             it->replace(cursor, cursor + 2, "=");
         }
@@ -138,12 +138,23 @@ void    c_callback::_meth_cgi_init_http(void) {
         *it = "HTTP_" + *it;
     }
     cgi_env_variables.insert(this->cgi_env_variables.begin(),
-                    this->saved_headers.begin(), this->saved_headers.end());
+            this->saved_headers.begin(), this->saved_headers.end());
     std::cout << "saved_headers:" << std::endl;
     std::cout << this->saved_headers << std::endl;
     std::cout << "cgi_env_variables:" << std::endl;
     std::cout << this->cgi_env_variables << std::endl;
     _continue();
+}
+
+static int launch_panic(char **envp, char **args, char *bin_path) {
+    std::cerr << "DEBUG : launch_panic()" << std::endl;
+    if (bin_path != NULL)
+        free(bin_path);
+    if (envp != NULL)
+        ft_freestrs(envp);
+    if (args != NULL)
+        ft_freestrs(args);
+    return (1);
 }
 
 void    c_callback::_meth_cgi_launch(void) {
@@ -169,37 +180,38 @@ void    c_callback::_meth_cgi_launch(void) {
     else
         fd_in = client_fd;
     if ((_pid = fork()) == 0) { // CHILD
-        bin_path = ft_strdup(this->fastcgi_pass.c_str());
-        envp = lststr_to_strs(this->cgi_env_variables);
+        if ((bin_path = ft_strdup(this->fastcgi_pass.c_str())) == NULL)
+            exit(launch_panic(envp, args, bin_path));
+        if ((envp = lststr_to_strs(this->cgi_env_variables)) == NULL)
+            exit(launch_panic(envp, args, bin_path));
+        if ((args = lststr_to_strs(lst_args)) == NULL)
+            exit(launch_panic(envp, args, bin_path));
         lst_args.push_back(bin_path);
-        args = lststr_to_strs(lst_args);
         // TODO : DESTROY C_TASK_QUEUE
-        if (bin_path == NULL || envp == NULL || args == NULL) {
-            if (bin_path != NULL)
-                free(bin_path);
-            if (envp != NULL)
-                ft_freestrs(envp);
-            if (args != NULL)
-                ft_freestrs(args);
-            exit(1);
-        }
         if (dup2(fd_in, 0) == -1 || dup2(_out_tmpfile->get_fd(), 1) == -1) {
-            free(bin_path);
-            ft_freestrs(envp);
-            ft_freestrs(args);
-            std::cerr << "cgi_launch : dup2 : " << strerror(errno) << std::endl;
-            exit(1);
+            std::cerr << \
+                "cgi_launch : dup2 : " << strerror(errno) << \
+            std::endl << std::flush;
+            exit(launch_panic(envp, args, bin_path));
+        }
+        if (chdir(ft_dirname(bin_path).c_str()) == -1) {
+            std::cerr <<                                            \
+                "cgi_launch : execve : " << strerror(errno) << " : " << \
+                ft_dirname(bin_path).c_str() <<                         \
+            std::endl << std::flush;
+            exit(launch_panic(envp, args, bin_path));
         }
         close(fd_in);
         if (execve(bin_path, args, envp) == -1) {
-            free(bin_path);
-            ft_freestrs(envp);
-            ft_freestrs(args);
-            std::cerr << "cgi_launch : execv : " << strerror(errno) << std::endl;
-            exit(1);
+            std::cerr <<                                       \
+                "cgi_launch : execve : " << strerror(errno) << \
+            std::endl << std::flush;
+            exit(launch_panic(envp, args, bin_path));
         }
     } else if (_pid == -1) { // ERROR
-        std::cerr << "cgi_launch : fork : " << strerror(errno) << std::endl;
+        std::cerr << \
+            "cgi_launch : execve : " << strerror(errno) << \
+        std::endl << std::flush;
         this->status_code = 500;
     }
 }
@@ -228,22 +240,25 @@ void    c_callback::_meth_cgi_wait(void) {
 
 void    c_callback::_meth_cgi_send_resp(void) {
     std::cout << "TASK : _meth_cgi_send_resp" << std::endl;
-    char *buf;
-    char *prepared;
+    int    buf_size;
+    char   buf[4096];
 
     if (_out_tmpfile->is_read_ready() == false ||
             this->is_write_ready == false) {
         --_it_recipes;
         return ;
     }
-    while (get_next_line(_out_tmpfile->get_fd(), &buf) == 1) {
-        prepared = ft_strjoin(buf, "\n");
-        send(this->client_fd, prepared, ft_strlen(buf), 0);
-        free(buf);
-        free(prepared);
+    if ((buf_size = read(_out_tmpfile->get_fd(), buf, 4096)) == -1) {
+        this->status_code = 500;
+        return ;
     }
-    if (buf)
-        send(this->client_fd, buf, ft_strlen(buf), 0);
-    free(buf);
+    if (send(this->client_fd, buf, buf_size, 0) == -1) {
+        this->status_code = 500;
+        return ;
+    }
+    if (buf_size > 0) { // Is still content to read?
+        --_it_recipes;
+        return ;
+    }
     delete _out_tmpfile;
 }

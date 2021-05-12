@@ -15,6 +15,7 @@
 const std::string whitespaces("\t\n\v\f\r ");
 
 std::string ft_basename(std::string const path);
+std::string ft_dirname(std::string const path);
 
 void    ft_error(std::string const &src,
                  std::string const &err = strerror(errno));
