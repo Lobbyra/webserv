@@ -172,6 +172,19 @@ std::list<c_location>::iterator        c_callback::_server_find_route(
         tmp_path = this->path;
     for (; it != ite; ++it)
     {
+        if (ft_strncmp((*it).route.c_str(), ".", 1) == 0) { // location management by file
+            std::string tmp_string;
+            size_t found = this->path.find_last_of(".");
+             if (found != std::string::npos) {
+                tmp_string.insert(0, this->path, found, this->path.length());
+                if ((ft_strncmp(tmp_string.c_str(), (*it).route.c_str(),
+                        tmp_string.length())) == 0 &&
+                        (tmp_string.length() == (*it).route.length())) {
+                    it_find = it;
+                    break ;
+                }
+            }
+        }
         if (ft_strcmp((*it).route.c_str(), "/") == 0)
             it_find = it;
         if ((ft_strncmp(tmp_path.c_str(), (*it).route.c_str(),
