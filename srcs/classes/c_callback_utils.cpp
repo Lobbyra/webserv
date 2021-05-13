@@ -118,7 +118,11 @@ void                    c_callback::_send_respons_body(void) {
     if ((file_fd = open(this->path.c_str(), O_RDONLY)) != -1) {
         if (is_fd_read_ready(file_fd) == true) {
             while ((status = read(file_fd, buf, 511)) > 0) {
-                send(client_fd, buf, ft_strlen(buf), 0);
+                if (send(client_fd, buf, ft_strlen(buf), 0) < 1) {
+                    std::cerr << "Error: send() in _send_respons_body" << \
+                    std::endl;
+                    break ;
+                }
                 ft_bzero(buf, 512);
             }
         } else
@@ -141,7 +145,7 @@ void                    c_callback::_send_respons(void) {
 
     std::cout << _resp_headers.c_str() << std::endl;
     if (send(client_fd, _resp_headers.c_str(), _resp_headers.length(), 0)
-            == -1) {
+            < 1) {
         std::cerr << "Error: Respons to client" << std::endl;
         this->status_code = 500;
     }

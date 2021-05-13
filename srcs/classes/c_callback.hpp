@@ -98,29 +98,6 @@ public:
     bool                        is_over();
     void                        exec();
 
-    // dumb Functions
-    void    dumb_coucou(void) {
-        std::string resp = "coucour\n";
-        std::cout << resp << std::endl;
-    };
-    void    dumb_salut(void) {
-        std::string resp = "salut\n";
-        std::cout << resp << std::endl;
-    };
-    void    dumb_bonjour(void) {
-        std::string resp = "bonjour\n";
-        std::cout << resp << std::endl;
-
-        std::list<std::string> _headers;
-        this->status_code = 200;
-        this->content_length_h = 0;
-        this->location_h = "/parla/sijissuis/";
-        this->last_modified_h = "hier";
-        _gen_resp_headers();
-        send(client_fd, _resp_headers.c_str(), _resp_headers.size(), 0);
-    };
-
-
 private:
     /* ATTRIBUT INIT
      * Function used in construction to init attributs

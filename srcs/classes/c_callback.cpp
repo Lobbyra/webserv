@@ -113,16 +113,6 @@ void    c_callback::_init_meth_functions(void) {
     _meth_funs["TRACE"] = _init_recipe_trace();
 }
 
-std::list<c_callback::t_task_f>     c_callback::_init_recipe_dumb(void) {
-    std::list<t_task_f> tasks;
-
-    tasks.push_back(&c_callback::dumb_coucou);
-    tasks.push_back(&c_callback::dumb_salut);
-    tasks.push_back(&c_callback::dumb_bonjour);
-
-    return (tasks);
-}
-
 void    c_callback::_init_request_header(s_request_header request) {
     this->method = request.method;
     this->path = request.path;
