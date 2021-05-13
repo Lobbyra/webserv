@@ -5,7 +5,7 @@
 # include <stdlib.h>
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 50
+#  define BUFFER_SIZE 1024
 # endif
 
 typedef struct	s_gnl

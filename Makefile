@@ -12,7 +12,7 @@ YELLOW = \033[93m
 NAME = webserv
 
 CC = clang++
-CFLAGS = -Wall -Wextra -Werror -std=c++98 -ferror-limit=2
+CFLAGS = -Wall -Wextra -std=c++98 -ferror-limit=2
 
 LIB_A	 = lib.a
 LIB_PATH = ./srcs/lib/

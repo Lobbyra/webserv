@@ -35,3 +35,14 @@ int     main(int argc, const char **argv) {
     webserv(conf);
     return (0);
 }
+
+/*
+int         main(void) {
+    int fd;
+    char *buff;
+
+    fd = open("big", O_RDONLY);
+    std::cout << get_next(fd, &buff, "\r\n");
+    return (0);
+}
+*/
