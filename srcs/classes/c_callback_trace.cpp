@@ -12,12 +12,26 @@ static bool             _host_exist(char *line) {
 }
 
 void                    c_callback::_write_request_line(void) {
-    write(_tmpfile->get_fd(), this->method.c_str(),this->method.length());
-    write(_tmpfile->get_fd(), " ", 1);
-    write(_tmpfile->get_fd(), this->path.c_str(),this->path.length());
-    write(_tmpfile->get_fd(), " ", 1);
-    write(_tmpfile->get_fd(), this->protocol.c_str(), this->protocol.length());
-    write(_tmpfile->get_fd(), "\n", 1);
+    if (write(_tmpfile->get_fd(), this->method.c_str(),this->method.length())
+        < 1) {
+        std::cerr << "Error: write() in _write_request_line()" << std::endl;
+    }
+    if (write(_tmpfile->get_fd(), " ", 1) < 1) {
+        std::cerr << "Error: write() in _write_request_line()" << std::endl;
+    }
+    if (write(_tmpfile->get_fd(), this->path.c_str(),this->path.length()) < 1) {
+        std::cerr << "Error: write() in _write_request_line()" << std::endl;
+    }
+    if (write(_tmpfile->get_fd(), " ", 1) < 1) {
+        std::cerr << "Error: write() in _write_request_line()" << std::endl;
+    }
+    if (write(_tmpfile->get_fd(), this->protocol.c_str(),
+              this->protocol.length()) < 1) {
+        std::cerr << "Error: write() in _write_request_line()" << std::endl;
+    }
+    if (write(_tmpfile->get_fd(), "\n", 1) < 1) {
+        std::cerr << "Error: write() in _write_request_line()" << std::endl;
+    }
 }
 
 void                    c_callback::_read_client_to_tmpfile(void){
