@@ -1,0 +1,3 @@
+DELETE /jpeg2/.hidden_dir2/.hidden_file2 HTTP/1.1
+Host: localhost:8000
+
