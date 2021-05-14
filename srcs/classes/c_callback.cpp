@@ -15,7 +15,7 @@ c_callback::c_callback(s_socket *client, s_request_header request,
         _init_server_hpp(this->server);
         _server_init_route(this->server->location);
     }
-    if (this->fastcgi_pass != "") {         // CGI case
+    if (this->fastcgi_pass != "" && _method_allow() == true) {  // CGI case
         _recipes = _init_recipe_cgi();
     } else {                                // Init recipes
         _init_meth_functions();
