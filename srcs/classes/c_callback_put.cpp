@@ -45,44 +45,48 @@ void    c_callback::_meth_put_choose_in(void) {
     _continue();
 }
 
-#define PUT_BUFFER_SIZE 4096
-
 /* _METH_PUT_WRITE_BODY()
  */
 void    c_callback::_meth_put_write_body(void) {
     std::cout << "TASK : _meth_put_write_body()" << std::endl;
-    int  line_len;
     int  bytes_read;
     char *buf;
 
     buf = NULL;
-    if (this->transfer_encoding == "chunked") {     // Tmpfile ready?
+    if (this->transfer_encoding == "chunked") {     // [IN]  Tmpfile ready?
         if (_tmpfile->is_read_ready() == false) {
             --_it_recipes;
             return ;
         }
-    } else {                                        // Client ready?
+    } else {                                        // [IN]  Client ready?
         if (this->is_read_ready == false) {
             --_it_recipes;
             return ;
         }
     }
-    if (is_fd_write_ready(_fd_to_write) == false) { // Target ressource ready?
+    if (is_fd_write_ready(_fd_to_write) == false) { // [OUT] Target ready?
         --_it_recipes;
         return ;
     }
-    while ((bytes_read = get_next(_put_fd_in, &buf, "\r\n")) == 1) {
-        line_len = ft_strlen(buf);
-        write(_fd_to_write, buf, line_len);
+    bytes_read = get_next(_put_fd_in, &buf, "\r\n");
+    if ((bytes_read == 0 && buf != NULL) || bytes_read == 1) {
+        if ((status_write = write(_fd_to_write, buf, ft_strlen(buf))) == -1) {
+            if (transfer_encoding == "chunked") {
+                delete _tmpfile;
+                _tmpfile = NULL;
+            }
+            status_code = 500;
+            std::cerr << "_METH_PUT_WRITE_BODY : write failed : " << std::endl;
+            return ;
+        }
         free(buf);
         buf = NULL;
+        if (bytes_read == 1) {      // [LOOP] More data are to write in target
+            --_it_recipes;
+            return ;
+        }
     }
-    if (bytes_read == 0 && buf != NULL) {
-        write(_fd_to_write, buf, ft_strlen(buf));
-        free(buf);
-        buf = NULL;
-    }
-    if (transfer_encoding == "chunked") {
+    if (bytes_read == 0 && transfer_encoding == "chunked") { // [END]
         delete _tmpfile;
         _tmpfile = NULL;
     }
