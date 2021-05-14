@@ -1,0 +1,15 @@
+HTTP/1.1 200 OK
+Date: Fri, 14 May 2021 11:48:50 GMT
+Server: Apache/2.4.46 (Unix)
+Transfer-Encoding: chunked
+Content-Type: message/http
+
+50
+TRACE / HTTP/1.1
+Host: localhost:8000
+User-Agent: curl/7.54.0
+Accept: */*
+
+
+0
+
