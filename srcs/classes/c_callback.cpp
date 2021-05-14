@@ -8,6 +8,7 @@ c_callback::c_callback(s_socket *client, s_request_header request,
                        std::list<s_socket> *clients) {
     this->_tmpfile = NULL;
     this->_out_tmpfile = NULL;
+    this->_fd_body = 0;
     this->clients = clients;
     _init_s_socket(client);                 // Init client socket variables
     _init_request_header(request);          // Init request headers
@@ -33,6 +34,12 @@ c_callback::c_callback(s_socket *client, s_request_header request,
 // }
 
 c_callback::~c_callback(void) {
+    if (_tmpfile) {
+        delete _tmpfile;
+        _tmpfile = NULL;
+    }
+    if (_fd_body != 0)
+        close(_fd_body);
     return ;
 }
 

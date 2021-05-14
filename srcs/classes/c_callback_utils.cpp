@@ -105,36 +105,47 @@ void                    c_callback::_fd_is_ready_to_send(void) {
     }
 }
 
+#define BUFFER_READ 4096
+
 /* SEND_RESPONS_BODY()
  * Send the respons body from the server to the client
  * Open the requested file, read the file, and send line by line
  */
 void                    c_callback::_send_respons_body(void) {
-    char            buf[512];
-    int             file_fd;
-    int             status;
+    char            buf[BUFFER_READ];
+    int             bytes_read;
 
-    ft_bzero(buf, 512);
-    if ((file_fd = open(this->path.c_str(), O_RDONLY)) != -1) {
-        if (is_fd_read_ready(file_fd) == true) {
-            while ((status = read(file_fd, buf, 511)) > 0) {
-                if (send(client_fd, buf, ft_strlen(buf), 0) < 1) {
-                    std::cerr << "Error: send() in _send_respons_body" << \
-                    std::endl;
-                    break ;
-                }
-                ft_bzero(buf, 512);
-            }
-        } else
-            std::cerr << "Error: body not ready to read" << std::endl;
-    } else {
-        std::cerr << "Error: open() _gen_resp_body" << std::endl;
+    if (_fd_body == 0) {                      // Open requested file
+        _fd_body = open(this->path.c_str(), O_RDONLY);
+        if (_fd_body == -1) {
+            this->status_code = 500;
+            --_it_recipes;
+            return ;
+        }
     }
-    close(file_fd);
-    if (_tmpfile) {
-        delete _tmpfile;
-        _tmpfile = NULL;
+    if (is_fd_read_ready(_fd_body) != true || // Client and file ready?
+            *this->is_write_ready != true ) {
+        --_it_recipes;
+        return ;
     }
+    ft_bzero(buf, BUFFER_READ);
+    bytes_read = read(_fd_body, buf, BUFFER_READ);
+    if (bytes_read == 0 || bytes_read > 0) {
+        if (send(client_fd, buf, bytes_read, 0) == -1) {
+            std::cerr << "_send_respons_body : send() failed" << std::endl;
+            this->status_code = 500;
+            --_it_recipes;
+            return ;
+        }
+        if (bytes_read > 0)
+            --_it_recipes;
+    } else if (bytes_read == -1) {
+        std::cerr << "_send_respons_body : read() failed" << std::endl;
+        this->status_code = 500;
+        --_it_recipes;
+        return ;
+    }
+    return ;
 }
 
 /* SEND_RESPONS()

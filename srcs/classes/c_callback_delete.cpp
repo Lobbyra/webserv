@@ -12,6 +12,9 @@ void                    c_callback::_meth_delete_request_is_valid(void) {
     }
     else
         this->status_code = 404;
+    if (S_ISDIR(stat.st_mode) == true &&
+       *(--this->path.end()) != '/')
+        this->status_code = 409;
 }
 
 int                     c_callback::_remove_directory(const char *path)
