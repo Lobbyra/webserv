@@ -227,12 +227,15 @@ void    c_callback::_meth_cgi_wait(void) {
         std::cerr << "error : waitpid() : " << strerror(errno) << std::endl;
         this->status_code = 500;
         delete _tmpfile;
+        _tmpfile = NULL;
         delete _out_tmpfile;
         return ;
     } else if (dead == _pid) {
         _out_tmpfile->reset_cursor();
-        if (this->transfer_encoding == "chunked")
+        if (this->transfer_encoding == "chunked") {
             delete _tmpfile;
+            _tmpfile = NULL;
+        }
     } else if (dead == 0) {
         --_it_recipes;
     }
