@@ -1,0 +1,10 @@
+HTTP/1.1 200 OK
+Date: Fri, 14 May 2021 13:47:54 GMT
+Server: Apache/2.4.46 (Unix)
+Last-Modified: Fri, 14 May 2021 13:47:15 GMT
+ETag: "14-5c24a7b445ec0"
+Accept-Ranges: bytes
+Content-Length: 20
+Content-Type: text/html
+
+! Default website !
