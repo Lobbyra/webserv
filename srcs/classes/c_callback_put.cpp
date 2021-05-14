@@ -70,7 +70,7 @@ void    c_callback::_meth_put_write_body(void) {
     }
     bytes_read = get_next(_put_fd_in, &buf, "\r\n");
     if ((bytes_read == 0 && buf != NULL) || bytes_read == 1) {
-        if ((status_write = write(_fd_to_write, buf, ft_strlen(buf))) == -1) {
+        if (write(_fd_to_write, buf, ft_strlen(buf)) == -1) {
             if (transfer_encoding == "chunked") {
                 delete _tmpfile;
                 _tmpfile = NULL;
