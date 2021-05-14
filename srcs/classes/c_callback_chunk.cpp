@@ -63,15 +63,21 @@ void    c_callback::_chunk_reading_chunk(void) {
     }
     tmp_len = 0;
     buf = NULL;
-    get_next(this->client_fd, &buf, "\r\n");
+    if (get_next(this->client_fd, &buf, "\r\n") == -1) {
+        this->status_code = 400;
+        return ;
+    }
     bytes_read = ft_strlen(buf);
     if (bytes_read != _chunk_size) {
         std::cerr << \
         "ERROR : chunk_len != chunk gived" << bytes_read << std::endl;
-        status_code = 400;
+        this->status_code = 400;
         return ;
     }
-    write(_tmpfile->get_fd(), buf, bytes_read);
+    if (write(_tmpfile->get_fd(), buf, bytes_read) < 1) {
+        this->status_code = 400;
+        return ;
+    }
     --_it_recipes;
     --_it_recipes; // Go to chunk read size
 }
