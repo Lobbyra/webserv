@@ -1,5 +1,6 @@
 #include "lib.hpp"
 #include "c_callback.hpp"
+extern bool g_verbose;
 
 /* C_CALLBACK_CGI
  * Recipe that will init all meta-variables and exec CGI.
@@ -22,7 +23,8 @@ std::list<c_callback::t_task_f> c_callback::_init_recipe_cgi(void) {
 
 // Init specific var of CGI (meta-variables) in cgi_env_variables.
 void    c_callback::_meth_cgi_init_meta(void) {
-    std::cout << "TASK : _meth_cgi_init_meta()" << std::endl;
+    if (g_verbose)
+        std::cout << "TASK : _meth_cgi_init_meta()" << std::endl;
     char        *c_tmp;
     std::string tmp;
     std::string::iterator it_tmp;
@@ -112,14 +114,17 @@ void    c_callback::_meth_cgi_init_meta(void) {
     this->cgi_env_variables.push_back("SERVER_PROTOCOL=HTTP/1.1");
     // SERVER_SOFTWARE
     this->cgi_env_variables.push_back("SERVER_SOFTWARE=drunkserv");
-    std::cout << "cgi_env_varibles: " << std::endl;
-    std::cout << this->cgi_env_variables << std::endl;
+    if (g_verbose) {
+        std::cout << "cgi_env_varibles: " << std::endl;
+        std::cout << this->cgi_env_variables << std::endl;
+    }
     _continue();
 }
 
 // Init additionnal var of from http request in cgi_env_variables.
 void    c_callback::_meth_cgi_init_http(void) {
-    std::cout << "TASK : _meth_cgi_init_http()" << std::endl;
+    if (g_verbose)
+        std::cout << "TASK : _meth_cgi_init_http()" << std::endl;
     std::string::iterator cursor;
 
     for (std::list<std::string>::iterator it = this->saved_headers.begin();
@@ -139,10 +144,12 @@ void    c_callback::_meth_cgi_init_http(void) {
     }
     cgi_env_variables.insert(this->cgi_env_variables.begin(),
             this->saved_headers.begin(), this->saved_headers.end());
-    std::cout << "saved_headers:" << std::endl;
-    std::cout << this->saved_headers << std::endl;
-    std::cout << "cgi_env_variables:" << std::endl;
-    std::cout << this->cgi_env_variables << std::endl;
+    if (g_verbose) {
+        std::cout << "saved_headers:" << std::endl;
+        std::cout << this->saved_headers << std::endl;
+        std::cout << "cgi_env_variables:" << std::endl;
+        std::cout << this->cgi_env_variables << std::endl;
+    }
     _continue();
 }
 
@@ -158,7 +165,8 @@ static int launch_panic(char **envp, char **args, char *bin_path) {
 }
 
 void    c_callback::_meth_cgi_launch(void) {
-    std::cout << "_meth_cgi_launch" << std::endl;
+    if (g_verbose)
+        std::cout << "_meth_cgi_launch" << std::endl;
     int  fd_in;
     char *bin_path = NULL;
     char **envp = NULL;
@@ -217,7 +225,8 @@ void    c_callback::_meth_cgi_launch(void) {
 }
 
 void    c_callback::_meth_cgi_wait(void) {
-    std::cout << "TASK : _meth_cgi_wait" << std::endl;
+    if (g_verbose)
+        std::cout << "TASK : _meth_cgi_wait" << std::endl;
     int status;
     pid_t dead;
 
@@ -242,7 +251,8 @@ void    c_callback::_meth_cgi_wait(void) {
 }
 
 void    c_callback::_meth_cgi_send_resp(void) {
-    std::cout << "TASK : _meth_cgi_send_resp" << std::endl;
+    if (g_verbose)
+        std::cout << "TASK : _meth_cgi_send_resp" << std::endl;
     int    buf_size;
     char   buf[4096];
 

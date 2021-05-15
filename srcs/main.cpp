@@ -1,6 +1,8 @@
 #include "webserv.hpp"
+#include "lib.hpp"
 
 extern volatile bool g_run;
+extern bool g_verbose;
 
 static void ft_signal(int sig) {
     static_cast<void>(sig);
@@ -12,19 +14,22 @@ static void ft_signalhandler_enable(void) {
 }
 
 static int  print_usage(char const *const prog_name) {
-    std::cerr << "Usage: " << prog_name << " [nginx.conf]" << std::endl;
+    std::cerr << "Usage: " << prog_name << " [-v] [file.conf]" << std::endl;
     return (1);
 }
 
 int     main(int argc, const char **argv) {
-    if (argc == 1)
-        argv[1] = "config_files/ok_basic.conf";
-    else if (argc != 2)
+    argc = 1;
+    if (argv[argc] && !ft_strcmp(argv[argc], "-v"))
+        g_verbose = argc++;
+    if (argv[argc] == NULL)
+        argv[argc] = "config_files/ok_methods_allowed.conf";
+    else if (argv[argc + 1] != NULL)
         return (print_usage(argv[0]));
     std::list<c_server> conf;
 
     try {
-        conf = parse_conf(argv[1]);
+        conf = parse_conf(argv[argc]);
         std::cout << conf << std::endl;
     }
     catch (std::exception &e) {

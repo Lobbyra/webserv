@@ -1,4 +1,5 @@
 #include "c_callback.hpp"
+extern bool g_verbose;
 
 std::string         c_callback::_find_index_if_exist(void) {
     std::list<std::string>::iterator    it, ite;
@@ -24,7 +25,8 @@ std::string         c_callback::_find_index_if_exist(void) {
 }
 
 void                c_callback::_meth_get_request_is_valid(void) {
-    std::cout << "TASK : _meth_get_request_is_valid" << std::endl;
+    if (g_verbose)
+        std::cout << "TASK : _meth_get_request_is_valid" << std::endl;
     struct stat     stat;
     std::string     tmp_path;
     this->path.insert(0, this->root);
@@ -35,7 +37,8 @@ void                c_callback::_meth_get_request_is_valid(void) {
     if (lstat(this->path.c_str(), &stat) == -1) {   // Path exist?
         this->status_code = 404;
     } else if ((stat.st_mode & S_IRUSR) == false) { // Do we have rights on it?
-        std::cout << "Error: no reading rights" << std::endl;
+        if (g_verbose)
+            std::cout << "Error: no reading rights" << std::endl;
         this->status_code = 403;
         this->content_length_h = 0;
     } else {                                        // Ok it exist and allowed

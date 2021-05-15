@@ -1,4 +1,5 @@
 #include "parse_request.hpp"
+extern bool g_verbose;
 
 std::list<s_request_header>     parse_request(t_socketlst *const clients) {
     std::list<s_request_header>     list_requests;
@@ -11,7 +12,8 @@ std::list<s_request_header>     parse_request(t_socketlst *const clients) {
             continue;
         s_request_header new_request_header;
         new_request_header = read_request_header(it->client_fd);
-        std::cout << new_request_header;
+        if (g_verbose)
+            std::cout << new_request_header;
         list_requests.push_back(new_request_header);
     }
     return (list_requests);

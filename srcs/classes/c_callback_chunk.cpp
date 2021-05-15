@@ -1,4 +1,5 @@
 #include "c_callback.hpp"
+extern bool g_verbose;
 
 /* IS_STR_HEX
  * Return false is string in parameter does not contain only hex chars. Return
@@ -21,7 +22,8 @@ static bool is_str_hex(char const *str) {
  * It will check if the size is hexadecimal and if it contain only hexa chars.
  */
 void    c_callback::_chunk_reading_size(void) {
-    std::cout << "TASK : _CHUNK_READING_SIZE" << std::endl;
+    if (g_verbose)
+        std::cout << "TASK : _CHUNK_READING_SIZE" << std::endl;
     char *line;
 
     _chunk_size = 0;
@@ -52,7 +54,8 @@ void    c_callback::_chunk_reading_size(void) {
  * This function will read the chunk from client_fd.
  */
 void    c_callback::_chunk_reading_chunk(void) {
-    std::cout << "TASK : _CHUNK_READING_CHUNK" << std::endl;
+    if (g_verbose)
+        std::cout << "TASK : _CHUNK_READING_CHUNK" << std::endl;
     int  tmp_len;
     int  bytes_read;
     char *buf;

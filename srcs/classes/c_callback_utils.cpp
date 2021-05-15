@@ -1,5 +1,6 @@
 #include "c_callback.hpp"
 #include <sys/time.h>
+extern bool g_verbose;
 
 /* C_CALLBACK_UTILS_CPP
  * This file contain all utils member functions used to create and
@@ -70,7 +71,8 @@ static void grh_add_headers(std::list<std::string> &headers, c_callback &cb) {
 }
 
 void    c_callback::_gen_resp_headers(void) {
-    std::cout << "TASK : _gen_resp_headers()" << std::endl;
+    if (g_verbose)
+        std::cout << "TASK : _gen_resp_headers()" << std::endl;
     std::list<std::string> headers;
 
     headers.push_back(get_status_line(status_code));
@@ -88,7 +90,8 @@ void    c_callback::_gen_resp_headers(void) {
  * If not decrement the iterator it_recipes
  */
 void                    c_callback::_fd_is_ready_to_read(void) {
-    std::cout << "TASK : _fd_is_ready_to_read()" << std::endl;
+    if (g_verbose)
+        std::cout << "TASK : _fd_is_ready_to_read()" << std::endl;
     if (*(this->is_read_ready) == false) {
         _it_recipes--;
     }
@@ -99,7 +102,8 @@ void                    c_callback::_fd_is_ready_to_read(void) {
  * If not decrement the iterator it_recipes
  */
 void                    c_callback::_fd_is_ready_to_send(void) {
-    std::cout << "TASK : _fd_is_ready_to_send()" << std::endl;
+    if (g_verbose)
+        std::cout << "TASK : _fd_is_ready_to_send()" << std::endl;
     if (*(this->is_write_ready) == false) {
         _it_recipes--;
     }
@@ -152,11 +156,12 @@ void                    c_callback::_send_respons_body(void) {
  * Send the respons from the server to the client
  */
 void                    c_callback::_send_respons(void) {
-    std::cout << "TASK : _send_respons()" << std::endl;
+    if (g_verbose) {
+        std::cout << "TASK : _send_respons()" << std::endl;
+        std::cout << _resp_headers.c_str() << std::endl;
+    }
 
-    std::cout << _resp_headers.c_str() << std::endl;
-    if (send(client_fd, _resp_headers.c_str(), _resp_headers.length(), 0)
-            < 1) {
+    if (send(client_fd, _resp_headers.c_str(), _resp_headers.length(), 0) < 1) {
         std::cerr << "Error: Respons to client" << std::endl;
         this->status_code = 500;
     }

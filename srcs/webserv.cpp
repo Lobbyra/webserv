@@ -3,6 +3,7 @@
 #include <unistd.h>
 
 volatile bool g_run = 1;
+bool g_verbose = false;
 
 static void set_reuse_port(t_socketlst const *const lst) {
     int fd;
@@ -41,12 +42,13 @@ void    webserv(std::list<c_server> const &conf) {
     task_queue.set_clients(clients);
     while (g_run) {
         ft_select(clients);
-        if (clients->size() > 1)
+        if (g_verbose && clients->size() > 1)
             std::cout << *clients << std::endl;
         if (g_run == false)
             break ;
         if (is_client_ready(clients) == true) {
-            std::cout << "WEBSERV_CPP : IS_CLIENT_READY" << std::endl;
+            if (g_verbose)
+                std::cout << "WEBSERV_CPP : IS_CLIENT_READY" << std::endl;
             requests = parse_request(clients);
             assign_server_to_clients(conf, clients, requests);
             task_queue.push(requests, clients);

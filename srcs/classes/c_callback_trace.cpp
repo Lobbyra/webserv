@@ -1,4 +1,5 @@
 #include "c_callback.hpp"
+extern bool g_verbose;
 
 static bool             _host_exist(char *line) {
     std::string     prefix;
@@ -12,30 +13,17 @@ static bool             _host_exist(char *line) {
 }
 
 void                    c_callback::_write_request_line(void) {
-    if (write(_tmpfile->get_fd(), this->method.c_str(),this->method.length())
-        < 1) {
-        std::cerr << "Error: write() in _write_request_line()" << std::endl;
-    }
-    if (write(_tmpfile->get_fd(), " ", 1) < 1) {
-        std::cerr << "Error: write() in _write_request_line()" << std::endl;
-    }
-    if (write(_tmpfile->get_fd(), this->path.c_str(),this->path.length()) < 1) {
-        std::cerr << "Error: write() in _write_request_line()" << std::endl;
-    }
-    if (write(_tmpfile->get_fd(), " ", 1) < 1) {
-        std::cerr << "Error: write() in _write_request_line()" << std::endl;
-    }
-    if (write(_tmpfile->get_fd(), this->protocol.c_str(),
-              this->protocol.length()) < 1) {
-        std::cerr << "Error: write() in _write_request_line()" << std::endl;
-    }
-    if (write(_tmpfile->get_fd(), "\n", 1) < 1) {
+    std::string tmp;
+
+    tmp = this->method + " " + this->path + " " + this->protocol + "\n";
+    if (write(_tmpfile->get_fd(), tmp.c_str(), tmp.size()) < 1) {
         std::cerr << "Error: write() in _write_request_line()" << std::endl;
     }
 }
 
 void                    c_callback::_read_client_to_tmpfile(void){
-    std::cout << "TASK : _read_client_to_tmpfile()" << std::endl;
+    if (g_verbose)
+        std::cout << "TASK : _read_client_to_tmpfile()" << std::endl;
     char            *line;
     char            *tmp;
     int             status;

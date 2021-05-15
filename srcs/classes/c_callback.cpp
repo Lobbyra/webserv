@@ -1,4 +1,5 @@
 #include "c_callback.hpp"
+extern bool g_verbose;
 
 c_callback::c_callback(void) {
     return ;
@@ -53,15 +54,18 @@ c_callback::~c_callback(void) {
  */
 
 void    c_callback::exec(void) {
-    std::cout << "C_CALLBACK : exec()" << std::endl;
+    if (g_verbose)
+        std::cout << "C_CALLBACK : exec()" << std::endl;
     if (this->is_over() == false) {
         if (this->status_code / 100 != 2 &&
                 _recipes != _init_error_request()) {
-            std::cout << "C_CALLBACK : turn recipe in error" << std::endl;
+            if (g_verbose)
+                std::cout << "C_CALLBACK : turn recipe in error" << std::endl;
             _recipes = _init_error_request();
             _it_recipes = _recipes.begin();
         } else {
-            std::cout << "C_CALLBACK : calling the task" << std::endl;
+            if (g_verbose)
+                std::cout << "C_CALLBACK : calling the task" << std::endl;
             (this->*(*_it_recipes))();
             if (this->status_code / 100 == 2 ||
                     _recipes == _init_error_request())
@@ -201,7 +205,7 @@ std::list<c_location>::iterator        c_callback::_server_find_route(
             status = 1;
         }
     }
-    if (status == 1 && i != std::string::npos) 
+    if (status == 1 && i != std::string::npos)
         this->path.erase(0, i);
     if (status == 1 && i == std::string::npos)
         this->path.clear();

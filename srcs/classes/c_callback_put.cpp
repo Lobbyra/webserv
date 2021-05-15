@@ -1,10 +1,12 @@
 #include "c_callback.hpp"
+extern bool g_verbose;
 
 #define PUT_OPEN_FLAGS (O_WRONLY | O_TRUNC)
 #define PUT_OPEN_CREAT_FLAGS (O_WRONLY | O_TRUNC | O_CREAT)
 
 void        c_callback::_meth_put_open_fd(void) {
-    std::cout << "TASK : _meth_put_open_fd()" << std::endl;
+    if (g_verbose)
+        std::cout << "TASK : _meth_put_open_fd()" << std::endl;
     int         flags;
     mode_t      mode;
     struct stat stat;
@@ -25,9 +27,10 @@ void        c_callback::_meth_put_open_fd(void) {
         mode = S_IRWXU;
     }
     if ((_fd_to_write = open(path.c_str(), flags, mode)) == -1) {
-        std::cerr <<                                              \
-        "open() [" << path.c_str() <<"] : " << strerror(errno) << \
-        std::endl;
+        if (g_verbose)
+            std::cerr << \
+            "open() [" << path.c_str() << "] : " << strerror(errno) << \
+            std::endl;
         this->status_code = 500;
         return ;
     }
@@ -35,7 +38,8 @@ void        c_callback::_meth_put_open_fd(void) {
 }
 
 void    c_callback::_meth_put_choose_in(void) {
-    std::cout << "TASK : _meth_put_choose_in()" << std::endl;
+    if (g_verbose)
+        std::cout << "TASK : _meth_put_choose_in()" << std::endl;
 
     if (this->transfer_encoding == "chunked") {
         _put_fd_in = _tmpfile->get_fd();
@@ -48,7 +52,8 @@ void    c_callback::_meth_put_choose_in(void) {
 /* _METH_PUT_WRITE_BODY()
  */
 void    c_callback::_meth_put_write_body(void) {
-    std::cout << "TASK : _meth_put_write_body()" << std::endl;
+    if (g_verbose)
+        std::cout << "TASK : _meth_put_write_body()" << std::endl;
     int  bytes_read;
     char *buf;
 
