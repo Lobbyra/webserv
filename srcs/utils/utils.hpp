@@ -9,6 +9,7 @@
 # include <string.h>
 # include <stdlib.h>
 
+# include "c_tmpfile.hpp"
 # include "insert_stream_cont.hpp"
 
 /* # GENERAL DECLARATIONS */
@@ -64,5 +65,7 @@ std::list<std::string> gen_listening(std::string dir_path);
 std::string get_err_page(int code);
 std::string get_status_msg(int code);
 std::string get_status_line(int code);
+
+char *cgitohttp(c_tmpfile *tmpfile);
 
 #endif

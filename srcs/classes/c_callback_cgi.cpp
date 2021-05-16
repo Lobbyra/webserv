@@ -13,9 +13,12 @@ std::list<c_callback::t_task_f> c_callback::_init_recipe_cgi(void) {
     if (this->transfer_encoding == "chunked") {
         recipe.push_back(&c_callback::_chunk_reading_size);
         recipe.push_back(&c_callback::_chunk_reading_chunk);
+    } else {
+        recipe.push_back(&c_callback::_meth_cgi_save_client_in);
     }
     recipe.push_back(&c_callback::_meth_cgi_launch);
     recipe.push_back(&c_callback::_meth_cgi_wait);
+    recipe.push_back(&c_callback::_meth_cgi_send_http);
     recipe.push_back(&c_callback::_meth_cgi_send_resp);
     return (recipe);
 }
@@ -53,8 +56,12 @@ void    c_callback::_meth_cgi_init_meta(void) {
     tmp = "GATEWAY_INTERFACE=CGI/1.1";
     this->cgi_env_variables.push_back(tmp);
     // PATH_INFO
-    tmp = "PATH_INFO=" + this->path;
+    if (this->path.size() != 0)
+        tmp = "PATH_INFO=" + this->path;
+    else
+        tmp = "PATH_INFO=/";           // To change this go c_callback:205
     this->cgi_env_variables.push_back(tmp);
+    std::cout << "DEBUG : " <<  tmp << std::endl;
     // PATH_TRANSLATED
     tmp = "PATH_TRANSLATED=" + this->root + this->path;
     if (find(this->index.begin(), this->index.end(), std::string("index.php"))
@@ -146,6 +153,42 @@ void    c_callback::_meth_cgi_init_http(void) {
     _continue();
 }
 
+void    c_callback::_meth_cgi_save_client_in(void) {
+    std::cout << "TASK : _meth_cgi_save_client_in" << std::endl;
+    int  status;
+    char *buf;
+
+    if (_tmpfile == NULL) {
+        _tmpfile = new c_tmpfile();
+    }
+    if (this->is_read_ready == false ||
+            _tmpfile->is_write_ready() == false) {
+        --_it_recipes;
+        return ;
+    }
+    buf = NULL;
+    status = get_next(this->client_fd, &buf, "\r\n");
+    if (status == -1) {
+        this->status_code = 500;
+        return ;
+    } else if (status == 0 || status == 1) {
+        if (buf) {
+            std::cout << "[DEBUG] : " << status << " : " << buf << std::endl;
+            if (write(_tmpfile->get_fd(), buf, ft_strlen(buf)) == -1) {
+                free(buf);
+                return ;
+            }
+            free(buf);
+        }
+        if (status == 1) {
+            --_it_recipes;
+        } else if (status == 0) {
+            _tmpfile->reset_cursor();
+        }
+    }
+    return ;
+}
+
 static int launch_panic(char **envp, char **args, char *bin_path) {
     std::cerr << "DEBUG : launch_panic()" << std::endl;
     if (bin_path != NULL)
@@ -159,7 +202,6 @@ static int launch_panic(char **envp, char **args, char *bin_path) {
 
 void    c_callback::_meth_cgi_launch(void) {
     std::cout << "_meth_cgi_launch" << std::endl;
-    int  fd_in;
     char *bin_path = NULL;
     char **envp = NULL;
     char **args = NULL;
@@ -173,12 +215,6 @@ void    c_callback::_meth_cgi_launch(void) {
         --_it_recipes;
         return;
     }
-    if (this->transfer_encoding == "chunked") {
-        fd_in = _tmpfile->get_fd();
-        _tmpfile->reset_cursor();
-    }
-    else
-        fd_in = client_fd;
     if ((_pid = fork()) == 0) { // CHILD
         if ((bin_path = ft_strdup(this->fastcgi_pass.c_str())) == NULL)
             exit(launch_panic(envp, args, bin_path));
@@ -188,7 +224,8 @@ void    c_callback::_meth_cgi_launch(void) {
             exit(launch_panic(envp, args, bin_path));
         lst_args.push_back(bin_path);
         // TODO : DESTROY C_TASK_QUEUE
-        if (dup2(fd_in, 0) == -1 || dup2(_out_tmpfile->get_fd(), 1) == -1) {
+        if (dup2(_tmpfile->get_fd(), 0) == -1 ||
+                dup2(_out_tmpfile->get_fd(), 1) == -1) {
             std::cerr << \
                 "cgi_launch : dup2 : " << strerror(errno) << \
             std::endl << std::flush;
@@ -201,7 +238,7 @@ void    c_callback::_meth_cgi_launch(void) {
             std::endl << std::flush;
             exit(launch_panic(envp, args, bin_path));
         }
-        close(fd_in);
+        close(_tmpfile->get_fd());
         if (execve(bin_path, args, envp) == -1) {
             std::cerr <<                                       \
                 "cgi_launch : execve : " << strerror(errno) << \
@@ -232,13 +269,37 @@ void    c_callback::_meth_cgi_wait(void) {
         return ;
     } else if (dead == _pid) {
         _out_tmpfile->reset_cursor();
-        if (this->transfer_encoding == "chunked") {
-            delete _tmpfile;
-            _tmpfile = NULL;
+        if (WEXITSTATUS(status) == -1) {
+            this->status_code = 500;
         }
     } else if (dead == 0) {
         --_it_recipes;
     }
+}
+
+void    c_callback::_meth_cgi_send_http(void) {
+    std::cout << "TASK : _meth_cgi_send_http" << std::endl;
+    char *http_content = NULL;
+
+    if (this->is_write_ready == false ||
+            _out_tmpfile->is_read_ready() == false) {
+        --_it_recipes;
+    }
+    try {
+        http_content = cgitohttp(_out_tmpfile);
+    } catch (std::exception &e) {
+        this->status_code = 500;
+        std::cerr << e.what() << std::endl;
+    }
+    if (http_content) {
+        std::cout << "DEBUG : " << http_content << std::endl;
+        if (send(this->client_fd, http_content, ft_strlen(http_content), 0)
+                == -1) {
+            this->status_code = 500;
+        }
+        free(http_content);
+    }
+    return ;
 }
 
 void    c_callback::_meth_cgi_send_resp(void) {

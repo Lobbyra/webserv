@@ -48,8 +48,8 @@ static void    parse_path(std::string line,
     it = line.begin() + found;
     ite = line.end();
     while (it != ite && sep.find(*it) != std::string::npos)
-        ++it;;
-    path =  get_word(line, it, sep);
+        ++it;
+    path = get_word(line, it, sep);
     if (path == *(static_cast<std::string *>(request_header["Method"])))
         return ;
     std::string * ptr = static_cast<std::string *>(request_header["Path"]);

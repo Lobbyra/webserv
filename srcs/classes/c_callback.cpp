@@ -201,7 +201,7 @@ std::list<c_location>::iterator        c_callback::_server_find_route(
             status = 1;
         }
     }
-    if (status == 1 && i != std::string::npos) 
+    if (status == 1 && i != std::string::npos)
         this->path.erase(0, i);
     if (status == 1 && i == std::string::npos)
         this->path.clear();
