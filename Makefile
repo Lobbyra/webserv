@@ -24,6 +24,8 @@ ifeq ($(f), f)
 	CFLAGS += -fsanitize=address -g3
 endif
 
+SERVER = /tmp/www
+
 SRCS_PATH = ./srcs/
 
 ROOT_FILES  = main.cpp webserv.cpp init_clients.cpp ft_select.cpp \
@@ -117,7 +119,7 @@ all: ${LIBS}
 	@echo " $(BOLD)with$(EOC) $(GREEN)$(CC)$(EOC) $(CYAN)$(CFLAGS)$(EOC): "
 	@make ${NAME} -j
 
-$(NAME): ${LIBS} ${OBJS_PATHS} ${OBJS} ${HEADER_FULL}
+$(NAME): ${LIBS} ${OBJS_PATHS} ${OBJS} ${HEADER_FULL} ${SERVER}
 	@echo ""
 	@${CC} ${CFLAGS} ${INCL_FLAGS} -o ${NAME} ${OBJS} ${LIBS}
 
@@ -137,6 +139,10 @@ ${OBJS_PATH}%.o: ${SRCS_PATH}%.cpp ${HEADER_FULL}
 
 ${LIB_PATH}${LIB_A}:
 	@make f="$f" -C ${LIB_PATH}
+
+${SERVER}:
+	@cp -rf ./tools/docker_nginx/www $@
+	@$@/run.sh $@
 
 clean:
 	@make -C ${LIB_PATH} fclean
