@@ -25,7 +25,7 @@ c_tmpfile::~c_tmpfile(void) {
     if (this->_fd == -1)
         return ;
     close(this->_fd);
-    unlink(this->_filename.c_str());
+   // unlink(this->_filename.c_str());
 }
 
 c_tmpfile   &c_tmpfile::operator=(c_tmpfile const &rhs) {
@@ -53,6 +53,13 @@ int const   &c_tmpfile::get_fd(void) const { return (this->_fd); }
 
 std::string const   &c_tmpfile::get_filename(void) const {
     return (this->_filename);
+}
+
+size_t  c_tmpfile::get_size(void) const {
+    struct stat file_stat;
+
+    fstat(this->get_fd(), &file_stat);
+    return (file_stat.st_size);
 }
 
 bool    c_tmpfile::is_read_ready(void) const {

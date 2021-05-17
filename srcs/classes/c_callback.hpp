@@ -213,14 +213,16 @@ private:
     void    _write_request_line(void);
 
     // GGI RECIPE
-    pid_t _pid; // pid of CGI child
-    c_tmpfile *_out_tmpfile;
+    pid_t                  _pid; // pid of CGI child
+    c_tmpfile              *_out_tmpfile;
     std::list<std::string> cgi_env_variables;
 
     void    _meth_cgi_init_meta(void); // Init specific var of CGI
     void    _meth_cgi_init_http(void); // Init additionnal headers from request
+    void    _meth_cgi_save_client_in(void); // Store body in a file
     void    _meth_cgi_launch(void);    // Launch binary in child by fork()
     void    _meth_cgi_wait(void);      // Wait until child death for error 500
+    void    _meth_cgi_send_http(void); // Get http data from cgi and send it
     void    _meth_cgi_send_resp(void); // Will translate and send the response
 
 };

@@ -25,6 +25,7 @@ class c_tmpfile {
         std::string const   &get_filename(void) const;
         bool                is_read_ready(void) const;
         bool                is_write_ready(void) const;
+        size_t              get_size(void) const;
         void                reset_cursor(void);
 };
 
