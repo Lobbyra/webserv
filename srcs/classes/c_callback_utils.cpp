@@ -119,6 +119,9 @@ void                    c_callback::_send_respons_body(void) {
     char            buf[BUFFER_READ];
     int             bytes_read;
 
+    if (_resp_body != true) {
+        return ;
+    }
     if (_fd_body == 0) {                      // Open requested file
         _fd_body = open(this->path.c_str(), O_RDONLY);
         if (_fd_body == -1) {
@@ -164,9 +167,6 @@ void                    c_callback::_send_respons(void) {
     if (send(client_fd, _resp_headers.c_str(), _resp_headers.length(), 0) < 1) {
         std::cerr << "Error: Respons to client" << std::endl;
         this->status_code = 500;
-    }
-    if (_resp_body == true) {
-        _send_respons_body();
     }
 }
 

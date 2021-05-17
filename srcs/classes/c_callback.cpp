@@ -192,6 +192,8 @@ std::list<c_location>::iterator        c_callback::_server_find_route(
                         tmp_string.length())) == 0 &&
                         (tmp_string.length() == (*it).route.length())) {
                     it_find = it;
+                    this->path.erase(0, i);
+                    this->path.insert(0, this->root);
                     break ;
                 }
             }
