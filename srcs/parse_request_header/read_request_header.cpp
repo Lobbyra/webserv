@@ -9,6 +9,11 @@ static void         parse_req_line(int client_fd,
     char *buf;
 
     status = get_next(client_fd, &buf, "\r\n");
+    // std::cout << "Status:" << status << "buf: [" << buf << "]" << "  errno: " << strerror(errno) << std::endl;
+    if (status == 0) {
+        throw std::exception();
+        free(buf);
+    }
     if (status != -1) {
         parse_method(buf, req_headers);
         free(buf);
@@ -32,7 +37,13 @@ s_request_header    read_request_header(int client_fd) {
     request.content_length = 0;
     request_header = init_request_header(&request);
     parser_request = init_parser_request();
-    parse_req_line(client_fd, request_header);
+    try {
+        parse_req_line(client_fd, request_header);
+    } catch(const std::exception& e) {
+        std::cerr << e.what() << '\n';
+        request.error = 42;
+        return (request);
+    }
     if (request.error >= 400 || request.method == "TRACE") {
         if (request.method == "TRACE")
             request.host = "tmp";

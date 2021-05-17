@@ -26,8 +26,8 @@ static void    remove_clients(std::list<s_socket> *clients, int client_fd) {
     while (it != ite) {
         if (it->client_fd == client_fd) {
             flush_fd(client_fd);
-            close(client_fd);
-            clients->erase(it);
+            // close(client_fd);
+            // clients->erase(it);
             break ;
         }
         ++it;

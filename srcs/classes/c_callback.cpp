@@ -41,6 +41,7 @@ c_callback::~c_callback(void) {
     }
     if (_fd_body != 0)
         close(_fd_body);
+    *this->is_header_read = false;
     return ;
 }
 

@@ -67,7 +67,7 @@ void    ft_select(t_socketlst *const clients) {
     bool    updated_read;
 
     errno = 0;
-    ft_timeval_init(&time, 1);
+    ft_timeval_init(&time, 2);
     init_fdsets(clients, &r_fdset, &w_fdset);
     select(socket_max(clients) + 1, &r_fdset, &w_fdset, NULL, &time);
     updated_read = update_socketlst(clients, &r_fdset, &w_fdset);

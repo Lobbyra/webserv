@@ -9,7 +9,7 @@ static int		ft_lstsize_gnl(t_gnl *lst)
 	int i;
 	int diff;
 
-	i = 1;
+	i = 0;
 	while (lst)
 	{
 		if ((diff = lst->max - lst->min) < 0)
@@ -27,7 +27,7 @@ static int	ft_sentence(t_gnl const *const *alist, const char *const sep)
 	t_gnl	tmp;
 	t_gnl const	*lst;
 
-	size = 1;
+	size = 0;
 	lst = *alist;
 	while (lst->next && lst->next->next)
 	{
@@ -75,9 +75,9 @@ static int		ft_found(t_gnl **alist, char **line, int size, int seplen)
 	i = 0;
 	lst = *alist;
 	src = lst->tab;
-	if (!(*line = (char *)malloc(sizeof(char) * size)))
+	if (!(*line = (char *)malloc(sizeof(char) * (size + 1))))
 		return (0);
-	while (i < size - 1)
+	while (i < size)
 	{
 		if ((lst->min >= lst->max) && lst->next)
 		{
