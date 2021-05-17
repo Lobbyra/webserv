@@ -49,7 +49,6 @@ static std::list<std::string> get_mid_page(char const *dir_path) {
     std::list<std::string> mid_page;
 
     errno = 0;
-    std::cout << "DEBUG = " << dir_path << std::endl;
     if ((curr_dir = opendir(dir_path)) == NULL)
         throw std::logic_error(strerror(errno));
     while ((it_dir = readdir(curr_dir))) {

@@ -63,7 +63,6 @@ void    c_callback::_meth_cgi_init_meta(void) {
     else
         tmp = "PATH_INFO=/";           // To change this go c_callback:205
     this->cgi_env_variables.push_back(tmp);
-    std::cout << "DEBUG : " <<  tmp << std::endl;
     // PATH_TRANSLATED
     tmp = "PATH_TRANSLATED=" + this->root + this->path;
     if (find(this->index.begin(), this->index.end(), std::string("index.php"))
@@ -180,7 +179,6 @@ void    c_callback::_meth_cgi_save_client_in(void) {
         return ;
     } else if (status == 0 || status == 1) {
         if (buf) {
-            std::cout << "[DEBUG] : " << status << " : " << buf << std::endl;
             if (write(_tmpfile->get_fd(), buf, ft_strlen(buf)) == -1) {
                 free(buf);
                 return ;
@@ -197,7 +195,6 @@ void    c_callback::_meth_cgi_save_client_in(void) {
 }
 
 static int launch_panic(char **envp, char **args, char *bin_path) {
-    std::cerr << "DEBUG : launch_panic()" << std::endl;
     if (bin_path != NULL)
         free(bin_path);
     if (envp != NULL)
@@ -301,7 +298,6 @@ void    c_callback::_meth_cgi_send_http(void) {
         std::cerr << e.what() << std::endl;
     }
     if (http_content) {
-        std::cout << "DEBUG : " << http_content << std::endl;
         if (send(this->client_fd, http_content, ft_strlen(http_content), 0)
                 == -1) {
             this->status_code = 500;

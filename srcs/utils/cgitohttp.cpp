@@ -31,7 +31,6 @@ static std::string get_status(int fd) {
             status_line += "\r\n";
         }
     }
-    std::cout << "DEBUG : line : " << line << std::endl;
     if (line)
         free(line);
     return (status_line);
@@ -50,8 +49,6 @@ static int         get_headers_len(int fd) {
         throw std::logic_error("cgitohttp(): [1] : get_next failed");
     } else if (headers) {
         headers_len += ft_strlen(headers) + ft_strlen("\r\n\r\n");
-        std::cout << "DEBUG header : " << headers << std::endl;
-        std::cout << "DEBUG headers_len : " << headers_len << std::endl;
         free(headers);
     }
     return (headers_len);
@@ -64,7 +61,6 @@ static std::string get_content_len(size_t tmpfile_size, int fd) {
     char        *str_content_len = NULL;
     std::string http_content = "";
 
-    std::cout << "DEBUG tmpfile_size = " << tmpfile_size << std::endl;
     str_content_len = ft_itoa(tmpfile_size - (get_headers_len(fd)));
     http_content = "Content-Length: ";
     http_content += str_content_len;
