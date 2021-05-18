@@ -82,6 +82,11 @@ int			get_next(int fd, char **line, const char *const sep, e_GNL mode)
 		return (-1);
 	while (right_fd && right_fd->fd != fd)
 		right_fd = right_fd->next;
+	if (right_fd == NULL && mode != GNL_READ) {
+		if (line)
+			*line = NULL;
+		return (0);
+	}
 	if (mode == GNL_FLUSH) {
 		ft_total_remove_fd(&begin_fd, right_fd);
 		return (0);
@@ -90,22 +95,18 @@ int			get_next(int fd, char **line, const char *const sep, e_GNL mode)
 		return (has_gnl_line(&right_fd->list, sep));
 	else if (line == NULL || sep == NULL)
 		return (-1);
-	if (right_fd == NULL && mode == GNL_EMPTY_STATIC) {
-		*line = NULL;
-		return (0);
+	if (mode == GNL_EMPTY_STATIC) {
+		return_value = ft_flush_static(line, &right_fd->list);
+		ft_total_remove_fd(&begin_fd, right_fd);
+		return (return_value);
 	}
 	if (right_fd == NULL)
 	{
-		if (!ft_addfront_fd(&begin_fd, fd)) {
-			std::cout << "POP !" << std::endl;
+		if (!ft_addfront_fd(&begin_fd, fd))
 			return (-1);
-		}
 		right_fd = begin_fd;
 	}
-	if (mode == GNL_EMPTY_STATIC)
-		return_value = ft_flush_static(line, &right_fd->list);
-	else
-		return_value = ft_gnl(fd, line, &(right_fd->list), sep);
+	return_value = ft_gnl(fd, line, &right_fd->list, sep);
 	if (return_value == 0 || return_value == (-1))
 		ft_total_remove_fd(&begin_fd, right_fd);
 	std::cout << "GNL Line:" << *line << std::endl;
