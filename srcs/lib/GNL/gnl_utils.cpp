@@ -71,22 +71,25 @@ static void	ft_total_remove_fd(t_gnlfdlst **begin_fd, t_gnlfdlst *to_delete_fd)
 	free(to_delete_fd);
 }
 
-int			get_next(int fd, char **line, const char *const sep)
+int			get_next(int fd, char **line, const char *const sep, e_GNL mode)
 {
 	int						return_value;
 	static t_gnlfdlst		*begin_fd = NULL;
 	t_gnlfdlst				*right_fd;
 
 	right_fd = begin_fd;
-	if (fd < 0 || BUFFER_SIZE <= 0)
+	if (fd < 0 || BUFFER_SIZE <= 0 || mode <= GNL_START || mode >= GNL_END)
 		return (-1);
 	while (right_fd && right_fd->fd != fd)
 		right_fd = right_fd->next;
-	if (!line)
-	{
+	if (mode == GNL_FLUSH) {
 		ft_total_remove_fd(&begin_fd, right_fd);
 		return (-1);
 	}
+	else if (mode == GNL_HAS_LINE)
+		return (has_gnl_line(&right_fd->list, sep));
+	else if (line == NULL || sep == NULL)
+		return (-1);
 	if (right_fd == NULL)
 	{
 		if (!ft_addfront_fd(&begin_fd, fd))
@@ -102,5 +105,5 @@ int			get_next(int fd, char **line, const char *const sep)
 
 int			get_next_line(int fd, char **line)
 {
-	return (get_next(fd, line, "\n"));
+	return (get_next(fd, line, "\n", GNL_READ));
 }

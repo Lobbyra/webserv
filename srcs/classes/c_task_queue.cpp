@@ -15,7 +15,7 @@ c_task_queue::~c_task_queue() {
 
 // Flush data in a fd
 static void flush_fd(int fd) {
-    get_next_line(fd, NULL);
+    get_next(fd, NULL, NULL, GNL_FLUSH);
 }
 
 // This function will remove finished request from client list

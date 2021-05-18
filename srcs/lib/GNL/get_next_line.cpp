@@ -114,3 +114,7 @@ int		ft_gnl(int fd, char **line, t_gnl **alist, const char *const sep)
 		return (-1);
 	return ((size > 0 ? 1 : 0));
 }
+
+bool	has_gnl_line(t_gnl const *const *alist, const char *const sep) {
+	return (ft_sentence(alist, sep) == 0 ? false : true);
+}

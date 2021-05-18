@@ -81,9 +81,9 @@ char    *cgitohttp(c_tmpfile *tmpfile) {
         return (NULL);
     }
     tmpfile->reset_cursor();
-    get_next(tmpfile->get_fd(), NULL, "\r\n\r\n"); // Flush GNL buffer
+    get_next(tmpfile->get_fd(), NULL, "\r\n\r\n", GNL_FLUSH); // Flush GNL buffer
     http_content += get_content_len(tmpfile->get_size(), tmpfile->get_fd());
     tmpfile->reset_cursor();
-    get_next(tmpfile->get_fd(), NULL, "\r\n\r\n"); // Flush GNL buffer
+    get_next(tmpfile->get_fd(), NULL, "\r\n\r\n", GNL_FLUSH); // Flush GNL buffer
     return (ft_strdup(http_content.c_str()));
 }

@@ -114,7 +114,8 @@ INCL_PATHS = ${SRCS_PATH}/. \
 
 INCL_FLAGS = ${addprefix -I, ${INCL_PATHS}}
 
-all: ${LIBS}
+all:
+	@make f="$f" -C ${LIB_PATH}
 	@printf "$(BOLD)Make $(RED)$(NAME)$(EOC)"
 	@echo " $(BOLD)with$(EOC) $(GREEN)$(CC)$(EOC) $(CYAN)$(CFLAGS)$(EOC): "
 	@make ${NAME} -j
