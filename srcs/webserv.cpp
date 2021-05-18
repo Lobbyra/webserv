@@ -53,7 +53,8 @@ void    webserv(std::list<c_server> const &conf) {
             assign_server_to_clients(conf, clients, requests);
             task_queue.push(requests, clients);
         }
-        task_queue.exec_task();
+        else
+            task_queue.exec_task();
     }
     set_reuse_port(clients);
     delete clients;

@@ -90,10 +90,16 @@ int			get_next(int fd, char **line, const char *const sep, e_GNL mode)
 		return (has_gnl_line(&right_fd->list, sep));
 	else if (line == NULL || sep == NULL)
 		return (-1);
+	if (right_fd == NULL && mode == GNL_EMPTY_STATIC) {
+		*line = NULL;
+		return (0);
+	}
 	if (right_fd == NULL)
 	{
-		if (!ft_addfront_fd(&begin_fd, fd))
+		if (!ft_addfront_fd(&begin_fd, fd)) {
+			std::cout << "POP !" << std::endl;
 			return (-1);
+		}
 		right_fd = begin_fd;
 	}
 	if (mode == GNL_EMPTY_STATIC)

@@ -163,34 +163,51 @@ void    c_callback::_meth_cgi_init_http(void) {
 void    c_callback::_meth_cgi_save_client_in(void) {
     std::cout << "TASK : _meth_cgi_save_client_in" << std::endl;
     int  status;
-    char *buf;
+    char *buf = NULL;
+    char *buf_tmp = NULL;
 
+    errno = 0;
     if (_tmpfile == NULL) {
         _tmpfile = new c_tmpfile();
     }
-    if (*this->is_read_ready == false ||
-            _tmpfile->is_write_ready() == false) {
+    if (_tmpfile->is_write_ready() == false) {
         --_it_recipes;
         return ;
     }
-    buf = NULL;
-    status = get_next(this->client_fd, &buf, "\r\n");
-    if (status == -1) {
-        this->status_code = 500;
-        return ;
-    } else if (status == 0 || status == 1) {
-        if (buf) {
-            std::cout << "[DEBUG] : " << status << " : " << buf << std::endl;
+    if (*this->is_read_ready == true) {
+        std::cout << "LECTURE" << std::endl;
+        status = get_next(this->client_fd, &buf, "\r\n");
+        std::cout << "status = " << status << " : " << strerror(errno) << std::endl;
+        if (status == -1) {
+            this->status_code = 500;
+            return ;
+        } else {
+            buf_tmp = ft_strjoin(buf, "\r\n");
+            free(buf);
+            if (write(_tmpfile->get_fd(), buf_tmp, ft_strlen(buf_tmp)) == -1) {
+                this->status_code = 500;
+                free(buf_tmp);
+                return ;
+            }
+            if (buf_tmp)
+                free(buf_tmp);
+        }
+        --_it_recipes;
+    } else if (*this->is_read_ready == false) {
+        std::cout << "PAS LECTURE" << std::endl;
+        status = get_next(this->client_fd, &buf, "", GNL_EMPTY_STATIC);
+        std::cout << "status = " << status << " : " << strerror(errno) << std::endl;
+        if (status == -1) {
+            this->status_code = 500;
+            return ;
+        } else if (status == 1) {
             if (write(_tmpfile->get_fd(), buf, ft_strlen(buf)) == -1) {
+                this->status_code = 500;
                 free(buf);
                 return ;
             }
-            free(buf);
-        }
-        if (status == 1) {
-            --_it_recipes;
-        } else if (status == 0) {
-            _tmpfile->reset_cursor();
+            if (buf)
+                free(buf);
         }
     }
     return ;

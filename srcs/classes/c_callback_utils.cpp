@@ -89,17 +89,17 @@ void    c_callback::_read_body(void) {
         std::cout << "BUF:" << buf << "." << std::endl;
         if (status > 0)
             --_it_recipes;
-        else if (status == 0) {
-            ite = clients->end();
-            close(client_fd);
-            for (it = clients->begin(); it != ite; ++it) {
-                if ((*it).client_fd == client_fd) {
-                    clients->erase(it);
-                    break ;
-                }
-            }
-        }
-        else {
+        // else if (status == 0) {
+        //     ite = clients->end();
+        //     close(client_fd);
+        //     for (it = clients->begin(); it != ite; ++it) {
+        //         if ((*it).client_fd == client_fd) {
+        //             clients->erase(it);
+        //             break ;
+        //         }
+        //     }
+        // }
+        else if (status == -1) {
             status_code = 500;
             --_it_recipes;
             std::cout << "error:" << strerror(errno) << std::endl;
