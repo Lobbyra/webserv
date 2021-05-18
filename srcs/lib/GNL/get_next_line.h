@@ -9,11 +9,9 @@
 # endif
 
 enum	e_GNL {
-	GNL_START,
 	GNL_READ,
 	GNL_FLUSH,
-	GNL_HAS_LINE,
-	GNL_END
+	GNL_HAS_LINE
 };
 
 typedef struct	s_gnl

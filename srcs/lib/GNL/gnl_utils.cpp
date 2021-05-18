@@ -78,13 +78,13 @@ int			get_next(int fd, char **line, const char *const sep, e_GNL mode)
 	t_gnlfdlst				*right_fd;
 
 	right_fd = begin_fd;
-	if (fd < 0 || BUFFER_SIZE <= 0 || mode <= GNL_START || mode >= GNL_END)
+	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (-1);
 	while (right_fd && right_fd->fd != fd)
 		right_fd = right_fd->next;
 	if (mode == GNL_FLUSH) {
 		ft_total_remove_fd(&begin_fd, right_fd);
-		return (-1);
+		return (0);
 	}
 	else if (mode == GNL_HAS_LINE)
 		return (has_gnl_line(&right_fd->list, sep));
