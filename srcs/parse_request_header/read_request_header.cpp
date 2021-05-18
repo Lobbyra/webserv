@@ -9,7 +9,7 @@ static void         parse_req_line(int client_fd,
     char *buf;
 
     status = get_next(client_fd, &buf, "\r\n");
-    // std::cout << "Status:" << status << "buf: [" << buf << "]" << "  errno: " << strerror(errno) << std::endl;
+    std::cout << "Status:" << status << "  errno: " << strerror(errno) << std::endl;
     if (status == 0) {
         throw std::exception();
         free(buf);

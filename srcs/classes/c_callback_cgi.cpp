@@ -168,7 +168,7 @@ void    c_callback::_meth_cgi_save_client_in(void) {
     if (_tmpfile == NULL) {
         _tmpfile = new c_tmpfile();
     }
-    if (this->is_read_ready == false ||
+    if (*this->is_read_ready == false ||
             _tmpfile->is_write_ready() == false) {
         --_it_recipes;
         return ;
@@ -290,7 +290,7 @@ void    c_callback::_meth_cgi_send_http(void) {
     std::cout << "TASK : _meth_cgi_send_http" << std::endl;
     char *http_content = NULL;
 
-    if (this->is_write_ready == false ||
+    if (*this->is_write_ready == false ||
             _out_tmpfile->is_read_ready() == false) {
         --_it_recipes;
     }
@@ -318,7 +318,7 @@ void    c_callback::_meth_cgi_send_resp(void) {
     char   buf[4096];
 
     if (_out_tmpfile->is_read_ready() == false ||
-            this->is_write_ready == false) {
+            *this->is_write_ready == false) {
         --_it_recipes;
         return ;
     }

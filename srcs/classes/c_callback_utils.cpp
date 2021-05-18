@@ -70,6 +70,43 @@ static void grh_add_headers(std::list<std::string> &headers, c_callback &cb) {
         headers.push_back("Last-Modified: " + cb.last_modified_h);
 }
 
+void    c_callback::_read_body(void) {
+    int                             status;
+    char                            buf[1024];
+    std::list<s_socket>::iterator   it, ite;
+
+    if (this->method == "PUT")
+        return ;
+    if (g_verbose)
+        std::cout << "TASK : _read_body()" << std::endl;
+    errno = 0;
+    if (*this->is_read_ready == false) {
+        return ;
+    }
+    else {
+        ft_bzero(buf, 1024);
+        status = read(client_fd, buf, 1023);
+        std::cout << "BUF:" << buf << "." << std::endl;
+        if (status > 0)
+            --_it_recipes;
+        else if (status == 0) {
+            ite = clients->end();
+            close(client_fd);
+            for (it = clients->begin(); it != ite; ++it) {
+                if ((*it).client_fd == client_fd) {
+                    clients->erase(it);
+                    break ;
+                }
+            }
+        }
+        else {
+            status_code = 500;
+            --_it_recipes;
+            std::cout << "error:" << strerror(errno) << std::endl;
+        }
+    }
+}
+
 void    c_callback::_gen_resp_headers(void) {
     if (g_verbose)
         std::cout << "TASK : _gen_resp_headers()" << std::endl;
@@ -118,6 +155,8 @@ void                    c_callback::_fd_is_ready_to_send(void) {
 void                    c_callback::_send_respons_body(void) {
     char            buf[BUFFER_READ];
     int             bytes_read;
+    if (g_verbose)
+        std::cout << "TASK : _send_respons_body()" << std::endl;
 
     if (_resp_body != true) {
         return ;

@@ -64,7 +64,7 @@ void    c_callback::_meth_put_write_body(void) {
             return ;
         }
     } else {                                        // [IN]  Client ready?
-        if (this->is_read_ready == false) {
+        if (*this->is_read_ready == false) {
             --_it_recipes;
             return ;
         }

@@ -29,7 +29,7 @@ void    c_callback::_chunk_reading_size(void) {
     _chunk_size = 0;
     if (this->_tmpfile == NULL)
         this->_tmpfile = new c_tmpfile();
-    if (this->is_read_ready == false) {
+    if (*this->is_read_ready == false) {
         _it_recipes--;
         return ;
     }
@@ -60,7 +60,7 @@ void    c_callback::_chunk_reading_chunk(void) {
     int  bytes_read;
     char *buf;
 
-    if (this->is_read_ready == false || _tmpfile->is_write_ready() == false) {
+    if (*this->is_read_ready == false || _tmpfile->is_write_ready() == false) {
         --_it_recipes;                      // Wait until all fd are ready
         return ;
     }
