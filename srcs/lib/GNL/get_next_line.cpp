@@ -116,5 +116,15 @@ int		ft_gnl(int fd, char **line, t_gnl **alist, const char *const sep)
 }
 
 bool	has_gnl_line(t_gnl const *const *alist, const char *const sep) {
+	if (alist == NULL)
+		return (0);
 	return (ft_sentence(alist, sep) == 0 ? false : true);
+}
+
+int		ft_flush_static(char **line, t_gnl **alist) {
+	int size = ft_lstsize_gnl(*alist);
+
+	if (ft_found(alist, line, size, 0) == 0)
+		return (-1);
+	return ((size > 0 ? 1 : 0));
 }

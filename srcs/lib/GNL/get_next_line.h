@@ -11,6 +11,7 @@
 enum	e_GNL {
 	GNL_READ,
 	GNL_FLUSH,
+	GNL_EMPTY_STATIC,
 	GNL_HAS_LINE
 };
 
@@ -34,6 +35,7 @@ int		get_next_line(int fd, char **line);
 int		ft_gnl(int fd, char **line, t_gnl **alst, const char *const sep);
 t_gnl	*ft_lstnew_gnl(int fd);
 bool	has_gnl_line(t_gnl const *const *alist, const char *const sep);
+int		ft_flush_static(char **line, t_gnl **alst);
 
 // From libft
 size_t		ft_strlen(const char *s);

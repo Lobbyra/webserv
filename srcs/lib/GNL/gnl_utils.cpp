@@ -96,7 +96,10 @@ int			get_next(int fd, char **line, const char *const sep, e_GNL mode)
 			return (-1);
 		right_fd = begin_fd;
 	}
-	return_value = ft_gnl(fd, line, &(right_fd->list), sep);
+	if (mode == GNL_EMPTY_STATIC)
+		return_value = ft_flush_static(line, &right_fd->list);
+	else
+		return_value = ft_gnl(fd, line, &(right_fd->list), sep);
 	if (return_value == 0 || return_value == (-1))
 		ft_total_remove_fd(&begin_fd, right_fd);
 	std::cout << "GNL Line:" << *line << std::endl;
