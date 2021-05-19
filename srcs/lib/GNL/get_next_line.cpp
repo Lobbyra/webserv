@@ -4,12 +4,13 @@
  * The separator `sep` have to be smaller than BUFFER_SIZE
  */
 
-static int		ft_lstsize_gnl(t_gnl *lst)
+static int		ft_lstsize_gnl(t_gnl *lst, int *flag)
 {
 	int i;
 	int diff;
 
 	i = 0;
+	*flag = 1;
 	while (lst)
 	{
 		if ((diff = lst->max - lst->min) < 0)
@@ -100,6 +101,7 @@ int		ft_gnl(int fd, char **line, t_gnl **alist, const char *const sep)
 {
 	int		size;
 	t_gnl	*list;
+	int		called_lstsize = 0;
 
 	list = *alist;
 	while (((size = ft_sentence(alist, sep)) == -1) &&
@@ -109,9 +111,11 @@ int		ft_gnl(int fd, char **line, t_gnl **alist, const char *const sep)
 			return (-1);
 		list = list->next;
 	}
-	size = (size != -1 ? size : ft_lstsize_gnl(*alist));
+	size = (size != -1 ? size : ft_lstsize_gnl(*alist, &called_lstsize));
 	if (ft_found(alist, line, size == -1 ? 0 : size, ft_strlen(sep)) == 0)
 		return (-1);
+	if (called_lstsize == 1 && size == 0)
+		return (0);
 	return ((size != -1 ? 1 : 0));
 }
 
@@ -123,8 +127,10 @@ bool	has_gnl_line(t_gnl const *const *alist, const char *const sep) {
 #include <iostream>
 
 int		ft_flush_static(char **line, t_gnl **alist) {
-	int size = ft_lstsize_gnl(*alist);
+	int garbage;
+	int size = ft_lstsize_gnl(*alist, &garbage);
 
+	static_cast<void>(garbage);
 	std::cout << "SIZE:" << size << std::endl;
 	if (ft_found(alist, line, size, 0) == 0) 
 		return (-1);

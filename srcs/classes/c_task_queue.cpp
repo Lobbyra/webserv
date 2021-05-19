@@ -47,7 +47,7 @@ void    c_task_queue::exec_task(void) {
     front->exec();
 
     if (front->is_over() == true) {
-        // remove_clients(_clients, front->client_fd);
+        remove_clients(_clients, front->client_fd);
         _tasks.pop();
         delete front;
         return ;
