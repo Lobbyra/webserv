@@ -46,6 +46,11 @@ void    c_callback::_chunk_reading_size(void) {
     }
     _chunk_size = hextodec(line);
     if (_chunk_size == 0) {
+        if (client_max_body_size != -1 &&
+                _tmpfile->get_size() > (size_t)client_max_body_size) {
+            status_code = 413;
+            return ;
+        }
         _tmpfile->reset_cursor();
         ++_it_recipes;
     }

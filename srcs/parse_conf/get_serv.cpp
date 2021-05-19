@@ -13,7 +13,7 @@
 
 // Init variables need to be inititalized to avoid undefined
 static void init_serv(c_server *srv) {
-    srv->client_max_body_size = 0;
+    srv->client_max_body_size = -1;
     srv->srv_id = 0;
     srv->index.push_back("index.html"); // Default value for index
 }

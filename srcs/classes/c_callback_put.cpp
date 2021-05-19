@@ -34,7 +34,6 @@ void        c_callback::_meth_put_open_fd(void) {
         this->status_code = 500;
         return ;
     }
-    _continue();
 }
 
 void    c_callback::_meth_put_choose_in(void) {
@@ -46,7 +45,6 @@ void    c_callback::_meth_put_choose_in(void) {
     } else {
         _put_fd_in = this->client_fd;
     }
-    _continue();
 }
 
 /* _METH_PUT_WRITE_BODY()
@@ -54,6 +52,7 @@ void    c_callback::_meth_put_choose_in(void) {
 void    c_callback::_meth_put_write_body(void) {
     if (g_verbose)
         std::cout << "TASK : _meth_put_write_body()" << std::endl;
+    int  buf_len;
     int  bytes_read;
     char *buf;
 
@@ -76,7 +75,21 @@ void    c_callback::_meth_put_write_body(void) {
     }
     bytes_read = get_next(_put_fd_in, &buf, "\r\n");
     if ((bytes_read == 0 && buf != NULL) || bytes_read == 1) {
-        if (write(_fd_to_write, buf, ft_strlen(buf)) == -1) {
+        buf_len = ft_strlen(buf);
+        if (this->client_max_body_size != -1 &&        // CMBS protection
+                _bytes_write + buf_len > (int)this->client_max_body_size) {
+            free(buf);
+            this->status_code = 413;
+            return ;
+        }
+        if (this->transfer_encoding != "chunked" &&    // body > content_len?
+                _bytes_write + buf_len > (int)this->content_length) {
+            free(buf);
+            std::cerr << "DEBUG : MMOOUUIII" << std::endl;
+            this->status_code = 400;
+            return ;
+        }
+        if (write(_fd_to_write, buf, buf_len) == -1) { // Save bytes read
             if (transfer_encoding == "chunked") {
                 delete _tmpfile;
                 _tmpfile = NULL;
@@ -85,6 +98,7 @@ void    c_callback::_meth_put_write_body(void) {
             std::cerr << "_METH_PUT_WRITE_BODY : write failed : " << std::endl;
             return ;
         }
+        bytes_read += buf_len;
         free(buf);
         buf = NULL;
         if (bytes_read == 1) {      // [LOOP] More data are to write in target
@@ -96,7 +110,6 @@ void    c_callback::_meth_put_write_body(void) {
         delete _tmpfile;
         _tmpfile = NULL;
     }
-    _continue();
 }
 
 std::list<c_callback::t_task_f>         c_callback::_init_recipe_put(void){

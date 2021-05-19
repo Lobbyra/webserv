@@ -1,0 +1,17 @@
+PUT /autrechose.html HTTP/1.1
+Host: example.com
+Transfer-Encoding: chunked
+
+32
+uuuuuuuuuuujjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj
+32
+uuuuuuuuuuujjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj
+32
+uuuuuuuuuuujjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj
+32
+uuuuuuuuuuujjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj
+32
+uuuuuuuuuuujjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj
+7
+coucoux
+0
