@@ -19,6 +19,8 @@ std::string get_status_msg(int code) {
             return ("Not Allowed");
         case 409:
             return ("Conflict");
+        case 413:
+            return ("Payload Too Large");
         case 500:
             return ("Internal Server Error");
         case 505:
