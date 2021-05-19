@@ -62,7 +62,7 @@ void    c_callback::_meth_cgi_init_meta(void) {
         tmp = "PATH_INFO=" + this->path;
     else
         tmp = "PATH_INFO=/";           // To change this go c_callback:205
-    this->cgi_env_variables.push_back(tmp);;
+    this->cgi_env_variables.push_back(tmp);
     // PATH_TRANSLATED
     tmp = "PATH_TRANSLATED=" + this->root + this->path;
     if (find(this->index.begin(), this->index.end(), std::string("index.php"))
