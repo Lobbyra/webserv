@@ -209,7 +209,6 @@ void    c_callback::_meth_cgi_save_client_in(void) {
 }
 
 static int launch_panic(char **envp, char **args, char *bin_path) {
-    std::cerr << "DEBUG : launch_panic()" << std::endl;
     if (bin_path != NULL)
         free(bin_path);
     if (envp != NULL)

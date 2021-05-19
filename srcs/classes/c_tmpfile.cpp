@@ -25,7 +25,7 @@ c_tmpfile::~c_tmpfile(void) {
     if (this->_fd == -1)
         return ;
     close(this->_fd);
-   // unlink(this->_filename.c_str());
+    unlink(this->_filename.c_str());
 }
 
 c_tmpfile   &c_tmpfile::operator=(c_tmpfile const &rhs) {
