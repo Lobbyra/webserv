@@ -5,7 +5,7 @@
 # include <stdlib.h>
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 4096
+#  define BUFFER_SIZE 40960
 # endif
 
 enum	e_GNL {

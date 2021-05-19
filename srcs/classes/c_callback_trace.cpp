@@ -24,6 +24,7 @@ void                    c_callback::_write_request_line(void) {
 void                    c_callback::_read_client_to_tmpfile(void){
     if (g_verbose)
         std::cout << "TASK : _read_client_to_tmpfile()" << std::endl;
+    _tmpfile = new c_tmpfile();
     char            *line;
     char            *tmp;
     int             status;
@@ -54,7 +55,6 @@ void                    c_callback::_read_client_to_tmpfile(void){
 std::list<c_callback::t_task_f>     c_callback::_init_recipe_trace(void) {
     std::list<t_task_f> tasks;
 
-    _tmpfile = new c_tmpfile();
     tasks.push_back(&c_callback::_fd_is_ready_to_read);
     tasks.push_back(&c_callback::_read_client_to_tmpfile);
     tasks.push_back(&c_callback::_gen_resp_headers);

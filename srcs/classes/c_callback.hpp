@@ -207,6 +207,10 @@ private:
     int      _put_fd_in;                 // == tmpfile for chunk or client_fd
     int      _fd_to_write;               // == fd of targeted file
 
+    // POST RECIPE
+    void    _create_tmp_file(void);
+    void    _check_is_body_to_large(void);
+
     // OPTIONS RECIPE
     void    _gen_resp_header_options(void);
 
