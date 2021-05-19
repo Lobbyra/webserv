@@ -131,7 +131,6 @@ int		ft_flush_static(char **line, t_gnl **alist) {
 	int size = ft_lstsize_gnl(*alist, &garbage);
 
 	static_cast<void>(garbage);
-	std::cout << "SIZE:" << size << std::endl;
 	if (ft_found(alist, line, size, 0) == 0) 
 		return (-1);
 	return ((size != -1 ? 1 : 0));

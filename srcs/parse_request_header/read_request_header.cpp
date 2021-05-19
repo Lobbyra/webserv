@@ -9,8 +9,9 @@ static void         parse_req_line(int client_fd,
     char *buf;
 
     usleep(1000);
+    errno = 0;
     status = get_next(client_fd, &buf, "\r\n");
-    std::cout << "Status:" << status << "buf:" << buf << "." << "  errno: " << strerror(errno) << std::endl;
+    // std::cout << "Status:" << status << "buf:" << buf << "." << "  errno: " << strerror(errno) << std::endl;
     if (status == 0) {
         throw std::exception();
         free(buf);
@@ -41,7 +42,6 @@ s_request_header    read_request_header(int client_fd) {
     try {
         parse_req_line(client_fd, request_header);
     } catch(const std::exception& e) {
-        std::cerr << e.what() << '\n';
         request.error = 42;
         return (request);
     }

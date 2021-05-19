@@ -74,11 +74,11 @@ void    ft_select(t_socketlst *const clients) {
 
     if (errno == EAGAIN || errno == EINTR || updated_read == false) {
         // std::cout << "*silence*" << std::endl;
+        errno = 0;
         return ;
     }
     else if (errno != 0)
         ft_error("select");
-
     if (clients->size() > 250) // Too much open fd protection
         return ;
     // Accept new clients and append it to the client list

@@ -62,8 +62,7 @@ void    c_callback::_meth_cgi_init_meta(void) {
         tmp = "PATH_INFO=" + this->path;
     else
         tmp = "PATH_INFO=/";           // To change this go c_callback:205
-    this->cgi_env_variables.push_back(tmp);
-    std::cout << "DEBUG : " <<  tmp << std::endl;
+    this->cgi_env_variables.push_back(tmp);;
     // PATH_TRANSLATED
     tmp = "PATH_TRANSLATED=" + this->root + this->path;
     if (find(this->index.begin(), this->index.end(), std::string("index.php"))
@@ -175,9 +174,7 @@ void    c_callback::_meth_cgi_save_client_in(void) {
         return ;
     }
     if (*this->is_read_ready == true) {
-        std::cout << "LECTURE" << std::endl;
         status = get_next(this->client_fd, &buf, "\r\n");
-        std::cout << "status = " << status << " : " << strerror(errno) << std::endl;
         if (status == -1) {
             this->status_code = 500;
             return ;
@@ -194,9 +191,7 @@ void    c_callback::_meth_cgi_save_client_in(void) {
         }
         --_it_recipes;
     } else if (*this->is_read_ready == false) {
-        std::cout << "PAS LECTURE" << std::endl;
         status = get_next(this->client_fd, &buf, "", GNL_EMPTY_STATIC);
-        std::cout << "status = " << status << " : " << strerror(errno) << std::endl;
         if (status == -1) {
             this->status_code = 500;
             return ;
@@ -318,7 +313,6 @@ void    c_callback::_meth_cgi_send_http(void) {
         std::cerr << e.what() << std::endl;
     }
     if (http_content) {
-        std::cout << "DEBUG : " << http_content << std::endl;
         if (send(this->client_fd, http_content, ft_strlen(http_content), 0)
                 == -1) {
             this->status_code = 500;

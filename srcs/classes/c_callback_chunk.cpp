@@ -40,7 +40,6 @@ void    c_callback::_chunk_reading_size(void) {
         return ;
     }
     if (is_str_hex(line) == false) { // Non hexad chunk size
-        std::cerr << "DEBUG: HEX:" << line << "." << std::endl;
         status_code = 400;
         free(line);
         return ;
