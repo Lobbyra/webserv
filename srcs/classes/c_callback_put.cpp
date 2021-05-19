@@ -60,17 +60,21 @@ void    c_callback::_meth_put_write_body(void) {
     buf = NULL;
     if (this->transfer_encoding == "chunked") {     // [IN]  Tmpfile ready?
         if (_tmpfile->is_read_ready() == false) {
+            std::cout << "DEBUG1: RETURN HERE | _meth_put_write_body" << std::endl;
             --_it_recipes;
             return ;
         }
     } else {                                        // [IN]  Client ready?
-        if (*this->is_read_ready == false) {
-            --_it_recipes;
+        if (*this->is_read_ready == false &&
+                get_next(client_fd, NULL, "\r\n", GNL_HAS_LINE) == false) {
+            std::cout << "DEBUG2: RETURN HERE | _meth_put_write_body" << std::endl;
+            // --_it_recipes;
             return ;
         }
     }
     if (is_fd_write_ready(_fd_to_write) == false) { // [OUT] Target ready?
         --_it_recipes;
+        std::cout << "DEBUG3: RETURN HERE | _meth_put_write_body" << std::endl;
         return ;
     }
     bytes_read = get_next(_put_fd_in, &buf, "\r\n");

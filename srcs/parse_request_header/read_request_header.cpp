@@ -8,8 +8,15 @@ static void         parse_req_line(int client_fd,
     int status;
     char *buf;
 
+    usleep(1000);
+    while ((status = get_next(client_fd, &buf, "\r\n")) == 1) {
+        if (buf[0] != '\0')
+            break ;
+        usleep(5000);
+    }
+
     status = get_next(client_fd, &buf, "\r\n");
-    std::cout << "Status:" << status << "  errno: " << strerror(errno) << std::endl;
+    std::cout << "Status:" << status << "buf:" << buf << "." << "  errno: " << strerror(errno) << std::endl;
     if (status == 0) {
         throw std::exception();
         free(buf);
@@ -64,9 +71,16 @@ s_request_header    read_request_header(int client_fd) {
     return (request);
 }
 
-/*
-int         main(void) {
-    std::cout << read_request_header(0) << std::endl;
-    return (0);
-}
-*/
+// int         main(void) {
+//     // std::cout << read_request_header(0) << std::endl;
+//     int fd;
+//     char *line = NULL;
+//     int ret;
+//     fd = open("test_gnl", O_RDONLY);
+//     while ((ret = get_next(fd, &line, "\r\n")) > 0) {
+//         std::cout << "RET: " << ret << " | LINE:" << line << std::endl;
+//     }
+//     std::cout << "RET: " << ret << " | LINE:" << line << std::endl;
+//     return (0);
+// }
+

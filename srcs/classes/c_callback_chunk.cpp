@@ -29,15 +29,18 @@ void    c_callback::_chunk_reading_size(void) {
     _chunk_size = 0;
     if (this->_tmpfile == NULL)
         this->_tmpfile = new c_tmpfile();
-    if (*this->is_read_ready == false) {
+    if (*this->is_read_ready == false &&
+            get_next(client_fd, NULL, "\r\n", GNL_HAS_LINE) == false) {
         _it_recipes--;
         return ;
     }
     if (get_next(this->client_fd, &line, "\r\n") == -1) { // Ending chunk miss
+        std::cerr << "DEBUG: GNL CHUNK READING" << std::endl;
         this->status_code = 400;
         return ;
     }
     if (is_str_hex(line) == false) { // Non hexad chunk size
+        std::cerr << "DEBUG: HEX:" << line << "." << std::endl;
         status_code = 400;
         free(line);
         return ;
@@ -60,7 +63,9 @@ void    c_callback::_chunk_reading_chunk(void) {
     int  bytes_read;
     char *buf;
 
-    if (*this->is_read_ready == false || _tmpfile->is_write_ready() == false) {
+    if ((*this->is_read_ready == false &&
+            get_next(client_fd, NULL, "\r\n", GNL_HAS_LINE) == false) ||
+            _tmpfile->is_write_ready() == false) {
         --_it_recipes;                      // Wait until all fd are ready
         return ;
     }

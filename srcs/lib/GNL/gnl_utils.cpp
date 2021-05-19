@@ -20,7 +20,7 @@ t_gnl		*ft_lstnew_gnl(int fd)
 		free(newNode);
 		return (NULL);
 	}
-	// printf("PRINTF99 [%.*s] | ret [%d]\n", newNode->max, newNode->tab, newNode->max);
+	printf("PRINTF [%.*s] | ret [%d]\n", newNode->max, newNode->tab, newNode->max);
 	newNode->next = 0;
 	return (newNode);
 }

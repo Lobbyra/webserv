@@ -13,7 +13,7 @@ static int		ft_lstsize_gnl(t_gnl *lst)
 	while (lst)
 	{
 		if ((diff = lst->max - lst->min) < 0)
-			return (0);
+			return (-1);
 		i += diff;
 		lst = lst->next;
 	}
@@ -50,7 +50,7 @@ static int	ft_sentence(t_gnl const *const *alist, const char *const sep)
 		if (sep[j] == '\0')
 			return (size - j);
 	}
-	return (0);
+	return (-1);
 }
 
 static void		ft_lstclear_gnl(t_gnl **alst)
@@ -102,23 +102,23 @@ int		ft_gnl(int fd, char **line, t_gnl **alist, const char *const sep)
 	t_gnl	*list;
 
 	list = *alist;
-	while (((size = ft_sentence(alist, sep)) == 0) &&
+	while (((size = ft_sentence(alist, sep)) == -1) &&
 			(list->max == BUFFER_SIZE || (fd == 0 && list->max > 0)))
 	{
 		if (!(list->next = ft_lstnew_gnl(fd)))
 			return (-1);
 		list = list->next;
 	}
-	size = (size > 0 ? size : ft_lstsize_gnl(*alist));
-	if (ft_found(alist, line, size, ft_strlen(sep)) == 0)
+	size = (size != -1 ? size : ft_lstsize_gnl(*alist));
+	if (ft_found(alist, line, size == -1 ? 0 : size, ft_strlen(sep)) == 0)
 		return (-1);
-	return ((size > 0 ? 1 : 0));
+	return ((size != -1 ? 1 : 0));
 }
 
 bool	has_gnl_line(t_gnl const *const *alist, const char *const sep) {
 	if (alist == NULL)
 		return (0);
-	return (ft_sentence(alist, sep) == 0 ? false : true);
+	return (ft_sentence(alist, sep) == -1 ? false : true);
 }
 #include <iostream>
 
@@ -128,5 +128,5 @@ int		ft_flush_static(char **line, t_gnl **alist) {
 	std::cout << "SIZE:" << size << std::endl;
 	if (ft_found(alist, line, size, 0) == 0) 
 		return (-1);
-	return ((size > 0 ? 1 : 0));
+	return ((size != -1 ? 1 : 0));
 }
