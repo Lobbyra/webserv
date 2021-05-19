@@ -173,7 +173,7 @@ void    c_callback::_meth_cgi_save_client_in(void) {
         --_it_recipes;
         return ;
     }
-    if (*this->is_read_ready == true) {
+    if (*this->is_read_ready == true && this->content_length > 0) {
         status = get_next(this->client_fd, &buf, "\r\n");
         if (status == -1) {
             this->status_code = 500;
@@ -203,6 +203,11 @@ void    c_callback::_meth_cgi_save_client_in(void) {
             }
             if (buf)
                 free(buf);
+        }
+        if (this->client_max_body_size != -1 &&
+                _tmpfile->get_size() > (size_t)this->client_max_body_size) {
+            status_code = 413;
+            return ;
         }
     }
     return ;

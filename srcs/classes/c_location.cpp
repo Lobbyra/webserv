@@ -5,7 +5,7 @@ int indent_lvl = 1;
 /*
 **    /// CONSTRUCTORS & DESTRUCTORS PART \\
 */
-c_location::c_location(void) : client_max_body_size(0) {
+c_location::c_location(void) : client_max_body_size(-1) {
     return ;
 }
 
@@ -52,7 +52,7 @@ std::ostream    &operator<<(std::ostream &o, c_location const &i) {
         o << "    autoindex = [" << i.autoindex << "]" << std::endl;
     if (i.error_page.empty() == false)
         o << "    error_page = [\n" << i.error_page << "]" << std::endl;
-    if (i.client_max_body_size > 0) {
+    if (i.client_max_body_size >= 0) {
         o << \
         "    client_max_body_size = [" << i.client_max_body_size << "]" << \
         std::endl;

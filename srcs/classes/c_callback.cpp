@@ -222,9 +222,8 @@ void        c_callback::_server_init_route(std::list<c_location> location) {
     ite = location.end();
     it = _server_find_route(it, ite);
     if (it != ite) {
-        if((*it).client_max_body_size)
-            client_max_body_size = (*it).client_max_body_size;
-        if((*it).index.begin() != (*it).index.end())
+        client_max_body_size = (*it).client_max_body_size;
+        if ((*it).index.begin() != (*it).index.end())
             index = (*it).index;
         if ((*it).methods.empty() == false)
             methods = (*it).methods;

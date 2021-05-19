@@ -70,7 +70,7 @@ void  parse_location(t_strcit it, void *ptr) {
     std::map<std::string, void*>    loc_ptr_select;
     std::map<std::string, f_parser> parse_select;
 
-    loc.client_max_body_size = 0;
+    loc.client_max_body_size = -1;
     parse_select = init_parsing_select();
     loc_ptr_select = init_loc_ptr_select(&loc);
     loc.route = get_route(it);
