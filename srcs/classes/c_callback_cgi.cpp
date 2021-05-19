@@ -124,7 +124,6 @@ void    c_callback::_meth_cgi_init_meta(void) {
         std::cout << "cgi_env_varibles: " << std::endl;
         std::cout << this->cgi_env_variables << std::endl;
     }
-    _continue();
 }
 
 // Init additionnal var of from http request in cgi_env_variables.
@@ -156,7 +155,6 @@ void    c_callback::_meth_cgi_init_http(void) {
         std::cout << "cgi_env_variables:" << std::endl;
         std::cout << this->cgi_env_variables << std::endl;
     }
-    _continue();
 }
 
 void    c_callback::_meth_cgi_save_client_in(void) {
@@ -294,7 +292,7 @@ void    c_callback::_meth_cgi_wait(void) {
         return ;
     } else if (dead == _pid) {
         _out_tmpfile->reset_cursor();
-        if (WEXITSTATUS(status) == -1) {
+        if (WEXITSTATUS(status) != 0) {
             this->status_code = 500;
         }
     } else if (dead == 0) {

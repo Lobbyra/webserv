@@ -7,6 +7,7 @@ c_callback::c_callback(void) {
 
 c_callback::c_callback(s_socket *client, s_request_header request,
                        std::list<s_socket> *clients) {
+    this->_bytes_write = 0;
     this->_tmpfile = NULL;
     this->_out_tmpfile = NULL;
     this->_fd_body = 0;
@@ -16,6 +17,10 @@ c_callback::c_callback(s_socket *client, s_request_header request,
     if (this->server) {                     // Init server variables
         _init_server_hpp(this->server);
         _server_init_route(this->server->location);
+    }
+    if (this->client_max_body_size != -1 &&
+            this->content_length > (size_t)this->client_max_body_size) {
+        this->status_code = 413;
     }
     if (this->fastcgi_pass != "" && _method_allow() == true) {  // CGI case
         _recipes = _init_recipe_cgi();

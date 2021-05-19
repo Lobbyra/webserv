@@ -206,6 +206,7 @@ private:
     void     _meth_put_write_body(void); // Loop to read/write from in/out fds
     int      _put_fd_in;                 // == tmpfile for chunk or client_fd
     int      _fd_to_write;               // == fd of targeted file
+    int      _bytes_write;               // bytes already write in target file
 
     // OPTIONS RECIPE
     void    _gen_resp_header_options(void);
