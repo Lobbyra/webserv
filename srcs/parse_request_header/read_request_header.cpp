@@ -11,7 +11,10 @@ static void         parse_req_line(int client_fd,
     usleep(1000);
     errno = 0;
     status = get_next(client_fd, &buf, "\r\n");
-    // std::cout << "Status:" << status << "buf:" << buf << "." << "  errno: " << strerror(errno) << std::endl;
+    // if (buf[0] != '\0')
+    //     std::cout << "Status:" << status << "buf:" << buf << "." << "  errno: " << strerror(errno) << std::endl;
+    // else
+    //     std::cout << "Status:" << status << "buf vide" << "  errno: " << strerror(errno) << std::endl;
     if (status == 0) {
         throw std::exception();
         free(buf);
