@@ -82,11 +82,9 @@ void    c_callback::_read_body(void) {
     errno = 0;
     if (*this->is_read_ready == false) {
         return ;
-    }
-    else {
-        ft_bzero(buf, 1024);
-        status = read(client_fd, buf, 1023);
-        if (status > 0)
+    } else {
+        status = read(client_fd, buf, 1024);
+        if (status > 0 && status == 1024)
             --_it_recipes;
         else if (status == -1) {
             status_code = 500;
@@ -109,6 +107,7 @@ void    c_callback::_gen_resp_headers(void) {
                                       _dir_listening_page.end());
     }
     _resp_headers = lststr_to_strcont(headers, "\r\n");
+    _continue();
 }
 
 /* FD_IS_READY_TO_READ()
@@ -144,6 +143,7 @@ void                    c_callback::_fd_is_ready_to_send(void) {
 void                    c_callback::_send_respons_body(void) {
     char            buf[BUFFER_READ];
     int             bytes_read;
+    int             ret;
     if (g_verbose)
         std::cout << "TASK : _send_respons_body()" << std::endl;
 
@@ -166,13 +166,14 @@ void                    c_callback::_send_respons_body(void) {
     ft_bzero(buf, BUFFER_READ);
     bytes_read = read(_fd_body, buf, BUFFER_READ);
     if (bytes_read == 0 || bytes_read > 0) {
-        if (send(client_fd, buf, bytes_read, 0) == -1) {
+        if ((ret = send(client_fd, buf, bytes_read, 0)) == -1) {
             std::cerr << "_send_respons_body : send() failed" << std::endl;
             this->status_code = 500;
             --_it_recipes;
             return ;
         }
-        if (bytes_read > 0)
+        // std::cout << "return body: " << ret << std::endl;
+        if (bytes_read > 0 && bytes_read == BUFFER_READ)
             --_it_recipes;
     } else if (bytes_read == -1) {
         std::cerr << "_send_respons_body : read() failed" << std::endl;
@@ -180,6 +181,7 @@ void                    c_callback::_send_respons_body(void) {
         --_it_recipes;
         return ;
     }
+    usleep(500);
     return ;
 }
 
@@ -187,14 +189,20 @@ void                    c_callback::_send_respons_body(void) {
  * Send the respons from the server to the client
  */
 void                    c_callback::_send_respons(void) {
+    int     ret;
     if (g_verbose) {
         std::cout << "TASK : _send_respons()" << std::endl;
         std::cout << _resp_headers.c_str() << std::endl;
     }
-
-    if (send(client_fd, _resp_headers.c_str(), _resp_headers.length(), 0) < 1) {
+    if (*(this->is_write_ready) == false) {
+        _it_recipes--;
+        return ;
+    }
+    if ((ret = send(client_fd, _resp_headers.c_str(), _resp_headers.length(), 0)) < 1) {
         std::cerr << "Error: Respons to client" << std::endl;
         this->status_code = 500;
     }
+    usleep(500);
+    // std::cout << "return header: " << ret << std::endl;
 }
 
