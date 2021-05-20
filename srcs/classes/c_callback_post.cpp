@@ -2,9 +2,9 @@
 
 void                        c_callback::_check_is_body_to_large(void) {
     struct stat     stat;
-    
+
     if (lstat(_tmpfile->get_filename().c_str(), &stat) != -1) {
-            if (this->client_max_body_size != -1 && 
+            if (this->client_max_body_size != -1 &&
                     stat.st_size > client_max_body_size) {
                 this->status_code = 413;
                 }
@@ -20,9 +20,10 @@ void                        c_callback::_create_tmp_file(void) {
         _tmpfile = new c_tmpfile();
     if (*this->is_read_ready == false)
         --_it_recipes;
-    if ((status = get_next(client_fd, &line, "\r\n")) == 1) {
+    line = NULL;
+    if ((status = get_next(client_fd, &line, "\r\n")) >= 1) {
         tmp = ft_strjoin(line, "\r\n");
-        write(_tmpfile->get_fd(), tmp, ft_strlen(tmp));
+        write(_tmpfile->get_fd(), tmp, status - 1 + 2);
         free(tmp);
         free(line);
         line = NULL;

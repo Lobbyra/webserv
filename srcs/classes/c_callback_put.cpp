@@ -79,8 +79,8 @@ void    c_callback::_meth_put_write_body(void) {
         return ;
     }
     bytes_read = get_next(_put_fd_in, &buf, "\r\n");
-    if ((bytes_read == 0 && buf != NULL) || bytes_read == 1) {
-        buf_len = ft_strlen(buf);
+    if ((bytes_read == 0 && buf != NULL) || bytes_read >= 1) {
+        buf_len = (bytes_read ?: 1) - 1;
         if (this->client_max_body_size != -1 &&        // CMBS protection
                 _bytes_write + buf_len > (int)this->client_max_body_size) {
             free(buf);

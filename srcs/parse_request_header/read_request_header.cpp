@@ -14,14 +14,14 @@ static void         parse_req_line(int client_fd,
     if (errno != 0)
         std::cout << "status: " << status << " errno: " << strerror(errno) << std::endl;
     if (status == 0) {
-        throw std::exception();
         free(buf);
+        throw std::exception();
     }
-    if (status != -1) {
+    else if (status != -1) {
         parse_method(buf, req_headers);
         free(buf);
     }
-    if (status == -1)
+    else if (status == -1)
         throw std::exception();
 }
 
@@ -53,8 +53,8 @@ s_request_header    read_request_header(int client_fd) {
             request.host = "tmp";
         return (request);
     }
-    while ((status = get_next(client_fd, &line, "\r\n")) == 1) {
-        line_len = ft_strlen(line);
+    while ((status = get_next(client_fd, &line, "\r\n")) >= 1) {
+        line_len = status - 1;
         if (line_len == 0 || request.error >= 400)
             break;
         if (parse_request_header(line, request_header, parser_request) == 1)

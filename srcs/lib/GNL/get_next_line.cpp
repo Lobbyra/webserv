@@ -1,4 +1,5 @@
 #include "get_next_line.h"
+#include <iostream>
 
 /* Warning:
  * The separator `sep` have to be smaller than BUFFER_SIZE
@@ -116,7 +117,7 @@ int		ft_gnl(int fd, char **line, t_gnl **alist, const char *const sep)
 		return (-1);
 	if (called_lstsize == 1 && size == 0)
 		return (0);
-	return ((size != -1 ? 1 : 0));
+	return ((size != -1 ? size + 1 : 0));
 }
 
 bool	has_gnl_line(t_gnl const *const *alist, const char *const sep) {
@@ -124,14 +125,13 @@ bool	has_gnl_line(t_gnl const *const *alist, const char *const sep) {
 		return (0);
 	return (ft_sentence(alist, sep) == -1 ? false : true);
 }
-#include <iostream>
 
 int		ft_flush_static(char **line, t_gnl **alist) {
 	int garbage;
 	int size = ft_lstsize_gnl(*alist, &garbage);
 
 	static_cast<void>(garbage);
-	if (ft_found(alist, line, size, 0) == 0) 
+	if (ft_found(alist, line, size, 0) == 0)
 		return (-1);
-	return ((size != -1 ? 1 : 0));
+	return ((size != -1 ? size + 1 : 0));
 }

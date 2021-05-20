@@ -42,13 +42,14 @@ static std::string get_status(int fd) {
  * compute the content-lenth header value.
  */
 static int         get_headers_len(int fd) {
-    char   *headers = NULL;
-    size_t headers_len = 0;
+    char    *headers = NULL;
+    size_t  headers_len = 0;
+    int     status;
 
-    if (get_next(fd, &headers, "\r\n\r\n") == -1) {
+    if ((status = get_next(fd, &headers, "\r\n\r\n")) == -1) {
         throw std::logic_error("cgitohttp(): [1] : get_next failed");
     } else if (headers) {
-        headers_len += ft_strlen(headers) + ft_strlen("\r\n\r\n");
+        headers_len += ((status ?: 1) - 1) + ft_strlen("\r\n\r\n");
         free(headers);
     }
     return (headers_len);

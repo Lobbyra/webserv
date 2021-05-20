@@ -71,7 +71,7 @@ std::string    get_conf(const char *const path) {
     if ((fd = open(path, O_RDONLY)) < 0)
         throw std::logic_error("Cannot open config file");
 
-    while ((n = get_next_line(fd, &line)) == 1) {
+    while ((n = get_next_line(fd, &line)) >= 1) {
         add_content_to_str(res, line);
         free(line);
     }

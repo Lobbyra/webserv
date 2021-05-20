@@ -180,7 +180,7 @@ void    c_callback::_meth_cgi_save_client_in(void) {
         } else {
             buf_tmp = ft_strjoin(buf, "\r\n");
             free(buf);
-            if (write(_tmpfile->get_fd(), buf_tmp, ft_strlen(buf_tmp)) == -1) {
+            if (write(_tmpfile->get_fd(), buf_tmp, (status ?: 1) + 1) == -1) {
                 this->status_code = 500;
                 free(buf_tmp);
                 return ;
@@ -194,8 +194,8 @@ void    c_callback::_meth_cgi_save_client_in(void) {
         if (status == -1) {
             this->status_code = 500;
             return ;
-        } else if (status == 1) {
-            if (write(_tmpfile->get_fd(), buf, ft_strlen(buf)) == -1) {
+        } else if (status >= 1) {
+            if (write(_tmpfile->get_fd(), buf, status - 1) == -1) {
                 this->status_code = 500;
                 free(buf);
                 return ;

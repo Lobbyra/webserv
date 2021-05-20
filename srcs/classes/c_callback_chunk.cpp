@@ -25,6 +25,7 @@ void    c_callback::_chunk_reading_size(void) {
     if (g_verbose)
         std::cout << "TASK : _CHUNK_READING_SIZE" << std::endl;
     char *line;
+    int status;
 
     _chunk_size = 0;
     if (this->_tmpfile == NULL)
@@ -34,12 +35,13 @@ void    c_callback::_chunk_reading_size(void) {
         _it_recipes--;
         return ;
     }
-    if (get_next(this->client_fd, &line, "\r\n") == -1) { // Ending chunk miss
+    if ((status = get_next(this->client_fd, &line, "\r\n")) == -1) {
+        // Ending chunk miss
         std::cerr << "DEBUG: GNL CHUNK READING" << std::endl;
         this->status_code = 400;
         return ;
     }
-    if (is_str_hex(line) == false || ft_strlen(line) == 0) { // Bad size
+    if (is_str_hex(line) == false || status <= 1) { // Bad size
         status_code = 400;
         free(line);
         return ;
@@ -78,11 +80,11 @@ void    c_callback::_chunk_reading_chunk(void) {
     tmp_len = 0;
     buf = NULL;
     usleep(500);
-    if (get_next(this->client_fd, &buf, "\r\n") == -1) {
+    if ((bytes_read = get_next(this->client_fd, &buf, "\r\n")) == -1) {
         this->status_code = 400;
         return ;
     }
-    bytes_read = ft_strlen(buf);
+    bytes_read -= 1;
     if (bytes_read != _chunk_size) {
         std::cerr << \
         "ERROR : chunk_len != chunk gived" << bytes_read << std::endl;

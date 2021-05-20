@@ -38,9 +38,9 @@ void                    c_callback::_read_client_to_tmpfile(void){
     _tmpfile = new c_tmpfile();
     host = false;
     _write_request_line();
-    while ((status = get_next(client_fd, &line, "\r\n")) == 1) {
+    while ((status = get_next(client_fd, &line, "\r\n")) >= 1) {
         tmp = ft_strjoin(line, "\r\n");
-        write(_tmpfile->get_fd(), tmp, ft_strlen(tmp));
+        write(_tmpfile->get_fd(), tmp, status - 1 + 2);
         if (_host_exist(line) == true)
            host = true;
         free(tmp);
