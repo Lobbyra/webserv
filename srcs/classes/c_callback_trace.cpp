@@ -31,6 +31,11 @@ void                    c_callback::_read_client_to_tmpfile(void){
     int             status;
     bool            host;
 
+    if (*(this->is_read_ready) == false) {
+        _it_recipes--;
+        return ;
+    }
+    _tmpfile = new c_tmpfile();
     host = false;
     _write_request_line();
     while ((status = get_next(client_fd, &line, "\r\n")) == 1) {
@@ -49,13 +54,12 @@ void                    c_callback::_read_client_to_tmpfile(void){
     }
     this->path = _tmpfile->get_filename();
     this->_resp_body = true;
+    _continue();
 }
 
 std::list<c_callback::t_task_f>     c_callback::_init_recipe_trace(void) {
     std::list<t_task_f> tasks;
 
-    _tmpfile = new c_tmpfile();
-    tasks.push_back(&c_callback::_fd_is_ready_to_read);
     tasks.push_back(&c_callback::_read_client_to_tmpfile);
     tasks.push_back(&c_callback::_gen_resp_headers);
     tasks.push_back(&c_callback::_read_body);

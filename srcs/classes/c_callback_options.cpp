@@ -13,6 +13,7 @@ void                c_callback::_gen_resp_header_options(void) {
     str_methods.insert(0, "Allow: ");
     str_methods.insert(str_methods.length(), "\r\n");
     _resp_headers.insert(i, str_methods);
+    _continue();
 }
 
 

@@ -35,6 +35,7 @@ void                    c_callback::_gen_error_header_and_body(void) {
         _gen_resp_headers();
         this->_resp_body = true;
     }
+    _continue();
 }
 
 std::list<c_callback::t_task_f>        c_callback::_init_error_request(void) {
