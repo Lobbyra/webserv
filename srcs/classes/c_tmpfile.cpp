@@ -13,6 +13,7 @@ c_tmpfile::c_tmpfile(void) : _fd(-1) {
         c_tmpfile::_update_nextnameprefix();
     this->_filename = c_tmpfile::_get_next_name();
     this->_fd = open(_filename.c_str(), O_CREAT | O_TRUNC | O_RDWR, S_IRWXU);
+    fcntl(this->_fd, F_SETFL, O_NONBLOCK);
     if (errno != 0)
         ft_error("c_tmpfile: open");
 }

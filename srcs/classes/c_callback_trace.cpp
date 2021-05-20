@@ -15,6 +15,8 @@ static bool             _host_exist(char *line) {
 void                    c_callback::_write_request_line(void) {
     std::string tmp;
 
+    if (this->path == "")
+        this->path = "/";
     tmp = this->method + " " + this->path + " " + this->protocol + "\n";
     if (write(_tmpfile->get_fd(), tmp.c_str(), tmp.size()) < 1) {
         std::cerr << "Error: write() in _write_request_line()" << std::endl;
@@ -31,10 +33,8 @@ void                    c_callback::_read_client_to_tmpfile(void){
 
     host = false;
     _write_request_line();
-    while ((status = get_next_line(client_fd, &line)) == 1) {
-        if (line[0] == '\r')
-            break ;
-        tmp = ft_strjoin(line, "\n");
+    while ((status = get_next(client_fd, &line, "\r\n")) == 1) {
+        tmp = ft_strjoin(line, "\r\n");
         write(_tmpfile->get_fd(), tmp, ft_strlen(tmp));
         if (_host_exist(line) == true)
            host = true;
