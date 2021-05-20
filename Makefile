@@ -12,7 +12,7 @@ YELLOW = \033[93m
 NAME = webserv
 
 CC = clang++
-CFLAGS = -Wall -Wextra -std=c++98 -ferror-limit=2 -O3
+CFLAGS = -MMD -Wall -Wextra -std=c++98 -ferror-limit=2 -O3
 
 LIB_A	 = lib.a
 LIB_PATH = ./srcs/lib/
@@ -31,11 +31,9 @@ SRCS_PATH = ./srcs/
 
 ROOT_FILES  = main.cpp webserv.cpp init_clients.cpp ft_select.cpp \
 			  assign_server_to_clients.cpp
-ROOT_HEADER = webserv.hpp
 
 DATA_STRUCTURES_PATH  = data_structures/
 DATA_STRUCTURES_FILES = s_request_header.cpp s_ipport.cpp s_socket.cpp
-DATA_STRUCTURES_HEADERS = s_request_header.hpp s_ipport.hpp s_socket.hpp
 
 CLASSES_PATH	= classes/
 CLASSES_FILES	= c_task_queue.cpp c_callback.cpp c_location.cpp c_server.cpp \
@@ -45,8 +43,6 @@ CLASSES_FILES	= c_task_queue.cpp c_callback.cpp c_location.cpp c_server.cpp \
 				  c_callback_trace.cpp c_callback_chunk.cpp					\
 				  c_callback_get.cpp c_callback_cgi.cpp c_tmpfile.cpp		\
 				  c_callback_post.cpp
-CLASSES_HEADERS	= c_task_queue.hpp c_callback.hpp c_location.hpp c_server.hpp \
-				  c_tmpfile.hpp
 
 PARSE_FUNS_PATH	 = parse_funs/
 PARSE_FUNS_FILES = parse_autoindex.cpp parse_listen.cpp						  \
@@ -59,7 +55,6 @@ PARSE_CONF_PATH 	= parse_conf/
 PARSE_CONF_FILES	= ${addprefix ${PARSE_FUNS_PATH}, ${PARSE_FUNS_FILES}} \
 					  get_conf.cpp skip_param.cpp init_maps.cpp			   \
 				   	  check_key.cpp get_serv.cpp parse_conf.cpp
-PARSE_CONF_HEADER	= parse_conf.hpp
 
 PARSE_REQUEST_HEADER_PATH  = parse_request_header/
 PARSE_REQUEST_HEADER_FILES = read_request_header.cpp parse_request.cpp		  \
@@ -75,8 +70,6 @@ UTILS_FILES	 = get_keys.cpp is_space.cpp get_word_it.cpp skip_it.cpp		  \
 			   is_fd_ready.cpp hextodec.cpp gen_listening.cpp ft_basename.cpp \
 			   lststr_len.cpp ft_dirname.cpp cgitohttp.cpp
 
-UTILS_HEADER = utils.hpp insert_stream_cont.hpp
-
 SRCS_FILES = ${ROOT_FILES} \
 			 ${addprefix ${PARSE_CONF_PATH}, ${PARSE_CONF_FILES}} \
 			 ${addprefix ${UTILS_PATH}, ${UTILS_FILES}}	\
@@ -84,24 +77,16 @@ SRCS_FILES = ${ROOT_FILES} \
 			 $(addprefix ${CLASSES_PATH}, ${CLASSES_FILES}) \
 			 $(addprefix ${DATA_STRUCTURES_PATH}, ${DATA_STRUCTURES_FILES})
 
-HEADER_FILES = ${ROOT_HEADER} \
-			   ${addprefix ${PARSE_CONF_PATH}, ${PARSE_CONF_HEADER}} \
-			   ${addprefix ${UTILS_PATH}, ${UTILS_HEADER}} \
-			   ${addprefix ${PARSE_REQUEST_HEADER_PATH}, ${PARSE_REQUEST_HEADER_HEADER}} \
-			   ${addprefix ${CLASSES_PATH}, ${CLASSES_HEADERS}} \
-			   ${addprefix ${DATA_STRUCTURES_PATH}, ${DATA_STRUCTURES_HEADERS}}
-
-HEADER_FULL = ${addprefix ${SRCS_PATH}, ${HEADER_FILES}}
-
-OBJS_PATH  = ./obj/
-OBJS_PATHS = ${OBJS_PATH} \
+OBJS_PATH	= ./.objs/
+OBJS_PATHS	= ${OBJS_PATH} \
 			 ${OBJS_PATH}/${UTILS_PATH}							\
 			 ${OBJS_PATH}/${CLASSES_PATH}						\
 			 ${OBJS_PATH}/${PARSE_CONF_PATH}					\
 			 ${OBJS_PATH}/${PARSE_REQUEST_HEADER_PATH}			\
 			 ${OBJS_PATH}/${PARSE_CONF_PATH}/${PARSE_FUNS_PATH} \
 			 ${OBJS_PATH}/${DATA_STRUCTURES_PATH}
-OBJS	   = ${addprefix ${OBJS_PATH}, ${SRCS_FILES:.cpp=.o}}
+OBJS		= ${addprefix ${OBJS_PATH}, ${SRCS_FILES:.cpp=.o}}
+MMD_FILES	= ${OBJS:.o=.d}
 
 INCL_PATHS = ${SRCS_PATH}/. \
 			 ${LIB_PATH}										\
@@ -112,7 +97,6 @@ INCL_PATHS = ${SRCS_PATH}/. \
 			 ${SRCS_PATH}/${CLASSES_PATH}						\
 			 ${SRCS_PATH}/${DATA_STRUCTURES_PATH}
 
-
 INCL_FLAGS = ${addprefix -I, ${INCL_PATHS}}
 
 all:
@@ -122,11 +106,13 @@ all:
 	@echo " $(BOLD)with$(EOC) $(GREEN)$(CC)$(EOC) $(CYAN)$(CFLAGS)$(EOC): "
 	@make ${NAME} -j
 
-$(NAME): ${LIBS} ${OBJS_PATHS} ${OBJS} ${HEADER_FULL} ${SERVER}
+-include ${MMD_FILES}
+
+$(NAME): ${LIBS} ${OBJS} ${SERVER} | ${OBJS_PATHS}
 	@echo ""
 	@${CC} ${CFLAGS} ${INCL_FLAGS} -o ${NAME} ${OBJS} ${LIBS}
 
-test: ${LIBS} ${OBJS_PATHS} ${OBJS} ${HEADER_FULL}
+test: ${LIBS} ${OBJS} | ${OBJS_PATHS}
 	@echo ""
 	@printf "$(BOLD)Make $(RED)$@$(EOC)"
 	@echo " $(BOLD)with$(EOC) $(GREEN)$(CC)$(EOC) $(CYAN)$(CFLAGS)$(EOC): "
@@ -136,7 +122,7 @@ test: ${LIBS} ${OBJS_PATHS} ${OBJS} ${HEADER_FULL}
 ${OBJS_PATHS}:
 	@mkdir -p $@
 
-${OBJS_PATH}%.o: ${SRCS_PATH}%.cpp ${HEADER_FULL}
+${OBJS_PATH}%.o: ${SRCS_PATH}%.cpp | ${OBJS_PATHS}
 	@${CC} ${CFLAGS} ${INCL_FLAGS} -c $< -o $@
 	@printf "$(YELLOW)▓$(EOC)"
 
