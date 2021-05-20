@@ -25,6 +25,8 @@ ifeq ($(f), f)
 endif
 
 SERVER = /tmp/www
+PREREQUISITE_FILE = .prerequisite
+PREREQUISITE_SCRIPT = .prerequisite.sh
 
 SRCS_PATH = ./srcs/
 
@@ -114,7 +116,7 @@ INCL_PATHS = ${SRCS_PATH}/. \
 
 INCL_FLAGS = ${addprefix -I, ${INCL_PATHS}}
 
-all:
+all: ${PREREQUISITE_FILE}
 	@make f="$f" -C ${LIB_PATH}
 	@printf "$(BOLD)Make $(RED)$(NAME)$(EOC)"
 	@echo " $(BOLD)with$(EOC) $(GREEN)$(CC)$(EOC) $(CYAN)$(CFLAGS)$(EOC): "
@@ -144,6 +146,9 @@ ${LIB_PATH}${LIB_A}:
 ${SERVER}:
 	@cp -rf ./tools/docker_nginx/www $@
 	@$@/run.sh $@
+
+${PREREQUISITE_FILE}:
+	@./${PREREQUISITE_SCRIPT}
 
 clean:
 	@make -C ${LIB_PATH} fclean
