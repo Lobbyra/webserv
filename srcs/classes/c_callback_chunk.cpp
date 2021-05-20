@@ -39,12 +39,13 @@ void    c_callback::_chunk_reading_size(void) {
         this->status_code = 400;
         return ;
     }
-    if (is_str_hex(line) == false) { // Non hexad chunk size
+    if (is_str_hex(line) == false || ft_strlen(line) == 0) { // Bad size
         status_code = 400;
         free(line);
         return ;
     }
     _chunk_size = hextodec(line);
+    std::cout << "_chunk_size = " << _chunk_size << std::endl;
     if (_chunk_size == 0) {
         if (client_max_body_size != -1 &&
                 _tmpfile->get_size() > (size_t)client_max_body_size) {
