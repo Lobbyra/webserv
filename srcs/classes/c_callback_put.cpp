@@ -36,6 +36,11 @@ void        c_callback::_meth_put_open_fd(void) {
     }
 }
 
+/* _METH_PUT_CHOOSE_IN
+ * This function will set which file descriptor in to take as input to write
+ * data in the targeted file. Input file can be chunked request in a tmpfile
+ * or a directly the client_fd body.
+ */
 void    c_callback::_meth_put_choose_in(void) {
     if (g_verbose)
         std::cout << "TASK : _meth_put_choose_in()" << std::endl;
@@ -62,7 +67,7 @@ void    c_callback::_meth_put_write_body(void) {
             --_it_recipes;
             return ;
         }
-    } else {                                        // [IN]  Client ready?
+    } else {                            // [END] End condition for client_fd
         if (*this->is_read_ready == false &&
                 get_next(client_fd, NULL, "\r\n", GNL_HAS_LINE) == false) {
             // --_it_recipes;
@@ -106,7 +111,7 @@ void    c_callback::_meth_put_write_body(void) {
             return ;
         }
     }
-    if (bytes_read == 0 && transfer_encoding == "chunked") { // [END]
+    if (bytes_read == 0 && transfer_encoding == "chunked") { // [END] chunked
         delete _tmpfile;
         _tmpfile = NULL;
     }

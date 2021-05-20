@@ -158,7 +158,8 @@ void    c_callback::_meth_cgi_init_http(void) {
 }
 
 void    c_callback::_meth_cgi_save_client_in(void) {
-    std::cout << "TASK : _meth_cgi_save_client_in" << std::endl;
+    if (g_verbose)
+        std::cout << "TASK : _meth_cgi_save_client_in" << std::endl;
     int  status;
     char *buf = NULL;
     char *buf_tmp = NULL;
@@ -302,7 +303,8 @@ void    c_callback::_meth_cgi_wait(void) {
 }
 
 void    c_callback::_meth_cgi_send_http(void) {
-    std::cout << "TASK : _meth_cgi_send_http" << std::endl;
+    if (g_verbose)
+        std::cout << "TASK : _meth_cgi_send_http" << std::endl;
     char *http_content = NULL;
 
     if (*this->is_write_ready == false ||
@@ -329,7 +331,8 @@ void    c_callback::_meth_cgi_send_http(void) {
 void    c_callback::_meth_cgi_send_resp(void) {
     if (g_verbose)
         std::cout << "TASK : _meth_cgi_send_resp" << std::endl;
-    int    buf_size;
+    int     buf_size;
+    ssize_t bytes_send;
     char   buf[4096];
 
     if (_out_tmpfile->is_read_ready() == false ||
@@ -341,10 +344,11 @@ void    c_callback::_meth_cgi_send_resp(void) {
         this->status_code = 500;
         return ;
     }
-    if (send(this->client_fd, buf, buf_size, 0) == -1) {
+    if ((bytes_send = send(this->client_fd, buf, buf_size, 0)) == -1) {
         this->status_code = 500;
         return ;
     }
+    usleep(100); // This stabilize read and send return (IDK why)
     if (buf_size > 0) { // Is still content to read?
         --_it_recipes;
         return ;
