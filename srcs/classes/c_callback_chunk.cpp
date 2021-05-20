@@ -50,6 +50,8 @@ void    c_callback::_chunk_reading_size(void) {
         if (client_max_body_size != -1 &&
                 _tmpfile->get_size() > (size_t)client_max_body_size) {
             status_code = 413;
+            if (line)
+                free(line);
             return ;
         }
         _tmpfile->reset_cursor();
@@ -86,12 +88,14 @@ void    c_callback::_chunk_reading_chunk(void) {
         std::cerr << \
         "ERROR : chunk_len != chunk gived" << bytes_read << std::endl;
         this->status_code = 400;
+        free(buf);
         return ;
     }
     if (write(_tmpfile->get_fd(), buf, bytes_read) < 1) {
         this->status_code = 400;
         return ;
     }
+    free(buf);
     --_it_recipes;
     --_it_recipes; // Go to chunk read size
 }
