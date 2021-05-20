@@ -207,6 +207,7 @@ void    c_callback::_meth_cgi_save_client_in(void) {
             status_code = 413;
             return ;
         }
+        _tmpfile->reset_cursor();
     }
     return ;
 }
@@ -321,6 +322,7 @@ void    c_callback::_meth_cgi_send_http(void) {
         }
         free(http_content);
     }
+    _out_tmpfile->reset_cursor();
     return ;
 }
 
