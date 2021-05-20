@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_memset.c                                        :+:      :+:    :+:   */
+/*   ft_memset.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mli <marvin@42.fr>                         +#+  +:+       +#+        */
+/*   By: mli <mli@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/07 12:04:54 by mli               #+#    #+#             */
-/*   Updated: 2019/10/08 16:09:37 by mli              ###   ########.fr       */
+/*   Updated: 2021/05/20 16:55:24 by mli              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,11 @@
 
 void	*ft_memset(void *b, int c, size_t len)
 {
-	size_t			i;
-	unsigned char	*dest;
-	unsigned char	src;
+	unsigned char				*dest = (unsigned char *)b;
+	unsigned char const *const	end = dest + len;
+	const unsigned char			src = c;
 
-	i = 0;
-	dest = (unsigned char *)b;
-	src = (unsigned char)c;
-	while (i < len)
-		dest[i++] = src;
+	while (dest != end)
+		*dest++ = src;
 	return (b);
 }
