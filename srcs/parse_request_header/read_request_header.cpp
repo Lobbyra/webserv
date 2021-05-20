@@ -11,7 +11,8 @@ static void         parse_req_line(int client_fd,
     usleep(1000);
     errno = 0;
     status = get_next(client_fd, &buf, "\r\n");
-    // std::cout << "status: " << status << " errno: " << strerror(errno) << std::endl;
+    if (errno != 0)
+        std::cout << "status: " << status << " errno: " << strerror(errno) << std::endl;
     if (status == 0) {
         throw std::exception();
         free(buf);
