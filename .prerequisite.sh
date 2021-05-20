@@ -1,8 +1,6 @@
-PREREQUISITE_FILE=.prerequisite
-PREREQUISITE_SCRIPT=.prerequisite.sh
-CONFIG_PATH=./config_files
+#!/usr/bin/env bash
 
-touch $PREREQUISITE_FILE
+CONFIG_PATH=./config_files
 
 if [ "$OSTYPE" = "linux-gnu" ]; then
 	function sedreplace () {
