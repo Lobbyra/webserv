@@ -65,6 +65,8 @@ s_request_header    read_request_header(int client_fd) {
     }
     if (line != NULL)
         free(line);
+    if (request.content_length != "" && request.transfer_encoding != "")
+        request.error = 400;
     return (request);
 }
 

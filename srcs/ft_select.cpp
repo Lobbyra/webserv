@@ -95,6 +95,7 @@ void    ft_select(t_socketlst *const clients) {
         nclient.client_fd = accept(nclient.entry_socket, \
                             &nclient.client_addr, &socklen);
         nclient.is_read_ready = false;
+        nclient.is_write_ready = false;
         if (errno != 0)
             ft_error("accept");
         fcntl(nclient.client_fd, F_SETFL, O_NONBLOCK);
