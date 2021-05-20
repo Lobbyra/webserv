@@ -12,7 +12,7 @@ CYAN = \033[96m
 NAME = lib.a
 
 CC = clang++
-CFLAGS = -Wall -Wextra -Werror -std=c++98
+CFLAGS = -MMD -Wall -Wextra -Werror -std=c++98
 
 ifeq ($(f), f)
 	CFLAGS += -fsanitize=address -g3
@@ -47,20 +47,23 @@ OBJS_PATHS = ${OBJS_PATH} \
 			 ${OBJS_PATH}/${LIBFT_PATH} \
 			 ${OBJS_PATH}/${GNL_PATH}
 OBJS = ${addprefix ${OBJS_PATH}, ${SRCS_FILES:.cpp=.o}}
+MMD_FILES = ${OBJS:.o=.d}
 
 all:
 	@printf "$(BOLD)Make $(RED)$(NAME)$(EOC)"
 	@echo " $(BOLD)with$(EOC) $(GREEN)$(CC)$(EOC) $(CYAN)$(CFLAGS)$(EOC): "
 	@make ${NAME} -j
 
-$(NAME): ${OBJS_PATHS} ${OBJS} ${HEADER_FILES}
+-include ${MMD_FILES}
+
+$(NAME): ${OBJS} | ${OBJS_PATHS}
 	@echo ""
 	@ar rcs ${NAME} ${OBJS}
 
 ${OBJS_PATHS}:
 	@mkdir -p $@
 
-${OBJS_PATH}%.o: %.cpp ${HEADER_FILES}
+${OBJS_PATH}%.o: %.cpp | ${OBJS_PATHS}
 	@${CC} ${CFLAGS} -c $< -o $@
 	@printf "$(YELLOW)▓$(EOC)"
 
