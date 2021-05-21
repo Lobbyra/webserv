@@ -19,7 +19,6 @@ LIB_PATH = ./srcs/lib/
 
 LIBS = ${addprefix ${LIB_PATH}, ${LIB_A}}
 
-f=f
 ifeq ($(f), f)
 	CFLAGS += -fsanitize=address -g3
 endif
@@ -61,6 +60,9 @@ PARSE_REQUEST_HEADER_FILES = read_request_header.cpp parse_request.cpp		  \
 							 parse_request_line.cpp  parse_request_header.cpp \
 							 init_maps.cpp
 
+READ_HEADERS_PATH  = read_headers/
+READ_HEADERS_FILES = cut_buffer.cpp cut_buffer_ret.cpp find_str_buffer.cpp
+
 UTILS_PATH	 = utils/
 UTILS_FILES	 = get_keys.cpp is_space.cpp get_word_it.cpp skip_it.cpp		  \
 			   is_str_num.cpp ft_isin.cpp ft_error.cpp get_word.cpp			  \
@@ -70,12 +72,13 @@ UTILS_FILES	 = get_keys.cpp is_space.cpp get_word_it.cpp skip_it.cpp		  \
 			   is_fd_ready.cpp hextodec.cpp gen_listening.cpp ft_basename.cpp \
 			   lststr_len.cpp ft_dirname.cpp cgitohttp.cpp
 
-SRCS_FILES = ${ROOT_FILES} \
-			 ${addprefix ${PARSE_CONF_PATH}, ${PARSE_CONF_FILES}} \
-			 ${addprefix ${UTILS_PATH}, ${UTILS_FILES}}	\
+SRCS_FILES = ${ROOT_FILES}															  \
+			 ${addprefix ${PARSE_CONF_PATH}, ${PARSE_CONF_FILES}}					  \
+			 ${addprefix ${UTILS_PATH}, ${UTILS_FILES}}								  \
 			 $(addprefix ${PARSE_REQUEST_HEADER_PATH}, ${PARSE_REQUEST_HEADER_FILES}) \
-			 $(addprefix ${CLASSES_PATH}, ${CLASSES_FILES}) \
-			 $(addprefix ${DATA_STRUCTURES_PATH}, ${DATA_STRUCTURES_FILES})
+			 $(addprefix ${CLASSES_PATH}, ${CLASSES_FILES})							  \
+			 $(addprefix ${DATA_STRUCTURES_PATH}, ${DATA_STRUCTURES_FILES})			  \
+			 $(addprefix ${READ_HEADERS_PATH}, ${READ_HEADERS_FILES})
 
 OBJS_PATH	= ./.objs/
 OBJS_PATHS	= ${OBJS_PATH} \
@@ -84,7 +87,8 @@ OBJS_PATHS	= ${OBJS_PATH} \
 			 ${OBJS_PATH}/${PARSE_CONF_PATH}					\
 			 ${OBJS_PATH}/${PARSE_REQUEST_HEADER_PATH}			\
 			 ${OBJS_PATH}/${PARSE_CONF_PATH}/${PARSE_FUNS_PATH} \
-			 ${OBJS_PATH}/${DATA_STRUCTURES_PATH}
+			 ${OBJS_PATH}/${DATA_STRUCTURES_PATH}				\
+			 ${OBJS_PATH}/${READ_HEADERS_PATH}
 OBJS		= ${addprefix ${OBJS_PATH}, ${SRCS_FILES:.cpp=.o}}
 MMD_FILES	= ${OBJS:.o=.d}
 
@@ -95,12 +99,14 @@ INCL_PATHS = ${SRCS_PATH}/. \
 			 ${SRCS_PATH}/${UTILS_PATH}							\
 			 ${SRCS_PATH}/${PARSE_REQUEST_HEADER_PATH}			\
 			 ${SRCS_PATH}/${CLASSES_PATH}						\
-			 ${SRCS_PATH}/${DATA_STRUCTURES_PATH}
+			 ${SRCS_PATH}/${DATA_STRUCTURES_PATH}				\
+			 ${SRCS_PATH}/${READ_HEADERS_PATH}
 
 INCL_FLAGS = ${addprefix -I, ${INCL_PATHS}}
 
 all:
 	@./${PREREQUISITE_SCRIPT}
+	@echo "👷 : If you want sanitize add f=f !"
 	@make f="$f" -C ${LIB_PATH}
 	@printf "$(BOLD)Make $(RED)$(NAME)$(EOC)"
 	@echo " $(BOLD)with$(EOC) $(GREEN)$(CC)$(EOC) $(CYAN)$(CFLAGS)$(EOC): "
@@ -114,6 +120,7 @@ $(NAME): ${LIBS} ${OBJS} ${SERVER} | ${OBJS_PATHS}
 
 test: ${LIBS} ${OBJS} | ${OBJS_PATHS}
 	@echo ""
+	@echo "👷 : If you want sanitize add f=f !"
 	@printf "$(BOLD)Make $(RED)$@$(EOC)"
 	@echo " $(BOLD)with$(EOC) $(GREEN)$(CC)$(EOC) $(CYAN)$(CFLAGS)$(EOC): "
 	@$(eval TMP := $(shell ls ${OBJS} | grep -v "main.o"))
