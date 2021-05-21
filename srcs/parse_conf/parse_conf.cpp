@@ -1,11 +1,26 @@
 #include "parse_conf.hpp"
 
+static void     check_incorrect_config(std::list<c_server> const &servers) {
+    std::list<c_server>::const_iterator it, it2, ite;
+
+    it = servers.begin();
+    ite = servers.end();
+    for (; it != ite; ++it) {
+        it2 = it;
+        for (++it2; it2 != ite; ++it2) {
+            if (it->listen.port == it2->listen.port \
+                && it->server_name == it2->server_name)
+                throw std::logic_error("Same port and server name forbidden");
+        }
+    }
+}
+
 /*
  * This function will return a list of server blocks from the config file in
  * string in parameter.
- * 
+ *
  * This function is designed to be in a try-catch from parent code.
- * 
+ *
  * If a parsing on a key, a key is missing or if the parsing of a key isn't
  * correct (like index    ; -> value missing).
  */
@@ -42,6 +57,7 @@ std::list<c_server>     parse_conf(std::string path) {
         skip_server(it, conf.end());
         ++server_id;
     }
+    check_incorrect_config(servers);
     return (servers);
 }
 
