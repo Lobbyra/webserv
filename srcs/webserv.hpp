@@ -15,7 +15,7 @@
 
 void    webserv(std::list<c_server> const &conf);
 
-void    ft_select(t_socketlst *const clients);
+bool    ft_select(t_socketlst *const clients);
 
 t_socketlst             init_clients(std::list<c_server> const &conf);
 

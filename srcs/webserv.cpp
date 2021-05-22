@@ -23,30 +23,21 @@ static void set_reuse_port(t_socketlst const *const lst) {
     }
 }
 
-static bool is_client_ready(t_socketlst const *const clients) {
-    t_socketlst::const_iterator it = clients->begin(), ite = clients->end();
-
-    for (; it != ite; ++it) {
-        if (it->is_read_ready == true && it->is_header_read == false)
-            return (true);
-    }
-    return (false);
-}
-
 void    webserv(std::list<c_server> const &conf) {
     t_socketlst                 *clients = new t_socketlst;
     std::list<s_request_header> requests;
     c_task_queue                task_queue;
+    bool                        has_new_header_ready;
 
     *clients = init_clients(conf);
     task_queue.set_clients(clients);
     while (g_run) {
-        ft_select(clients);
+        has_new_header_ready = ft_select(clients);
         if (g_verbose && clients->size() > 1)
             std::cout << *clients << std::endl;
         if (g_run == false)
             break ;
-        if (is_client_ready(clients) == true) {
+        if (has_new_header_ready) {
             if (g_verbose)
                 std::cout << "WEBSERV_CPP : IS_CLIENT_READY" << std::endl;
             requests = parse_request(clients);
