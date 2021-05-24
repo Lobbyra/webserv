@@ -24,25 +24,43 @@ static void set_reuse_port(t_socketlst const *const lst) {
 }
 
 void    webserv(std::list<c_server> const &conf) {
-    t_socketlst                 *clients = new t_socketlst;
-    std::list<s_request_header> requests;
-    c_task_queue                task_queue;
+    bool                        is_new_request;
     bool                        has_new_header_ready;
+    t_socketlst                 *clients;
+    c_task_queue                task_queue;
+    std::list<s_request_header> requests;
 
+    is_new_request = false;
+    has_new_header_ready = false;
+    clients = new t_socketlst;
     *clients = init_clients(conf);
     task_queue.set_clients(clients);
     while (g_run) {
         has_new_header_ready = ft_select(clients);
+        std::cout << "1" << std::endl;
         if (g_verbose && clients->size() > 1)
             std::cout << *clients << std::endl;
         if (g_run == false)
             break ;
-        if (has_new_header_ready) {
-            if (g_verbose)
-                std::cout << "WEBSERV_CPP : IS_CLIENT_READY" << std::endl;
-            requests = parse_request(clients);
-            assign_server_to_clients(conf, clients, requests);
-            task_queue.push(requests, clients);
+        if (has_new_header_ready == true) {
+            std::cout << "2" << std::endl;
+            is_new_request = read_headers(clients);
+            std::cout << "3" << std::endl;
+            has_new_header_ready = false;
+        }
+        if (is_new_request == true) {
+            for (std::list<s_socket>::iterator it = clients->begin();
+                    it != clients->end(); ++it) {
+                if (it->is_header_read == true) {
+                    std::cout << it->headers << std::endl;
+                }
+            }
+            std::cout << "4" << std::endl;
+            assign_server_to_clients(conf, clients);
+            std::cout << "5" << std::endl;
+            task_queue.push(clients);
+            std::cout << "6" << std::endl;
+            is_new_request = false;
         }
         else
             task_queue.exec_task();

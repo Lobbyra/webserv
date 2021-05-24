@@ -62,7 +62,9 @@ PARSE_REQUEST_HEADER_FILES = read_request_header.cpp parse_request.cpp		  \
 
 READ_HEADERS_PATH  = read_headers/
 READ_HEADERS_FILES = cut_buffer.cpp cut_buffer_ret.cpp find_str_buffer.cpp \
-					 flush_crlf.cpp is_sep_header.cpp get_header.cpp
+					 flush_crlf.cpp is_sep_header.cpp get_header.cpp	   \
+					 parse_header.cpp parse_header_functions.cpp		   \
+					 parse_status_line.cpp read_headers.cpp init_maps.cpp
 
 UTILS_PATH	 = utils/
 UTILS_FILES	 = get_keys.cpp is_space.cpp get_word_it.cpp skip_it.cpp		  \
@@ -76,7 +78,6 @@ UTILS_FILES	 = get_keys.cpp is_space.cpp get_word_it.cpp skip_it.cpp		  \
 SRCS_FILES = ${ROOT_FILES}															  \
 			 ${addprefix ${PARSE_CONF_PATH}, ${PARSE_CONF_FILES}}					  \
 			 ${addprefix ${UTILS_PATH}, ${UTILS_FILES}}								  \
-			 $(addprefix ${PARSE_REQUEST_HEADER_PATH}, ${PARSE_REQUEST_HEADER_FILES}) \
 			 $(addprefix ${CLASSES_PATH}, ${CLASSES_FILES})							  \
 			 $(addprefix ${DATA_STRUCTURES_PATH}, ${DATA_STRUCTURES_FILES})			  \
 			 $(addprefix ${READ_HEADERS_PATH}, ${READ_HEADERS_FILES})
@@ -86,7 +87,6 @@ OBJS_PATHS	= ${OBJS_PATH} \
 			 ${OBJS_PATH}/${UTILS_PATH}							\
 			 ${OBJS_PATH}/${CLASSES_PATH}						\
 			 ${OBJS_PATH}/${PARSE_CONF_PATH}					\
-			 ${OBJS_PATH}/${PARSE_REQUEST_HEADER_PATH}			\
 			 ${OBJS_PATH}/${PARSE_CONF_PATH}/${PARSE_FUNS_PATH} \
 			 ${OBJS_PATH}/${DATA_STRUCTURES_PATH}				\
 			 ${OBJS_PATH}/${READ_HEADERS_PATH}
@@ -96,7 +96,6 @@ MMD_FILES	= ${OBJS:.o=.d}
 INCL_PATHS = ${SRCS_PATH}/. \
 			 ${LIB_PATH}										\
 			 ${SRCS_PATH}/${PARSE_CONF_PATH}					\
-			 ${SRCS_PATH}/${PARSE_CONF_PATH}/${PARSE_FUNS_PATH} \
 			 ${SRCS_PATH}/${UTILS_PATH}							\
 			 ${SRCS_PATH}/${PARSE_REQUEST_HEADER_PATH}			\
 			 ${SRCS_PATH}/${CLASSES_PATH}						\

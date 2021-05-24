@@ -2,18 +2,17 @@
 #include "colors.hpp"
 
 std::ostream    &operator<<(std::ostream &o, s_socket const &i) {
-    o << "{";
-
-    o << COLOR_WHITE_("entry_socket") << " = " << i.entry_socket;
-    o << COLOR_WHITE_(", client_fd") << " = " << i.client_fd;
-    o << COLOR_WHITE_(", is_read_ready") << " = " << \
-        std::boolalpha << COLOR_BOOL_(i.is_read_ready);
-    o << COLOR_WHITE_(", is_write_ready") << " = " << \
-        std::boolalpha << COLOR_BOOL_(i.is_write_ready);
-    o << COLOR_WHITE_(", is_header_read") << " = " << \
-        std::boolalpha << COLOR_BOOL_(i.is_header_read);
-
-    o << "}" << std::endl;
+    o << "{" <<                                                       \
+    COLOR_WHITE_("entry_socket") << " = " << i.entry_socket <<        \
+    COLOR_WHITE_(", client_fd") << " = " << i.client_fd << std::endl;
+    o <<                                                   \
+    COLOR_WHITE_(" is_read_ready") << " = " <<             \
+        std::boolalpha << COLOR_BOOL_(i.is_read_ready) <<  \
+    COLOR_WHITE_(", is_write_ready") << " = " <<           \
+        std::boolalpha << COLOR_BOOL_(i.is_write_ready) << \
+    COLOR_WHITE_(", is_header_read") << " = " <<           \
+        std::boolalpha << COLOR_BOOL_(i.is_header_read) << \
+    "}" << std::endl;
     return (o);
 }
 

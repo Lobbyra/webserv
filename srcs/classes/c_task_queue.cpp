@@ -54,24 +54,20 @@ void    c_task_queue::exec_task(void) {
 }
 
 // Add a new request in c_callback form in the queue
-void    c_task_queue::push(std::list<s_request_header> &requests,
-                           std::list<s_socket> *clients) {
-    c_callback *cb_temp;
+void    c_task_queue::push(std::list<s_socket> *clients) {
+    c_callback *cb_temp = NULL;
     std::list<s_socket>::iterator it_clients = clients->begin();
     std::list<s_socket>::iterator ite_clients = clients->end();
-    std::list<s_request_header>::iterator it_requests = requests.begin();
-    std::list<s_request_header>::iterator ite_requests = requests.end();
 
-    while (it_clients != ite_clients && it_requests != ite_requests) {
-        if (it_clients->server == NULL || it_clients->is_header_read) {
+    while (it_clients != ite_clients) {
+        if (it_clients->server == NULL || it_clients->is_callback_created) {
             ++it_clients;
             continue ;
         }
-        cb_temp = new c_callback(&(*it_clients), *it_requests, clients);
-        it_clients->is_header_read = true;
+        cb_temp = new c_callback(&(*it_clients), it_clients->headers, clients);
+        it_clients->is_callback_created = true;
         _tasks.push(cb_temp);
         ++it_clients;
-        ++it_requests;
     }
 }
 

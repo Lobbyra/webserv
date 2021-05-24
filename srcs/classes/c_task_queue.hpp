@@ -19,8 +19,7 @@ class    c_task_queue {
     virtual ~c_task_queue();
 
     void    exec_task(void);
-    void    push(std::list<s_request_header> &requests,
-                 std::list<s_socket> *clients);
+    void    push(std::list<s_socket> *clients);
 
     void    set_clients(std::list<s_socket> *clients);
 

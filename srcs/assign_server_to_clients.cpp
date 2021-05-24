@@ -28,6 +28,7 @@ static c_server const *get_right_conf(std::list<c_server> const &conf,
     std::list<c_server>::const_reverse_iterator right_conf;
 
     for (; it_conf != ite_conf; ++it_conf) {
+        std::cout << "coucou" << std::endl;
         if (*ipport != it_conf->listen)
             continue ;
         right_conf = it_conf;
@@ -38,13 +39,18 @@ static c_server const *get_right_conf(std::list<c_server> const &conf,
 }
 
 void    assign_server_to_clients(std::list<c_server> const &conf,
-        t_socketlst *const clients, std::list<s_request_header> const &reqs) {
-    t_socketlst::iterator it_c = clients->begin(), ite_c = clients->end();
-    std::list<s_request_header>::const_iterator it_r = reqs.begin();
+                                 t_socketlst *const clients) {
+    std::list<s_socket>::iterator it_clients = clients->begin();
+    std::list<s_socket>::iterator ite_clients = clients->end();
 
-    for (; it_c != ite_c; ++it_c) {
-        if (it_c->client_fd == 0 || it_c->is_header_read)
-            continue ;
-        it_c->server = get_right_conf(conf, it_c->ipport, *it_r++);
+    while (it_clients != ite_clients) {
+        if (it_clients->client_fd == 0 ||
+                it_clients->is_callback_created == true) {
+            ++it_clients;
+            continue;
+        }
+        it_clients->server = get_right_conf(conf, it_clients->ipport,
+                                            it_clients->headers);
+        ++it_clients;
     }
 }

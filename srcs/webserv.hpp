@@ -13,6 +13,8 @@
 # include "our_typedefs.hpp"
 # include "s_request_header.hpp"
 
+bool    read_headers(std::list<s_socket> *clients);
+
 void    webserv(std::list<c_server> const &conf);
 
 bool    ft_select(t_socketlst *const clients);
@@ -22,6 +24,6 @@ t_socketlst             init_clients(std::list<c_server> const &conf);
 std::list<s_request_header>     parse_request(t_socketlst *const clients);
 
 void    assign_server_to_clients(std::list<c_server> const &conf, \
-    t_socketlst *const clients, std::list<s_request_header> const &reqs);
+                                 t_socketlst *const clients);
 
 #endif

@@ -35,26 +35,40 @@ static int  makeSocketfd(const int &port) {
 static s_socket makeSocket(const c_server *server) {
     s_socket newSocket;
 
-    ft_bzero(&newSocket, sizeof(newSocket));
+    newSocket.client_fd = 0;
+    newSocket.entry_socket = 0;
+    newSocket.is_read_ready = false;
+    newSocket.is_write_ready = false;
+    newSocket.is_callback_created = false;
+    newSocket.is_status_line_read = false;
+    newSocket.is_header_read = false;
+    ft_bzero(&newSocket.client_addr, sizeof(sockaddr));
+    newSocket.ipport = NULL;
+    newSocket.server = NULL;
+    newSocket.headers.error = 200;
+    newSocket.headers.content_length = 0;
     newSocket.entry_socket = makeSocketfd(server->listen.port);
     newSocket.ipport = &server->listen;
     return (newSocket);
 }
 
-t_socketlst     init_clients(std::list<c_server> const &conf) {
-    std::list<c_server>::const_iterator it = conf.begin(), ite = conf.end();
-    t_socketlst res;
+std::list<s_socket>     init_clients(std::list<c_server> const &conf) {
+    std::list<s_socket> res;
+    std::list<c_server>::const_iterator conf_it = conf.begin();
+    std::list<c_server>::const_iterator conf_ite = conf.end();
+    std::list<s_socket>::const_iterator sock_it;
+    std::list<s_socket>::const_iterator sock_ite;
 
-    for (; it != ite; ++it) {
-        if (it->listen.ip.empty())
+    for (; conf_it != conf_ite; ++conf_it) {
+        if (conf_it->listen.ip.empty())
             continue ;
-        t_socketlst::const_iterator sock_it = res.begin(), sock_ite = res.end();
-
-        while (sock_it != sock_ite && !(*sock_it->ipport == it->listen))
+        sock_it = res.begin();
+        sock_ite = res.end();
+        while (sock_it != sock_ite && !(*sock_it->ipport == conf_it->listen))
             ++sock_it;
-        if (sock_it != sock_ite)
+        if (sock_it != sock_ite) // Avoid duplicated sockets
             continue ;
-        res.push_back(makeSocket(&(*it)));
+        res.push_back(makeSocket(&(*conf_it)));
     }
     return (res);
 }

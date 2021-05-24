@@ -1,23 +1,28 @@
 #ifndef S_SOCKET_HPP
 # define S_SOCKET_HPP
 
-#include "s_ipport.hpp"
-#include "c_server.hpp"
-
 #include <iostream> // operator<<
 
 #include <sys/types.h> // sockaddr
 #include <sys/socket.h>
 
+#include "s_ipport.hpp"
+#include "c_server.hpp"
+#include "s_request_header.hpp"
+
 struct s_socket {
-    int             entry_socket;
-    s_ipport const  *ipport;
-    c_server const  *server;
-    int             client_fd;
-    sockaddr      client_addr;
-    bool            is_read_ready;
-    bool            is_write_ready;
-    bool            is_header_read;
+    int              client_fd;
+    int              entry_socket;
+    bool             is_read_ready;
+    bool             is_write_ready;
+    bool             is_header_read;
+    bool             is_status_line_read;
+    bool             is_callback_created;
+    sockaddr         client_addr;
+    s_ipport const   *ipport;
+    c_server const   *server;
+    s_request_header headers;
+    std::list<char*> buf_header;
 };
 
 std::ostream    &operator<<(std::ostream &o, s_socket const &i);

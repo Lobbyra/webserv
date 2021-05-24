@@ -10,8 +10,6 @@
  */
 #define CRLF "\r\n"
 
-#include <iostream>
-
 std::string get_header(std::list<char*> *buf_header,
                        bool is_status_line_read) {
     char         *str_tmp = NULL;
@@ -23,7 +21,6 @@ std::string get_header(std::list<char*> *buf_header,
     if (find_str_buffer(buf_header, CRLF) == 0)
         return ("");
     header_len = find_str_buffer(buf_header, CRLF);
-    std::cout << header_len << std::endl;
     str_tmp = cut_buffer_ret(buf_header, header_len);
     cut_buffer(buf_header, 2);
     final_header = str_tmp;
@@ -31,6 +28,7 @@ std::string get_header(std::list<char*> *buf_header,
     return (final_header);
 }
 
+/*
 #define IS_STATUS_LINE_READ false
 #include <iostream>
 #include "lib.hpp"
@@ -78,3 +76,4 @@ int         main(void) {
     }
     return (0);
 }
+*/
