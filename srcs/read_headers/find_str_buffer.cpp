@@ -7,16 +7,16 @@
 /* FIND_STR_BUFFER
  * This function return the number of chars between the start of the buffer and
  * the first char of to_find if it found in the buffer. If to_find is not found
- * in the buffer, this function return the length of the buffer.
+ * in the buffer, this function return 0.
  */
-unsigned int find_str_buffer(std::list<char*> *buffer, char *to_find) {
-    char         *i_to_find = NULL;
-    char         *i_buf_parts = NULL;
+unsigned int find_str_buffer(std::list<char*> *buffer, std::string to_find) {
+    char const   *i_to_find = NULL;
+    char const   *i_buf_parts = NULL;
     unsigned int final_len = 0;
     std::list<char*>::iterator it = buffer->begin();
     std::list<char*>::iterator ite = buffer->end();
 
-    i_to_find = to_find;
+    i_to_find = to_find.c_str();
     while (it != ite) {
         i_buf_parts = *it;
         while (*i_buf_parts) {
@@ -24,17 +24,17 @@ unsigned int find_str_buffer(std::list<char*> *buffer, char *to_find) {
                 ++i_to_find;
                 if (*i_to_find == '\0') {                     // Find exit case
                     ++final_len;
-                    return (final_len - ft_strlen(to_find));
+                    return (final_len - to_find.size());
                 }
-            } else if (i_to_find != to_find) {              // Find not complet
-                i_to_find = to_find;
+            } else if (i_to_find != to_find.c_str()) {      // Find not complet
+                i_to_find = to_find.c_str();
             }
             ++final_len;
             ++i_buf_parts;
         }
         ++it;
     }
-    return (final_len);
+    return (0);
 }
 
 /*
