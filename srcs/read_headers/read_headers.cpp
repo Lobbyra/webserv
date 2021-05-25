@@ -87,7 +87,8 @@ bool    read_headers(std::list<s_socket> *clients) {
             continue;
         }
         // PARSING INIT
-        it->is_header_read = is_sep_header(&it->buf_header);
+        it->is_header_read = is_sep_header(&it->buf_header,
+                                           it->is_status_line_read);
         is_one_req_ready |= it->is_header_read;
         header_to_parse = get_header(&it->buf_header, it->is_status_line_read);
         if (header_to_parse != "")

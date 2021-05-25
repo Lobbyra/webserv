@@ -1,12 +1,16 @@
 #include <list>
 #include <iostream>
 
-bool        is_sep_header(std::list<char*> *buffer) {
+#include "lib.hpp"
+
+bool        is_sep_header(std::list<char*> *buffer, bool is_status_line_read) {
     char *i_buf_parts = NULL;
     std::string crlf_save = "";
     std::list<char*>::iterator it = buffer->begin();
     std::list<char*>::iterator ite = buffer->end();
 
+    if (is_status_line_read == true && ft_strncmp(*it, "\r\n", 2) == 0)
+        return (true);
     while (it != ite && crlf_save != "\r\n\r\n") {
         i_buf_parts = *it;
         while (*i_buf_parts && crlf_save != "\r\n\r\n") {
