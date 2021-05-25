@@ -8,7 +8,6 @@
 
 extern bool g_verbose;
 
-
 /* REMOVE_CLIENT
  * This function will remove the client gived from the list of client cause of
  * EOF/connection closed or recv return an error.
@@ -16,8 +15,8 @@ extern bool g_verbose;
 static void remove_client(std::list<s_socket> *clients,
         std::list<s_socket>::iterator client, ssize_t bytes_read) {
     std::string closing_cause = "";
-    std::list<char*>::iterator it = client->buf_header.begin();
-    std::list<char*>::iterator ite = client->buf_header.end();
+    std::list<char*>::iterator it_buf = client->buf_header.begin();
+    std::list<char*>::iterator ite_buf = client->buf_header.end();
 
     if (g_verbose == true) {
         if (bytes_read == -1) {
@@ -30,9 +29,11 @@ static void remove_client(std::list<s_socket> *clients,
             closing_cause <<                                               \
         std::endl;
     }
-    while (it != ite) {
-        free(*it++);
+    while (it_buf != ite_buf) {
+        free(*it_buf);
+        client->buf_header.erase(it_buf++);
     }
+    close(client->client_fd);
     clients->erase(client);
     return ;
 }
@@ -43,7 +44,7 @@ static void remove_client(std::list<s_socket> *clients,
  * This function will read socket and save data read in the buffer header.
  * Return what recv return.
  */
-ssize_t     read_socket(std::list<char*> *buf_header, int client_fd) {
+static ssize_t     read_socket(std::list<char*> *buf_header, int client_fd) {
     char    *read_buffer = NULL;
     ssize_t bytes_read = 0;
 
@@ -51,7 +52,6 @@ ssize_t     read_socket(std::list<char*> *buf_header, int client_fd) {
         return (NULL);
     ft_bzero(read_buffer, BUFF_SIZE_SOCKET + 1);
     bytes_read = recv(client_fd, read_buffer, BUFF_SIZE_SOCKET, 0);
-    std::cout << read_buffer << std::endl;
     if (bytes_read > 0)
         buf_header->push_back(read_buffer);
     return (bytes_read);
@@ -93,6 +93,7 @@ bool    read_headers(std::list<s_socket> *clients) {
         if (header_to_parse != "")
             header_ptrs = init_header_ptrs(&(it->headers));
         // PARSING DATA RECIEVED
+        // TODO : put this loop in a static function parse_buffer().
         while (header_to_parse != "" && it->headers.error / 100 == 2) {
             it->headers.saved_headers.push_back(header_to_parse);
             if (it->is_status_line_read == false) { // Parse a status line

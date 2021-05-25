@@ -42,7 +42,7 @@ std::list<c_callback::t_task_f>        c_callback::_init_error_request(void) {
     std::list<t_task_f> tasks;
 
     tasks.push_back(&c_callback::_gen_error_header_and_body);
-    tasks.push_back(&c_callback::_read_body);
+//    tasks.push_back(&c_callback::_read_body);
     tasks.push_back(&c_callback::_send_respons);
     return (tasks);
 }

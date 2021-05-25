@@ -5,7 +5,7 @@ c_callback::c_callback(void) {
     return ;
 }
 
-c_callback::c_callback(s_socket *client, s_request_header request,
+c_callback::c_callback(s_socket *client, s_request_header *request,
                        std::list<s_socket> *clients) {
     this->_bytes_write = 0;
     this->_tmpfile = NULL;
@@ -40,13 +40,12 @@ c_callback::c_callback(s_socket *client, s_request_header request,
 // }
 
 c_callback::~c_callback(void) {
-    if (_tmpfile) {
+    if (_tmpfile != NULL) {
         delete _tmpfile;
         _tmpfile = NULL;
     }
     if (_fd_body != 0)
         close(_fd_body);
-    *this->is_header_read = false;
     return ;
 }
 
@@ -130,23 +129,23 @@ void    c_callback::_init_meth_functions(void) {
     _meth_funs["TRACE"] = _init_recipe_trace();
 }
 
-void    c_callback::_init_request_header(s_request_header request) {
-    this->method = request.method;
-    this->path = request.path;
-    this->protocol = request.protocol;
-    this->date = request.date;
-    this->host = request.host;
-    this->referer = request.referer;
-    this->transfer_encoding = request.transfer_encoding;
-    this->accept_charset = request.accept_charset;
-    this->accept_language = request.accept_language;
-    this->authorization = request.authorization;
-    this->content_type = request.content_type;
-    this->user_agent = request.user_agent;
-    this->content_length = request.content_length;
-    this->status_code = request.error;
+void    c_callback::_init_request_header(s_request_header *request) {
+    this->method = request->method;
+    this->path = request->path;
+    this->protocol = request->protocol;
+    this->date = request->date;
+    this->host = request->host;
+    this->referer = request->referer;
+    this->transfer_encoding = request->transfer_encoding;
+    this->accept_charset = request->accept_charset;
+    this->accept_language = request->accept_language;
+    this->authorization = request->authorization;
+    this->content_type = request->content_type;
+    this->user_agent = request->user_agent;
+    this->content_length = request->content_length;
+    this->status_code = request->error;
     this->_resp_body = false;
-    this->saved_headers = request.saved_headers;
+    this->saved_headers = request->saved_headers;
     return ;
 }
 

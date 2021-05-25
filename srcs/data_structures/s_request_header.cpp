@@ -34,4 +34,23 @@ std::ostream& operator<<(std::ostream& os, s_request_header const &src)
     if (src.saved_headers.size() > 0)
         os << "saved headers: " << src.saved_headers << std::endl;
     return os;
+}
+
+// This function reset a header given to default value of a header.
+void    reset_header(s_request_header *h) {
+    h->path = "";
+    h->date = "";
+    h->host = "";
+    h->error = 200;
+    h->method = "";
+    h->referer = "";
+    h->protocol = "";
+    h->content_length = 0;
+    h->user_agent.clear();
+    h->content_type.clear();
+    h->authorization.clear();
+    h->saved_headers.clear();
+    h->transfer_encoding = "";
+    h->accept_charset.clear();
+    h->accept_language.clear();
 };

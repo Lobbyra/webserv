@@ -13,11 +13,6 @@ c_task_queue::~c_task_queue() {
     return ;
 }
 
-// Flush data in a fd
-static void flush_fd(int fd) {
-    get_next(fd, NULL, NULL, GNL_FLUSH);
-}
-
 // This function will remove finished request from client list
 static void    remove_clients(std::list<s_socket> *clients, int client_fd) {
     std::list<s_socket>::iterator it  = clients->begin();
@@ -25,7 +20,7 @@ static void    remove_clients(std::list<s_socket> *clients, int client_fd) {
 
     while (it != ite) {
         if (it->client_fd == client_fd) {
-            flush_fd(client_fd);
+            reset_socket(&(*it));
             break ;
         }
         ++it;
@@ -60,13 +55,12 @@ void    c_task_queue::push(std::list<s_socket> *clients) {
     std::list<s_socket>::iterator ite_clients = clients->end();
 
     while (it_clients != ite_clients) {
-        if (it_clients->server == NULL || it_clients->is_callback_created) {
-            ++it_clients;
-            continue ;
+        if (it_clients->is_header_read && !it_clients->is_callback_created) {
+            cb_temp = new c_callback(&(*it_clients),
+                    &(it_clients->headers), clients);
+            it_clients->is_callback_created = true;
+            _tasks.push(cb_temp);
         }
-        cb_temp = new c_callback(&(*it_clients), it_clients->headers, clients);
-        it_clients->is_callback_created = true;
-        _tasks.push(cb_temp);
         ++it_clients;
     }
 }

@@ -22,6 +22,8 @@ struct s_request_header {
     std::list<std::string> saved_headers;
 };
 
+void    reset_header(s_request_header *h);
+
 std::ostream& operator<<(std::ostream& os, s_request_header const &src);
 
 #endif

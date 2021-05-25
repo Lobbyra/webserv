@@ -37,33 +37,28 @@ void    webserv(std::list<c_server> const &conf) {
     task_queue.set_clients(clients);
     while (g_run) {
         has_new_header_ready = ft_select(clients);
-        std::cout << "1" << std::endl;
         if (g_verbose && clients->size() > 1)
             std::cout << *clients << std::endl;
         if (g_run == false)
             break ;
         if (has_new_header_ready == true) {
-            std::cout << "2" << std::endl;
             is_new_request = read_headers(clients);
-            std::cout << "3" << std::endl;
             has_new_header_ready = false;
         }
         if (is_new_request == true) {
             for (std::list<s_socket>::iterator it = clients->begin();
                     it != clients->end(); ++it) {
-                if (it->is_header_read == true) {
-                    std::cout << it->headers << std::endl;
+                if (g_verbose == true && it->is_header_read == true &&
+                        it->is_callback_created == false) {
+                    std::cerr << "client : " << it->client_fd << std::endl;
+                    std::cerr << it->headers << std::endl;
                 }
             }
-            std::cout << "4" << std::endl;
             assign_server_to_clients(conf, clients);
-            std::cout << "5" << std::endl;
             task_queue.push(clients);
-            std::cout << "6" << std::endl;
             is_new_request = false;
         }
-        else
-            task_queue.exec_task();
+        task_queue.exec_task();
     }
     set_reuse_port(clients);
     delete clients;

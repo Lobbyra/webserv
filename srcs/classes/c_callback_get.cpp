@@ -65,7 +65,7 @@ std::list<c_callback::t_task_f>     c_callback::_init_recipe_get(void) {
 
     tasks.push_back(&c_callback::_meth_get_request_is_valid);
     tasks.push_back(&c_callback::_gen_resp_headers);
-    tasks.push_back(&c_callback::_read_body);
+//    tasks.push_back(&c_callback::_read_body);
     tasks.push_back(&c_callback::_send_respons);
     tasks.push_back(&c_callback::_send_respons_body);
     return tasks;

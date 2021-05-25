@@ -79,7 +79,6 @@ void    c_callback::_chunk_reading_chunk(void) {
     }
     tmp_len = 0;
     buf = NULL;
-    usleep(500);
     if ((bytes_read = get_next(this->client_fd, &buf, "\r\n")) == -1) {
         this->status_code = 400;
         return ;

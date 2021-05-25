@@ -8,7 +8,6 @@ static void         parse_req_line(int client_fd,
     int status;
     char *buf;
 
-    usleep(1000);
     errno = 0;
     status = get_next(client_fd, &buf, "\r\n");
     if (errno != 0)

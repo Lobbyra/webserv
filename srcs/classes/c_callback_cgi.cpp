@@ -348,7 +348,6 @@ void    c_callback::_meth_cgi_send_resp(void) {
         this->status_code = 500;
         return ;
     }
-    usleep(100); // This stabilize read and send return (IDK why)
     if (buf_size > 0) { // Is still content to read?
         --_it_recipes;
         return ;

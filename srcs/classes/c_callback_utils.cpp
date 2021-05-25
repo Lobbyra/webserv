@@ -107,7 +107,6 @@ void    c_callback::_gen_resp_headers(void) {
                                       _dir_listening_page.end());
     }
     _resp_headers = lststr_to_strcont(headers, "\r\n");
-    _continue();
 }
 
 /* FD_IS_READY_TO_READ()
@@ -151,8 +150,12 @@ void                    c_callback::_send_respons_body(void) {
         return ;
     }
     if (_fd_body == 0) {                      // Open requested file
+        errno = 0;
         _fd_body = open(this->path.c_str(), O_RDONLY);
         if (_fd_body == -1) {
+            std::cerr <<                                                  \
+                "ERR : _SEND_RESP_BODY : open() : " << strerror(errno) << \
+            std::endl;
             this->status_code = 500;
             --_it_recipes;
             return ;
@@ -165,7 +168,7 @@ void                    c_callback::_send_respons_body(void) {
     }
     ft_bzero(buf, BUFFER_READ);
     bytes_read = read(_fd_body, buf, BUFFER_READ);
-    if (bytes_read == 0 || bytes_read > 0) {
+    if (bytes_read > 0) {
         if ((ret = send(client_fd, buf, bytes_read, 0)) == -1) {
             std::cerr << "_send_respons_body : send() failed" << std::endl;
             this->status_code = 500;
@@ -180,8 +183,9 @@ void                    c_callback::_send_respons_body(void) {
         this->status_code = 500;
         --_it_recipes;
         return ;
+    } else if (bytes_read == 0) {
+        close(_fd_body);
     }
-    usleep(500);
     return ;
 }
 
@@ -202,7 +206,6 @@ void                    c_callback::_send_respons(void) {
         std::cerr << "Error: Respons to client" << std::endl;
         this->status_code = 500;
     }
-    usleep(500);
     // std::cout << "return header: " << ret << std::endl;
 }
 

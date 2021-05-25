@@ -25,6 +25,8 @@ struct s_socket {
     std::list<char*> buf_header;
 };
 
+void    reset_socket(s_socket *s);
+
 std::ostream    &operator<<(std::ostream &o, s_socket const &i);
 std::ostream    &operator<<(std::ostream& os, const std::list<s_socket>& v);
 

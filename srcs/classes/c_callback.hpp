@@ -43,7 +43,7 @@ public:
     // c_callback &operator=(c_callback const &src);
     virtual ~c_callback();
 
-    c_callback(s_socket *client, s_request_header request,
+    c_callback(s_socket *client, s_request_header *request,
                std::list<s_socket> *clients);
 
     //s_socket
@@ -102,7 +102,7 @@ private:
     /* ATTRIBUT INIT
      * Function used in construction to init attributs
      */
-    void    _init_request_header(s_request_header request);
+    void    _init_request_header(s_request_header *request);
     void    _init_s_socket(s_socket *client);
     void    _init_server_hpp(c_server const *server);
     void    _server_init_route(std::list<c_location> location);
