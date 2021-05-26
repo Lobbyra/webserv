@@ -62,6 +62,8 @@ void    c_callback::_meth_put_write_body(void) {
     char *buf;
 
     buf = NULL;
+
+    concate_list_str(this->client_buffer);
     if (this->transfer_encoding == "chunked") {     // [IN]  Tmpfile ready?
         if (_tmpfile->is_read_ready() == false) {
             --_it_recipes;

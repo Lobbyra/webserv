@@ -68,11 +68,11 @@ ${OBJS_PATH}%.o: %.cpp | ${OBJS_PATHS}
 	@printf "$(YELLOW)▓$(EOC)"
 
 clean:
-	@echo "$(BOLD)$(YELLOW)Remove objs lib|$(GREEN)| done$(EOC)"
+	@echo "$(BOLD)$(YELLOW)Remove objs lib |$(GREEN)| done$(EOC)"
 	@rm -rf ${OBJS_PATH}
 
 fclean: clean
-	@echo "$(BOLD)$(YELLOW)Remove all lib |$(GREEN)| done$(EOC)"
+	@echo "$(BOLD)$(YELLOW)Remove all lib  |$(GREEN)| done$(EOC)"
 	@rm -rf $(NAME)
 
 re: fclean all

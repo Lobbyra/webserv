@@ -34,6 +34,8 @@ bool    is_fd_write_ready(int fd);
 bool    is_str_num(std::string str);
 bool    ft_isin(const char &c, const std::string &str);
 
+char    *concate_list_str(std::list<char*> *buffer);
+
 /* ## ITERATOR FUNCTIONS */
 void    skip_it(std::string::const_iterator &it,
                 const std::string sep = whitespaces);
