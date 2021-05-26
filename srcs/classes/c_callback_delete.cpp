@@ -30,8 +30,8 @@ int                     c_callback::_remove_directory(const char *path)
     }
     while ((it_directory = readdir(curr_directory)))
     {
-        if (!strcmp(it_directory->d_name, ".") ||
-        !strcmp(it_directory->d_name, ".."))
+        if (!ft_strcmp(it_directory->d_name, ".") ||
+        !ft_strcmp(it_directory->d_name, ".."))
              continue;
         std::string new_path(path);
         new_path.push_back('/');

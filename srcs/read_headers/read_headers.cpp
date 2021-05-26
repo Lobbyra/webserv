@@ -74,6 +74,10 @@ static void parse_buffer(std::list<char*> *buffer, s_request_header *headers,
         if (*is_status_line_read == false) {            // Status line parsing
             parse_status_line(header_to_parse, &headers_ptrs);
             *is_status_line_read = true;
+            if (ft_strcmp(headers->method.c_str(), "TRACE") == 0) {
+                headers->host = "tmp";
+                return ;
+            }
         } else {                                        // Common head parsing
             if (parse_header(header_to_parse, &headers_ptrs, headers_parsers)
                     == 1) {                             // Double host error
@@ -120,7 +124,8 @@ bool    read_headers(std::list<s_socket> *clients) {
         // PARSING DATA RECIEVED
         parse_buffer(&(it->buf_header), &(it->headers), &headers_parsers,
                      &(it->is_status_line_read));
-        if (it->is_header_read == true) {
+        if (it->is_header_read == true &&
+            ft_strcmp(it->headers.method.c_str(), "TRACE") != 0) {
             cut_buffer(&(it->buf_header), 2);
         }
         if (it->headers.error / 100 != 2)          // Read finished if error

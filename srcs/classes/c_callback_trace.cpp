@@ -26,9 +26,8 @@ void                    c_callback::_write_request_line(void) {
 void                    c_callback::_read_client_to_tmpfile(void){
     if (g_verbose)
         std::cout << "TASK : _read_client_to_tmpfile()" << std::endl;
-    char            *line;
-    char            *tmp;
-    int             status;
+    char            *buf;
+    int             bytes_read;
     bool            host;
 
     if (*(this->is_read_ready) == false) {
@@ -38,16 +37,14 @@ void                    c_callback::_read_client_to_tmpfile(void){
     _tmpfile = new c_tmpfile();
     host = false;
     _write_request_line();
-    while ((status = get_next(client_fd, &line, "\r\n")) >= 1) {
-        tmp = ft_strjoin(line, "\r\n");
-        write(_tmpfile->get_fd(), tmp, status - 1 + 2);
-        if (_host_exist(line) == true)
+    if (this->client_buffer->empty() == false) {
+        buf = concate_list_str(this->client_buffer);
+        bytes_read = ft_strlen(buf);
+        write(_tmpfile->get_fd(), buf, bytes_read);
+        if (_host_exist(buf) == true)
            host = true;
-        free(tmp);
-        free(line);
+        free(buf);
     }
-    if (line != NULL)
-        free(line);
     if (host == false) {
         _recipes = _init_error_request();
         _it_recipes = _recipes.begin();
