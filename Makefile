@@ -55,11 +55,6 @@ PARSE_CONF_FILES	= ${addprefix ${PARSE_FUNS_PATH}, ${PARSE_FUNS_FILES}} \
 					  get_conf.cpp skip_param.cpp init_maps.cpp			   \
 				   	  check_key.cpp get_serv.cpp parse_conf.cpp
 
-PARSE_REQUEST_HEADER_PATH  = parse_request_header/
-PARSE_REQUEST_HEADER_FILES = read_request_header.cpp parse_request.cpp		  \
-							 parse_request_line.cpp  parse_request_header.cpp \
-							 init_maps.cpp
-
 READ_HEADERS_PATH  = read_headers/
 READ_HEADERS_FILES = cut_buffer.cpp cut_buffer_ret.cpp find_str_buffer.cpp \
 					 flush_crlf.cpp is_sep_header.cpp get_header.cpp	   \
@@ -97,7 +92,6 @@ INCL_PATHS = ${SRCS_PATH}/. \
 			 ${LIB_PATH}										\
 			 ${SRCS_PATH}/${PARSE_CONF_PATH}					\
 			 ${SRCS_PATH}/${UTILS_PATH}							\
-			 ${SRCS_PATH}/${PARSE_REQUEST_HEADER_PATH}			\
 			 ${SRCS_PATH}/${CLASSES_PATH}						\
 			 ${SRCS_PATH}/${DATA_STRUCTURES_PATH}				\
 			 ${SRCS_PATH}/${READ_HEADERS_PATH}
