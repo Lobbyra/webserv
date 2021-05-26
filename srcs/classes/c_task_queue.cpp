@@ -13,20 +13,6 @@ c_task_queue::~c_task_queue() {
     return ;
 }
 
-// This function will remove finished request from client list
-static void    remove_clients(std::list<s_socket> *clients, int client_fd) {
-    std::list<s_socket>::iterator it  = clients->begin();
-    std::list<s_socket>::iterator ite = clients->end();
-
-    while (it != ite) {
-        if (it->client_fd == client_fd) {
-            reset_socket(&(*it));
-            break ;
-        }
-        ++it;
-    }
-}
-
 // Will execute the last task in the queue and remove it if the recipe is done
 void    c_task_queue::exec_task(void) {
     c_callback *front;
@@ -39,7 +25,7 @@ void    c_task_queue::exec_task(void) {
     front->exec();
 
     if (front->is_over() == true) {
-        remove_clients(_clients, front->client_fd);
+        reset_socket(front->client);
         _tasks.pop();
         delete front;
         return ;

@@ -120,8 +120,12 @@ bool    read_headers(std::list<s_socket> *clients) {
         // PARSING DATA RECIEVED
         parse_buffer(&(it->buf_header), &(it->headers), &headers_parsers,
                      &(it->is_status_line_read));
+        if (it->is_header_read == true) {
+            cut_buffer(&(it->buf_header), 2);
+        }
         if (it->headers.error / 100 != 2)          // Read finished if error
             it->is_header_read = true;
+
         ++it;
     }
     return (is_one_req_ready);
