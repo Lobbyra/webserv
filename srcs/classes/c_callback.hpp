@@ -112,7 +112,8 @@ private:
     void    _read_body(void);
 
     std::list<c_location>::iterator    _server_find_route(
-    std::list<c_location>::iterator &it, std::list<c_location>::iterator &ite);
+                                         std::list<c_location>::iterator &it,
+                                         std::list<c_location>::iterator &ite);
 
 
     /* _METH_FUNS
@@ -144,6 +145,7 @@ private:
     t_recipes                   _recipes;
     t_recipes_it                _it_recipes;
     void _continue(void);
+    void _exit(void);
 
     /* _STATUS_MESSAGES
      * Contain relations between all status codes and messages.

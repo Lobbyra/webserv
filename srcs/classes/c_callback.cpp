@@ -84,6 +84,15 @@ bool    c_callback::is_over(void) {
     return (_it_recipes == _recipes.end());
 }
 
+/* EXIT
+ * This function is designed to be called inside a recipe to end and quit
+ * callback before the end of all tasks.
+ */
+void    c_callback::_exit(void) {
+    _it_recipes = _recipes.end();
+    return ;
+}
+
 /*
  * ####### PRIVATE FUNCTIONS
  */
