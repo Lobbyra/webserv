@@ -62,6 +62,7 @@ static void grh_add_headers(std::list<std::string> &headers, c_callback &cb) {
         cb.status_code = 500;
         std::cerr << e.what() << std::endl;
     }
+    headers.push_back("Connection: Keep-Alive");
     // LOCATION
     if (cb.location_h != "")
         headers.push_back("Location: " + cb.location_h);
