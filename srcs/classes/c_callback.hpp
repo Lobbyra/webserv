@@ -215,6 +215,8 @@ private:
     // POST RECIPE
     void    _create_tmp_file(void);
     void    _check_is_body_to_large(void);
+    void    _read_body_post(void);
+    int     _bytes_read;
 
     // OPTIONS RECIPE
     void    _gen_resp_header_options(void);
