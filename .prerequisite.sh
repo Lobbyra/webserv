@@ -1,8 +1,13 @@
 #!/usr/bin/env bash
 
 CONFIG_PATH=./config_files
-PHPCGI_TARGET=./tools/php-cgi/
+PHPCGI_TARGET=tools/php-cgi
 PHPCGI_RES=php-8.0.2
+PHPBIN_PATH="$PHPCGI_TARGET/sapi/cgi/php-cgi"
+
+function ft_escape_backslash () {
+	echo $* | sed s/\\//\\\\\\//g
+}
 
 if [ "$OSTYPE" = "linux-gnu" ]; then
 	function sedreplace () {
@@ -26,7 +31,9 @@ fi
 
 # Replace __PWD__ by actual PWD in every config files
 FILES=($(ls $CONFIG_PATH))
-PWD=$(echo $PWD | sed s/\\//\\\\\\//g)
+NEWPWD=$(ft_escape_backslash $PWD)
+NEWPHPBIN=$(ft_escape_backslash "$PWD/$PHPBIN_PATH")
 for file in ${FILES[@]}; do
-	sedreplace __PWD__ "$PWD" "$CONFIG_PATH/$file"
+	sedreplace __PWD__ "$NEWPWD" "$CONFIG_PATH/$file"
+	sedreplace __PHP__ "$NEWPHPBIN" "$CONFIG_PATH/$file"
 done
