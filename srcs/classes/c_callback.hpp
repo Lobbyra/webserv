@@ -47,14 +47,16 @@ public:
                std::list<s_socket> *clients);
 
     //s_socket
-    std::list<s_socket>         *clients;
-    int                         entry_socket;
-    c_server                    *server;
     int                         client_fd;
-    sockaddr                    client_addr;
+    int                         entry_socket;
     bool                        *is_read_ready;
     bool                        *is_write_ready;
     bool                        *is_header_read;
+    c_server                    *server;
+    s_socket                    *client;
+    sockaddr                    client_addr;
+    std::list<char*>            *client_buffer;
+    std::list<s_socket>         *clients;
 
     // Variables from server block from config
     int                   client_max_body_size;
@@ -170,7 +172,7 @@ private:
     /* CHUNK TASK
      * Tasks to read chunk from client_fd.
      */
-    int     _chunk_size;
+    int     _chunk_size;                // == -1 if im waiting a size, > 0 else
     void    _chunk_reading_size(void);  // Read the size of the chunk.
     void    _chunk_reading_chunk(void); // Read the chunk in stack and save it
 

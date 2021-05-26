@@ -7,11 +7,12 @@ c_callback::c_callback(void) {
 
 c_callback::c_callback(s_socket *client, s_request_header *request,
                        std::list<s_socket> *clients) {
-    this->_bytes_write = 0;
-    this->_tmpfile = NULL;
-    this->_out_tmpfile = NULL;
     this->_fd_body = 0;
+    this->_tmpfile = NULL;
+    this->_bytes_write = 0;
+    this->_chunk_size = -1;
     this->clients = clients;
+    this->_out_tmpfile = NULL;
     _init_s_socket(client);                 // Init client socket variables
     _init_request_header(request);          // Init request headers
     if (this->server) {                     // Init server variables
@@ -120,57 +121,59 @@ void    c_callback::_init_meth_functions(void) {
     }
     if (_method_allow() == false)
         return ;
+    _meth_funs["PUT"] = _init_recipe_put();
     _meth_funs["GET"] = _init_recipe_get();
     _meth_funs["HEAD"] = _init_recipe_head();
-    _meth_funs["DELETE"] = _init_recipe_delete();
-    _meth_funs["PUT"] = _init_recipe_put();
-    _meth_funs["OPTIONS"] = _init_recipe_options();
     _meth_funs["POST"] = _init_recipe_post();
     _meth_funs["TRACE"] = _init_recipe_trace();
+    _meth_funs["DELETE"] = _init_recipe_delete();
+    _meth_funs["OPTIONS"] = _init_recipe_options();
 }
 
 void    c_callback::_init_request_header(s_request_header *request) {
-    this->method = request->method;
-    this->path = request->path;
-    this->protocol = request->protocol;
+    this->_resp_body = false;
     this->date = request->date;
     this->host = request->host;
+    this->path = request->path;
+    this->method = request->method;
     this->referer = request->referer;
-    this->transfer_encoding = request->transfer_encoding;
-    this->accept_charset = request->accept_charset;
-    this->accept_language = request->accept_language;
-    this->authorization = request->authorization;
-    this->content_type = request->content_type;
-    this->user_agent = request->user_agent;
-    this->content_length = request->content_length;
     this->status_code = request->error;
-    this->_resp_body = false;
+    this->protocol = request->protocol;
+    this->user_agent = request->user_agent;
+    this->content_type = request->content_type;
+    this->authorization = request->authorization;
     this->saved_headers = request->saved_headers;
+    this->accept_charset = request->accept_charset;
+    this->content_length = request->content_length;
+    this->accept_language = request->accept_language;
+    this->transfer_encoding = request->transfer_encoding;
     return ;
 }
 
 void        c_callback::_init_s_socket(s_socket *client) {
-    this->entry_socket = client->entry_socket;
-    this->server = (c_server*)client->server;
+    this->client = client;
+    this->content_length_h = 0;
     this->client_fd = client->client_fd;
     this->client_addr = client->client_addr;
+    this->server = (c_server*)client->server;
+    this->entry_socket = client->entry_socket;
+    this->client_buffer = &(client->buf_header);
     this->is_read_ready = &(client->is_read_ready);
     this->is_write_ready = &(client->is_write_ready);
     this->is_header_read = &(client->is_header_read);
-    this->content_length_h = 0;
 }
 
 void        c_callback::_init_server_hpp(c_server const *server) {
-    this->client_max_body_size = server->client_max_body_size;
-    this->srv_id = server->srv_id;
-    this->index = server->index;
-    this->listen = server->listen;
-    this->server_name = server->server_name;
     this->root = server->root;
-    this->autoindex = server->autoindex;
-    this->fastcgi_param = server->fastcgi_param;
-    this->error_page = server->error_page;
+    this->index = server->index;
+    this->srv_id = server->srv_id;
+    this->listen = server->listen;
     this->location = server->location;
+    this->autoindex = server->autoindex;
+    this->error_page = server->error_page;
+    this->server_name = server->server_name;
+    this->fastcgi_param = server->fastcgi_param;
+    this->client_max_body_size = server->client_max_body_size;
 }
 
 std::list<c_location>::iterator        c_callback::_server_find_route(
