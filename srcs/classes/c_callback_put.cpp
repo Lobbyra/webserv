@@ -103,6 +103,8 @@ void    c_callback::_meth_put_write_body(void) {
             --_it_recipes;
             return ;
         }
+        else if (bytes_read == 0)
+            remove_client(this->clients, this->client_fd);
     }
     else if (*this->is_read_ready == false) {
         if (this->client_buffer->empty() == false) {
