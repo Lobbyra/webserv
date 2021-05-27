@@ -188,7 +188,8 @@ void    c_callback::_meth_cgi_save_client_in(void) {
                 return ;
             }
             --_it_recipes;
-        }
+        } else if (ret_read == 0)
+            remove_client(this->clients, this->client_fd);
     }
     else if (*this->is_read_ready == false) {
         if (this->client_buffer->empty() == false) {

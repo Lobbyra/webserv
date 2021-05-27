@@ -102,8 +102,7 @@ void    c_callback::_meth_put_write_body(void) {
             this->status_code = 500;
             --_it_recipes;
             return ;
-        }
-        else if (bytes_read == 0)
+        } else if (bytes_read == 0)
             remove_client(this->clients, this->client_fd);
     }
     else if (*this->is_read_ready == false) {
