@@ -1,13 +1,26 @@
 #include "c_callback.hpp"
 extern bool g_verbose;
 
-static bool             _host_exist(char *line) {
-    std::string     prefix;
-    std::string     tmp_line(line);
-    std::string     sep(":");
+static bool             _host_exist(std::list<char*> *client_buffer) {
+    int                             i = 0;
+    int                             first_c = 0;
+    int                             count = 0;
+    std::list<char *>::iterator     it = client_buffer->begin();
+    std::list<char *>::iterator     ite = client_buffer->end();
 
-    prefix = get_word(tmp_line, tmp_line.begin(), sep);
-    if (prefix == "Host")
+    while (it != ite) {
+        while ((*it)[i]) {
+            if ((*it)[i] == '\r' && (*it)[i + 1] == '\n') {
+                if (ft_strncmp((*it) + first_c, "Host", 4) == 0)
+                    count++;
+                if ((*it)[i + 2] != '\0')
+                    first_c = i + 2;
+            }
+            i++;
+        }
+        it++;
+    }
+    if (count == 1)
         return (true);
     return (false);
 }
@@ -28,30 +41,28 @@ void                    c_callback::_read_client_to_tmpfile(void){
         std::cout << "TASK : _read_client_to_tmpfile()" << std::endl;
     char            *buf;
     int             bytes_read;
-    bool            host;
 
     if (*(this->is_read_ready) == false) {
         _it_recipes--;
         return ;
     }
     _tmpfile = new c_tmpfile();
-    host = false;
     _write_request_line();
     if (this->client_buffer->empty() == false) {
+        if (_host_exist(client_buffer) == true)
+           _host = true;
         buf = concate_list_str(this->client_buffer);
         bytes_read = ft_strlen(buf);
         write(_tmpfile->get_fd(), buf, bytes_read);
-        if (_host_exist(buf) == true)
-           host = true;
         free(buf);
     }
-    if (host == false) {
-        _recipes = _init_error_request();
-        _it_recipes = _recipes.begin();
+    if (_host == false) {
+        this->status_code = 400;
+    } else {
+        this->path = _tmpfile->get_filename();
+        this->_resp_body = true;
+        _continue();
     }
-    this->path = _tmpfile->get_filename();
-    this->_resp_body = true;
-    _continue();
 }
 
 std::list<c_callback::t_task_f>     c_callback::_init_recipe_trace(void) {

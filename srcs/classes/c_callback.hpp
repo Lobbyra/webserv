@@ -224,6 +224,7 @@ private:
     // TRACE RECIPE
     void    _read_client_to_tmpfile(void);
     void    _write_request_line(void);
+    bool    _host;
 
     // GGI RECIPE
     pid_t                  _pid; // pid of CGI child

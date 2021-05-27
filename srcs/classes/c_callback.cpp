@@ -11,6 +11,7 @@ c_callback::c_callback(s_socket *client, s_request_header *request,
     this->_tmpfile = NULL;
     this->_bytes_write = 0;
     this->_bytes_read = 0;
+    this->_host = false;
     this->_chunk_size = -1;
     this->clients = clients;
     this->_out_tmpfile = NULL;
