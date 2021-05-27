@@ -170,7 +170,7 @@ void    c_callback::_meth_cgi_save_client_in(void) {
         --_it_recipes;
         return ;
     }
-    else (*this->is_read_ready == true && this->content_length > 0) {
+    else if (*this->is_read_ready == true && this->content_length > 0) {
         ret_read = read(client_fd, buf, 4096);
         if (ret_read == -1) {
             this->status_code = 500;
