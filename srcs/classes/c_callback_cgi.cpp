@@ -160,55 +160,29 @@ void    c_callback::_meth_cgi_init_http(void) {
 void    c_callback::_meth_cgi_save_client_in(void) {
     if (g_verbose)
         std::cout << "TASK : _meth_cgi_save_client_in" << std::endl;
-    int  status;
-    char *buf = NULL;
-    char *buf_tmp = NULL;
+    int  ret_read;
+    char buf[4096];
 
-    errno = 0;
     if (_tmpfile == NULL) {
         _tmpfile = new c_tmpfile();
     }
-    if (_tmpfile->is_write_ready() == false) {
+    if (_tmpfile->is_write_ready() == false || *this->is_read_ready == false) {
         --_it_recipes;
         return ;
     }
-    if (*this->is_read_ready == true && this->content_length > 0) {
-        status = get_next(this->client_fd, &buf, "\r\n");
-        if (status == -1) {
+    else (*this->is_read_ready == true && this->content_length > 0) {
+        ret_read = read(client_fd, buf, 4096);
+        if (ret_read == -1) {
             this->status_code = 500;
             return ;
         } else {
-            buf_tmp = ft_strjoin(buf, "\r\n");
-            free(buf);
-            if (write(_tmpfile->get_fd(), buf_tmp, (status ?: 1) + 1) == -1) {
+            if (write(_tmpfile->get_fd(), buf, ret_read) < 1) {
                 this->status_code = 500;
-                free(buf_tmp);
                 return ;
             }
-            if (buf_tmp)
-                free(buf_tmp);
+            if (ret_read > 0)
+                --_it_recipes;
         }
-        --_it_recipes;
-    } else if (*this->is_read_ready == false) {
-        status = get_next(this->client_fd, &buf, "", GNL_EMPTY_STATIC);
-        if (status == -1) {
-            this->status_code = 500;
-            return ;
-        } else if (status >= 1) {
-            if (write(_tmpfile->get_fd(), buf, status - 1) == -1) {
-                this->status_code = 500;
-                free(buf);
-                return ;
-            }
-            if (buf)
-                free(buf);
-        }
-        if (this->client_max_body_size != -1 &&
-                _tmpfile->get_size() > (size_t)this->client_max_body_size) {
-            status_code = 413;
-            return ;
-        }
-        _tmpfile->reset_cursor();
     }
     return ;
 }
