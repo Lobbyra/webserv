@@ -20,10 +20,12 @@ void                       c_callback::_read_body_post(void) {
     else
         buf_size = this->content_length;
     char    buf[buf_size];  
-    if ((ret_read = read(client_fd, &buf, buf_size)) >= 1) {
-        _bytes_read += ret_read;
-        if (_bytes_read < (int)this->content_length)
-            --_it_recipes;
+    if (*this->is_read_ready == true) {
+        if ((ret_read = read(client_fd, &buf, buf_size)) >= 1) {
+            _bytes_read += ret_read;
+            if (_bytes_read < (int)this->content_length)
+                --_it_recipes;
+        }
     }
 }                    
 

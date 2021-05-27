@@ -160,29 +160,53 @@ void    c_callback::_meth_cgi_init_http(void) {
 void    c_callback::_meth_cgi_save_client_in(void) {
     if (g_verbose)
         std::cout << "TASK : _meth_cgi_save_client_in" << std::endl;
-    int  ret_read;
-    char buf[4096];
+    int  ret_read = 0;
+    char *buf;
 
     if (_tmpfile == NULL) {
         _tmpfile = new c_tmpfile();
     }
-    if (_tmpfile->is_write_ready() == false || *this->is_read_ready == false) {
+    if (_tmpfile->is_write_ready() == false) {
         --_it_recipes;
         return ;
     }
-    else if (*this->is_read_ready == true && this->content_length > 0) {
-        ret_read = read(client_fd, buf, 4096);
+    if (*this->is_read_ready == true && this->content_length > 0) {
+        if (this->client_buffer->empty() == false) {
+            buf = concate_list_str(this->client_buffer);
+            ret_read = ft_strlen(buf);
+        } else {
+            if (!(buf = (char *)malloc(sizeof(char) * 4096)))
+                return ;
+            ret_read = read(client_fd, buf, 4096);     
+        }
         if (ret_read == -1) {
             this->status_code = 500;
             return ;
-        } else {
+        } else if (ret_read > 0) {
             if (write(_tmpfile->get_fd(), buf, ret_read) < 1) {
                 this->status_code = 500;
                 return ;
             }
-            if (ret_read > 0)
-                --_it_recipes;
+            --_it_recipes;
         }
+    }
+    else if (*this->is_read_ready == false) {
+        if (this->client_buffer->empty() == false) {
+            buf = concate_list_str(this->client_buffer);
+            ret_read = ft_strlen(buf);
+        }
+        if (ret_read > 0) {
+            if (write(_tmpfile->get_fd(), buf, ret_read) < 1) {
+                this->status_code = 500;
+                return ;
+            }
+        }
+        if (this->client_max_body_size != -1 &&
+                _tmpfile->get_size() > (size_t)this->client_max_body_size) {
+            this->status_code = 413;
+            return ;
+        }
+        _tmpfile->reset_cursor();
     }
     return ;
 }
