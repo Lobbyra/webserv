@@ -160,11 +160,9 @@ void    c_callback::_meth_cgi_init_http(void) {
 void    c_callback::_meth_cgi_save_client_in(void) {
     if (g_verbose)
         std::cout << "TASK : _meth_cgi_save_client_in" << std::endl;
-    int  status;
-    char *buf = NULL;
-    char *buf_tmp = NULL;
+    int  ret_read = 0;
+    char *buf;
 
-    errno = 0;
     if (_tmpfile == NULL) {
         _tmpfile = new c_tmpfile();
     }
@@ -173,39 +171,40 @@ void    c_callback::_meth_cgi_save_client_in(void) {
         return ;
     }
     if (*this->is_read_ready == true && this->content_length > 0) {
-        status = get_next(this->client_fd, &buf, "\r\n");
-        if (status == -1) {
-            this->status_code = 500;
-            return ;
+        if (this->client_buffer->empty() == false) {
+            buf = concate_list_str(this->client_buffer);
+            ret_read = ft_strlen(buf);
         } else {
-            buf_tmp = ft_strjoin(buf, "\r\n");
-            free(buf);
-            if (write(_tmpfile->get_fd(), buf_tmp, (status ?: 1) + 1) == -1) {
-                this->status_code = 500;
-                free(buf_tmp);
+            if (!(buf = (char *)malloc(sizeof(char) * 4096)))
                 return ;
-            }
-            if (buf_tmp)
-                free(buf_tmp);
+            ret_read = read(client_fd, buf, 4096);     
         }
-        --_it_recipes;
-    } else if (*this->is_read_ready == false) {
-        status = get_next(this->client_fd, &buf, "", GNL_EMPTY_STATIC);
-        if (status == -1) {
+        if (ret_read == -1) {
             this->status_code = 500;
             return ;
-        } else if (status >= 1) {
-            if (write(_tmpfile->get_fd(), buf, status - 1) == -1) {
+        } else if (ret_read > 0) {
+            if (write(_tmpfile->get_fd(), buf, ret_read) < 1) {
                 this->status_code = 500;
-                free(buf);
                 return ;
             }
-            if (buf)
-                free(buf);
+            --_it_recipes;
+        } else if (ret_read == 0)
+            remove_client(this->clients, this->client_fd);
+    }
+    else if (*this->is_read_ready == false) {
+        if (this->client_buffer->empty() == false) {
+            buf = concate_list_str(this->client_buffer);
+            ret_read = ft_strlen(buf);
+        }
+        if (ret_read > 0) {
+            if (write(_tmpfile->get_fd(), buf, ret_read) < 1) {
+                this->status_code = 500;
+                return ;
+            }
         }
         if (this->client_max_body_size != -1 &&
                 _tmpfile->get_size() > (size_t)this->client_max_body_size) {
-            status_code = 413;
+            this->status_code = 413;
             return ;
         }
         _tmpfile->reset_cursor();

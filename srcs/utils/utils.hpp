@@ -10,6 +10,7 @@
 # include <stdlib.h>
 
 # include "c_tmpfile.hpp"
+# include "s_socket.hpp"
 # include "insert_stream_cont.hpp"
 
 /* # GENERAL DECLARATIONS */
@@ -20,6 +21,7 @@ std::string ft_dirname(std::string const path);
 
 void    ft_error(std::string const &src,
                  std::string const &err = strerror(errno));
+void remove_client(std::list<s_socket> *clients, int client_fd);
 
 /* ## TRANSFORMATION FUNCTIONS */
 char        *strcont_to_str(std::string str);
