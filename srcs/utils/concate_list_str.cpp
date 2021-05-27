@@ -8,11 +8,9 @@ char    *concate_list_str(std::list<char*> *buffer) {
     int                            i = 0;
     char                           *tmp;
 
-    std::cout << "concate_list_str" << std::endl;
     it = buffer->begin();
     ite = buffer->end();
     for (;it != ite; ++it) {
-        std::cout << "Ls: " << (*it) << std::endl;
         while ((*it)[i]){
             i++;
         }
@@ -30,7 +28,5 @@ char    *concate_list_str(std::list<char*> *buffer) {
         tmp[i] = '\0';
     }
     buffer->clear();
-    std::cout << "I: " << i << std::endl;
-    std::cout << "tmp: " << tmp << std::endl;
     return (tmp);
 }
