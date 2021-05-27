@@ -57,18 +57,10 @@ void    c_callback::_meth_put_choose_in(void) {
 void    c_callback::_meth_put_write_body(void) {
     if (g_verbose)
         std::cout << "TASK : _meth_put_write_body()" << std::endl;
-    int  bytes_read;
+    int  bytes_read = 0;
     char *buf;
-
     buf = NULL;
 
-    if (this->client_buffer->empty() == false) {
-        buf = concate_list_str(this->client_buffer);
-        bytes_read = ft_strlen(buf);
-    } else if (is_fd_read_ready(client_fd) == false) {
-        --_it_recipes;
-        return ;
-    }
     if (this->transfer_encoding == "chunked") {     // [IN]  Tmpfile ready?
         if (_tmpfile->is_read_ready() == false) {
             --_it_recipes;
@@ -79,34 +71,52 @@ void    c_callback::_meth_put_write_body(void) {
         --_it_recipes;
         return ;
     }
-    if (buf == NULL) {
-        if (!(buf = (char *)malloc(sizeof(char) * 4096)))
+    if (*this->is_read_ready == true) {
+        if (this->client_buffer->empty() == false) {
+            buf = concate_list_str(this->client_buffer);
+            bytes_read = ft_strlen(buf);
+        } else {
+            if (!(buf = (char *)malloc(sizeof(char) * 4096)))
             return ;
-        bytes_read = read(_put_fd_in, &buf, 4096);
-    }
-    if (this->client_max_body_size != -1 &&
-        bytes_read > (int)this->client_max_body_size) {
-        free(buf);
-        this->status_code = 413;
-        return ;
-    }
-    if (bytes_read > 0) {
-        if (write(_fd_to_write, buf, bytes_read) == -1) {
-            if (transfer_encoding == "chunked") {
-                delete _tmpfile;
-                _tmpfile = NULL;
-            }
-            std::cerr << "_meth_put_write_body : write() failed" << std::endl;
-            this->status_code = 500;
+            bytes_read = read(_put_fd_in, &buf, 4096);
+        }
+        if (this->client_max_body_size != -1 &&
+            bytes_read > (int)this->client_max_body_size) {
+            free(buf);
+            this->status_code = 413;
             return ;
         }
-        if (bytes_read > 0)
+        if (bytes_read > 0) {
+            if (write(_fd_to_write, buf, bytes_read) == -1) {
+                if (transfer_encoding == "chunked") {
+                    delete _tmpfile;
+                    _tmpfile = NULL;
+                }
+                std::cerr << "_meth_put_write_body : write() failed" << std::endl;
+                this->status_code = 500;
+                return ;
+            }
             --_it_recipes;
-    } else if (bytes_read == -1) {
-        std::cerr << "_meth_put_write_body : read() failed" << std::endl;
-        this->status_code = 500;
-        --_it_recipes;
-        return ;
+        } else if (bytes_read == -1) {
+            std::cerr << "_meth_put_write_body : read() failed" << std::endl;
+            this->status_code = 500;
+            --_it_recipes;
+            return ;
+        }
+    }
+    else if (*this->is_read_ready == false) {
+        if (this->client_buffer->empty() == false) {
+            buf = concate_list_str(this->client_buffer);
+            bytes_read = ft_strlen(buf);
+        }
+        if (bytes_read > 0) {
+            if (write(_fd_to_write, buf, bytes_read) == -1) {
+                if (transfer_encoding == "chunked") {
+                    delete _tmpfile;
+                    _tmpfile = NULL;
+                }
+            }
+        }
     }
     if (bytes_read == 0 && transfer_encoding == "chunked") { // [END] chunked
         delete _tmpfile;
