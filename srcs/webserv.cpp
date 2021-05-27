@@ -15,9 +15,8 @@ static void set_reuse_port(t_socketlst const *const lst) {
         if (it->client_fd != 0)
             continue;
         fd = it->entry_socket;
-        if (setsockopt(fd, SOL_SOCKET, SO_REUSEPORT, &opt, sizeof(opt)))
-            ft_error("setsockopt");
-        if (setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)))
+        if (setsockopt(fd, SOL_SOCKET, SO_REUSEPORT, &opt, sizeof(opt)) ||
+            setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)))
             ft_error("setsockopt");
         close(fd);
     }
@@ -33,7 +32,13 @@ void    webserv(std::list<c_server> const &conf) {
     is_new_request = false;
     has_new_header_ready = false;
     clients = new t_socketlst;
-    *clients = init_clients(conf);
+    try {
+        init_clients(conf, clients);
+    }
+    catch (std::exception const &e) {
+        std::cerr << "init_clients: " << e.what() << std::endl;
+        g_run = false;
+    }
     task_queue.set_clients(clients);
     while (g_run) {
         has_new_header_ready = ft_select(clients);

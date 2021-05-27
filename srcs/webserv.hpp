@@ -19,7 +19,7 @@ void    webserv(std::list<c_server> const &conf);
 
 bool    ft_select(t_socketlst *const clients);
 
-t_socketlst             init_clients(std::list<c_server> const &conf);
+void    init_clients(std::list<c_server> const &conf, t_socketlst *clients);
 
 std::list<s_request_header>     parse_request(t_socketlst *const clients);
 
