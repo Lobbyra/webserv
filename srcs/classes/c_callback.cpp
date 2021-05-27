@@ -168,7 +168,7 @@ void        c_callback::_init_s_socket(s_socket *client) {
     this->client_addr = client->client_addr;
     this->server = (c_server*)client->server;
     this->entry_socket = client->entry_socket;
-    this->client_buffer = &(client->buf_header);
+    this->client_buffer = &(client->buffer);
     this->is_read_ready = &(client->is_read_ready);
     this->is_write_ready = &(client->is_write_ready);
     this->is_header_read = &(client->is_header_read);

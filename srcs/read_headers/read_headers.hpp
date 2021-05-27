@@ -41,7 +41,7 @@ char    *cut_buffer_ret(std::list<char*> *buffer, unsigned int len);
 
 unsigned int find_str_buffer(std::list<char*> *buffer, std::string to_find);
 
-std::string get_header(std::list<char*> *buf_header, bool is_status_line_read);
+std::string get_header(std::list<char*> *buffer, bool is_status_line_read);
 /* -                        - */
 
 #endif
