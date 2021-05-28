@@ -9,10 +9,10 @@ void                        c_callback::_check_is_body_to_large(void) {
     struct stat     stat;
 
     if (lstat(_tmpfile->get_filename().c_str(), &stat) != -1) {
-            if (this->client_max_body_size != -1 &&
-                    stat.st_size > client_max_body_size) {
-                this->status_code = 413;
-                }
+        if (this->client_max_body_size != -1 &&
+            stat.st_size > client_max_body_size) {
+            this->status_code = 413;
+        }
     }
 }
 
@@ -31,11 +31,11 @@ void                       c_callback::_read_body_post(void) {
         free(buffer);
     }
     if (this->client_max_body_size != -1 &&
-            _bytes_read > (int)this->client_max_body_size) {
-            this->status_code = 413;
-            return ;
-        } else if (_bytes_read == (int)this->content_length)
-            return ;
+        _bytes_read > (int)this->client_max_body_size) {
+        this->status_code = 413;
+        return ;
+    } else if (_bytes_read == (int)this->content_length)
+        return ;
     if (this->content_length > 4096)
         buf_size = 4096;
     else
