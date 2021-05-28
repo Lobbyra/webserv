@@ -6,7 +6,6 @@ void remove_client(std::list<s_socket> *clients, int client_fd) {
     std::list<s_socket>::iterator       ite = clients->end();
     std::list<char*>::iterator          it_buf;
     std::list<char*>::iterator          ite_buf;
-    
 
     for (; it != ite; ++it)
         if ((*it).client_fd == client_fd)
