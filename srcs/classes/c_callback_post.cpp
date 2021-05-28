@@ -1,4 +1,6 @@
 #include "c_callback.hpp"
+#include "read_headers.hpp"
+
 extern bool g_verbose;
 
 void                        c_callback::_check_is_body_to_large(void) {
@@ -27,13 +29,13 @@ void                       c_callback::_read_body_post(void) {
                                 (int)this->content_length);
         _bytes_read = ft_strlen(buffer);
         free(buffer);
-        if (this->client_max_body_size != -1 &&
+    }
+    if (this->client_max_body_size != -1 &&
             _bytes_read > (int)this->client_max_body_size) {
             this->status_code = 413;
             return ;
         } else if (_bytes_read == (int)this->content_length)
             return ;
-    }
     if (this->content_length > 4096)
         buf_size = 4096;
     else
@@ -50,7 +52,7 @@ void                       c_callback::_read_body_post(void) {
             }
         }
         if (ret_read <= 0) {
-            remove_client(this->clients, this->client_fd);
+            remove_client(this->clients, this->client_fd, 0);
             _exit();
         }
     }
@@ -76,8 +78,7 @@ std::list<c_callback::t_task_f>     c_callback::_init_recipe_post(void) {
     std::list<t_task_f>     tasks;
 
     if (this->transfer_encoding == "chunked") {
-        tasks.push_back(&c_callback::_chunk_reading_size);
-        tasks.push_back(&c_callback::_chunk_reading_chunk);
+        tasks.push_back(&c_callback::_chunk_reading);
     } else {
         tasks.push_back(&c_callback::_create_tmp_file);
         tasks.push_back(&c_callback::_check_is_body_to_large);
