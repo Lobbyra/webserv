@@ -23,10 +23,12 @@ void                       c_callback::_read_body_post(void) {
     char    *buffer;
 
     if (this->client_buffer->empty() == false) {
-        buffer = concate_list_str(this->client_buffer);
+        buffer = cut_buffer_ret(this->client_buffer,
+                                (int)this->content_length);
         _bytes_read = ft_strlen(buffer);
         free(buffer);
-        if (_bytes_read > (int)this->content_length) {
+        if (this->client_max_body_size != -1 &&
+            _bytes_read > (int)this->client_max_body_size) {
             this->status_code = 413;
             return ;
         } else if (_bytes_read == (int)this->content_length)
@@ -41,9 +43,13 @@ void                       c_callback::_read_body_post(void) {
             _bytes_read += ret_read;
             if (_bytes_read < (int)this->content_length)
                 --_it_recipes;
+            if (this->client_max_body_size != -1 &&
+                    _bytes_read > (int)this->client_max_body_size) {
+                    this->status_code = 413;
+            return ;
+            }
         }
         if (ret_read <= 0) {
-            std::cout << "REMOVE" << std::endl;
             remove_client(this->clients, this->client_fd);
             _exit();
         }
