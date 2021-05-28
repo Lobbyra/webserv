@@ -176,6 +176,10 @@ void                    c_callback::_send_respons_body(void) {
             --_it_recipes;
             return ;
         }
+        if (ft_strcmp(this->method.c_str(), "GET") == 0 &&
+        ft_strcmp(this->original_path.c_str(), "/") == 0) {
+            this->client->similar_req->respons.append(buf);
+        }
         // std::cout << "return body: " << ret << std::endl;
         if (bytes_read > 0 && bytes_read == BUFFER_READ)
             --_it_recipes;
@@ -206,6 +210,18 @@ void                    c_callback::_send_respons(void) {
     if ((ret = send(client_fd, _resp_headers.c_str(), _resp_headers.length(), 0)) < 1) {
         std::cerr << "Error: Respons to client" << std::endl;
         this->status_code = 500;
+    }
+    if (ft_strcmp(this->method.c_str(), "GET") == 0 &&
+        ft_strcmp(this->original_path.c_str(), "/") == 0) {
+            struct stat         stat;
+            this->client->similar_req->host = this->host;
+            this->client->similar_req->path_respons = this->path;
+
+            if (lstat(this->path.c_str(), &stat) == -1)
+                std::cerr << "Error: lstat _send_respons()" << std::endl;
+            this->client->similar_req->last_state_change = stat.st_ctime;
+            this->client->similar_req->ipport = this->client->ipport;
+            this->client->similar_req->respons = _resp_headers;
     }
     // std::cout << "return header: " << ret << std::endl;
 }

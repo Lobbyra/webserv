@@ -19,15 +19,14 @@ void                       c_callback::_read_body_post(void) {
         std::cout << "TASK : _read_body_post()" << std::endl;
     int     buf_size;
     int     ret_read;
-    int     len_buffer;
     char    buf[4096];
     char    *buffer;
 
     if (this->client_buffer->empty() == false) {
         buffer = concate_list_str(this->client_buffer);
-        len_buffer = ft_strlen(buffer);
+        _bytes_read = ft_strlen(buffer);
         free(buffer);
-        if (len_buffer >= (int)this->content_length)
+        if (_bytes_read >= (int)this->content_length)
             return ;
     }
     if (this->content_length > 4096)
@@ -40,7 +39,7 @@ void                       c_callback::_read_body_post(void) {
             if (_bytes_read < (int)this->content_length)
                 --_it_recipes;
         }
-        if (ret_read == 0) {
+        if (ret_read >= 0) {
             remove_client(this->clients, this->client_fd);
             _exit();
         }

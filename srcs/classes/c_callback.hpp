@@ -75,6 +75,7 @@ public:
     // Variables from client request
     std::string                 method;
     std::string                 path;
+    std::string                 original_path;
     std::string                 protocol;
     std::string                 date;
     std::string                 host;

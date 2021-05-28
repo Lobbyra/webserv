@@ -177,7 +177,7 @@ void    c_callback::_meth_cgi_save_client_in(void) {
         } else {
             if (!(buf = (char *)malloc(sizeof(char) * 4096)))
                 return ;
-            ret_read = read(client_fd, buf, 4096);     
+            ret_read = read(client_fd, buf, 4096);
         }
         if (ret_read == -1) {
             this->status_code = 500;
@@ -188,8 +188,10 @@ void    c_callback::_meth_cgi_save_client_in(void) {
                 return ;
             }
             --_it_recipes;
-        } else if (ret_read == 0)
+        } else if (ret_read == 0) {
             remove_client(this->clients, this->client_fd);
+            _exit();
+        }
     }
     else if (*this->is_read_ready == false) {
         if (this->client_buffer->empty() == false) {

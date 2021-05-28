@@ -28,6 +28,7 @@ void    webserv(std::list<c_server> const &conf) {
     t_socketlst                 *clients;
     c_task_queue                task_queue;
     std::list<s_request_header> requests;
+    struct s_similar_get_req    similar_req;
 
     is_new_request = false;
     has_new_header_ready = false;
@@ -41,7 +42,7 @@ void    webserv(std::list<c_server> const &conf) {
     }
     task_queue.set_clients(clients);
     while (g_run) {
-        has_new_header_ready = ft_select(clients);
+        has_new_header_ready = ft_select(clients, &similar_req);
         if (g_verbose && clients->size() > 1)
             std::cout << *clients << std::endl;
         if (g_run == false)
@@ -49,6 +50,9 @@ void    webserv(std::list<c_server> const &conf) {
         if (has_new_header_ready == true) {
             is_new_request = read_headers(clients);
             has_new_header_ready = false;
+        }
+        if (similar_req.host.empty() == false) {
+           similar_get_req_manager(clients, &similar_req);
         }
         if (is_new_request == true) {
             for (std::list<s_socket>::iterator it = clients->begin();

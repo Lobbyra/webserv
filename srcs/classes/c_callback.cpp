@@ -15,6 +15,7 @@ c_callback::c_callback(s_socket *client, s_request_header *request,
     this->_chunk_size = -1;
     this->clients = clients;
     this->_out_tmpfile = NULL;
+    this->original_path = request->path;
     _init_s_socket(client);                 // Init client socket variables
     _init_request_header(request);          // Init request headers
     if (this->server) {                     // Init server variables

@@ -66,7 +66,7 @@ static int update_socketlst(t_socketlst *const lst, fd_set *r_set,
 /*
  * Return if a new header is ready to be read
  */
-bool    ft_select(t_socketlst *const clients) {
+bool    ft_select(t_socketlst *const clients, struct s_similar_get_req *similar_req) {
     fd_set  r_fdset, w_fdset;
     struct timeval time = {2, 0};
     int     updated_flag;
@@ -98,6 +98,7 @@ bool    ft_select(t_socketlst *const clients) {
                             &nclient.client_addr, &socklen);
         nclient.is_read_ready = false;
         nclient.is_write_ready = false;
+        nclient.similar_req = similar_req;
         if (errno != 0)
             ft_error("accept");
         fcntl(nclient.client_fd, F_SETFL, O_NONBLOCK);
