@@ -26,11 +26,11 @@ void                       c_callback::_read_body_post(void) {
         buffer = concate_list_str(this->client_buffer);
         _bytes_read = ft_strlen(buffer);
         free(buffer);
-        if (_bytes_read >= (int)this->content_length) {
+        if (_bytes_read > (int)this->content_length) {
             this->status_code = 413;
             return ;
-        }
-        return ;
+        } else if (_bytes_read == (int)this->content_length)
+            return ;
     }
     if (this->content_length > 4096)
         buf_size = 4096;
@@ -43,6 +43,7 @@ void                       c_callback::_read_body_post(void) {
                 --_it_recipes;
         }
         if (ret_read <= 0) {
+            std::cout << "REMOVE" << std::endl;
             remove_client(this->clients, this->client_fd);
             _exit();
         }
