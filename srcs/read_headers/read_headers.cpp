@@ -3,6 +3,7 @@
 #include <string>
 
 #include "lib.hpp"
+#include "utils.hpp"
 #include "s_socket.hpp"
 #include "read_headers.hpp"
 

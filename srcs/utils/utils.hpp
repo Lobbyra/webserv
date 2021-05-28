@@ -22,7 +22,9 @@ std::string ft_dirname(std::string const path);
 
 void    ft_error(std::string const &src,
                  std::string const &err = strerror(errno));
-void remove_client(std::list<s_socket> *clients, int client_fd);
+
+void remove_client(std::list<s_socket> *clients, int client_fd,
+                   ssize_t bytes_read);
 
 /* ## TRANSFORMATION FUNCTIONS */
 char        *strcont_to_str(std::string str);
@@ -37,7 +39,9 @@ bool    is_fd_write_ready(int fd);
 bool    is_str_num(std::string str);
 bool    ft_isin(const char &c, const std::string &str);
 
+/* ## BUFFER MANAGMENT FUNCTIONS */
 char    *concate_list_str(std::list<char*> *buffer);
+bool    is_buffer_crlf(std::list<char*> *buffer);
 
 /* ## ITERATOR FUNCTIONS */
 void    skip_it(std::string::const_iterator &it,

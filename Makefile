@@ -69,7 +69,7 @@ UTILS_FILES	 = get_keys.cpp is_space.cpp get_word_it.cpp skip_it.cpp		  \
 			   ft_freestrs.cpp print_strs.cpp lststr_to_strs.cpp			  \
 			   is_fd_ready.cpp hextodec.cpp gen_listening.cpp ft_basename.cpp \
 			   lststr_len.cpp ft_dirname.cpp cgitohttp.cpp 					  \
-			   concate_list_str.cpp remove_client.cpp
+			   concate_list_str.cpp remove_client.cpp is_buffer_crlf.cpp
 
 SRCS_FILES = ${ROOT_FILES}															  \
 			 ${addprefix ${PARSE_CONF_PATH}, ${PARSE_CONF_FILES}}					  \
@@ -100,6 +100,7 @@ INCL_PATHS = ${SRCS_PATH}/. \
 INCL_FLAGS = ${addprefix -I, ${INCL_PATHS}}
 
 all:
+	#$@./${PREREQUISITE_SCRIPT}
 	@echo "👷 : If you want sanitize add f=f !"
 	@make f="$f" -C ${LIB_PATH}
 	@printf "$(BOLD)Make $(RED)$(NAME)$(EOC)"

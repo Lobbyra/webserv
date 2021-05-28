@@ -175,9 +175,8 @@ private:
     /* CHUNK TASK
      * Tasks to read chunk from client_fd.
      */
-    int     _chunk_size;                // == -1 if im waiting a size, > 0 else
-    void    _chunk_reading_size(void);  // Read the size of the chunk.
-    void    _chunk_reading_chunk(void); // Read the chunk in stack and save it
+    int     _chunk_size;           // == -1 if im waiting a size, > 0 else
+    void    _chunk_reading(void);  // Read the size of the chunk.
 
     /* _FD_BODY
      * File descriptor that we will be read and write in the client_fd.
