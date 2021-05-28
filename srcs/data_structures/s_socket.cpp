@@ -1,5 +1,6 @@
 #include "s_socket.hpp"
 #include "colors.hpp"
+#include <stdlib.h>
 
 std::ostream    &operator<<(std::ostream &o, s_socket const &i) {
     o << "{" <<                                                       \
