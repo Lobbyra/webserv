@@ -10,19 +10,28 @@
 #include "c_server.hpp"
 #include "s_request_header.hpp"
 
+struct s_similar_get_req {
+    std::string     host;
+    std::string     respons;
+    std::string     path_respons;
+    s_ipport const  *ipport;
+    time_t          last_access;
+};
+
 struct s_socket {
-    int              client_fd;
-    int              entry_socket;
-    bool             is_read_ready;
-    bool             is_write_ready;
-    bool             is_header_read;
-    bool             is_status_line_read;
-    bool             is_callback_created;
-    sockaddr         client_addr;
-    s_ipport const   *ipport;
-    c_server const   *server;
-    s_request_header headers;
-    std::list<char*> buffer;
+    int                 client_fd;
+    int                 entry_socket;
+    bool                is_read_ready;
+    bool                is_write_ready;
+    bool                is_header_read;
+    bool                is_status_line_read;
+    bool                is_callback_created;
+    sockaddr            client_addr;
+    s_ipport const      *ipport;
+    c_server const      *server;
+    s_request_header    headers;
+    std::list<char*>    buffer;
+    s_similar_get_req   *similar_req;
 };
 
 void    reset_socket(s_socket *s);
