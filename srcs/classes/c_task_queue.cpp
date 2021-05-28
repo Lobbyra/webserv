@@ -26,11 +26,9 @@ void    c_task_queue::exec_task(void) {
 
     if (front->is_over() == true) {
         reset_socket(front->client);
-        _tasks.pop();
         delete front;
-        return ;
-    }
-    _tasks.push(front);
+    } else
+        _tasks.push(front);
     _tasks.pop();
 }
 

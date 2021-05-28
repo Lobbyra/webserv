@@ -1,0 +1,6 @@
+PUT /imabadguy.mp3 HTTP/1.1
+Host: example.com
+Content-Length: 10
+Transfer-Encoding: chunked
+
+coucou124

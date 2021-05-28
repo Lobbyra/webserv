@@ -103,7 +103,7 @@ void    c_callback::_meth_put_write_body(void) {
             --_it_recipes;
             return ;
         } else if (bytes_read == 0)
-            remove_client(this->clients, this->client_fd);
+            remove_client(this->clients, this->client_fd, bytes_read);
     }
     else if (*this->is_read_ready == false) {
         if (this->client_buffer->empty() == false) {
@@ -128,10 +128,8 @@ void    c_callback::_meth_put_write_body(void) {
 std::list<c_callback::t_task_f>         c_callback::_init_recipe_put(void){
     std::list<t_task_f> tasks;
 
-    if (this->transfer_encoding == "chunked") {
-        tasks.push_back(&c_callback::_chunk_reading_size);
-        tasks.push_back(&c_callback::_chunk_reading_chunk);
-    }
+    if (this->transfer_encoding == "chunked")
+        tasks.push_back(&c_callback::_chunk_reading);
     tasks.push_back(&c_callback::_meth_put_open_fd);
     tasks.push_back(&c_callback::_meth_put_choose_in);
     tasks.push_back(&c_callback::_meth_put_write_body);

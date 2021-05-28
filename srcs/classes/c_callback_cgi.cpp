@@ -12,8 +12,7 @@ std::list<c_callback::t_task_f> c_callback::_init_recipe_cgi(void) {
     recipe.push_back(&c_callback::_meth_cgi_init_meta);
     recipe.push_back(&c_callback::_meth_cgi_init_http);
     if (this->transfer_encoding == "chunked") {
-        recipe.push_back(&c_callback::_chunk_reading_size);
-        recipe.push_back(&c_callback::_chunk_reading_chunk);
+        recipe.push_back(&c_callback::_chunk_reading);
     } else {
         recipe.push_back(&c_callback::_meth_cgi_save_client_in);
     }
@@ -189,7 +188,7 @@ void    c_callback::_meth_cgi_save_client_in(void) {
             }
             --_it_recipes;
         } else if (ret_read == 0)
-            remove_client(this->clients, this->client_fd);
+            remove_client(this->clients, this->client_fd, 0);
     }
     else if (*this->is_read_ready == false) {
         if (this->client_buffer->empty() == false) {
