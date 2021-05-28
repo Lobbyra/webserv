@@ -11,19 +11,19 @@
  */
 #define CRLF "\r\n"
 
-std::string get_header(std::list<char*> *buf_header,
+std::string get_header(std::list<char*> *buffer,
                        bool is_status_line_read) {
     char         *str_tmp = NULL;
     std::string  final_header = "";
     unsigned int header_len = 0;
 
     if (is_status_line_read == false)
-        flush_crlf(buf_header);
-    if (find_str_buffer(buf_header, CRLF) == 0)
+        flush_crlf(buffer);
+    if (find_str_buffer(buffer, CRLF) == 0)
         return ("");
-    header_len = find_str_buffer(buf_header, CRLF);
-    str_tmp = cut_buffer_ret(buf_header, header_len);
-    cut_buffer(buf_header, 2);
+    header_len = find_str_buffer(buffer, CRLF);
+    str_tmp = cut_buffer_ret(buffer, header_len);
+    cut_buffer(buffer, 2);
     final_header = str_tmp;
     free(str_tmp);
     return (final_header);
@@ -40,38 +40,38 @@ int         main(void) {
     int  fd;
     char *buf = NULL;
     std::string         header = "";
-    std::list<char*>    buf_header;
+    std::list<char*>    buffer;
 
     fd = open("test.txt", O_RDONLY);
     buf = (char*)malloc(sizeof(char) * 2);
     ft_bzero(buf, 2);
     while (read(fd, buf, 1) != 0) {
-        buf_header.push_back(buf);
+        buffer.push_back(buf);
         buf = (char*)malloc(sizeof(char) * 2);
         ft_bzero(buf, 2);
     }
 
     std::cout <<                                                           \
-        "buf_header.size() before get_header() : " << buf_header.size() << \
+        "buffer.size() before get_header() : " << buffer.size() << \
     std::endl;
     std::cout <<                                                          \
-        "buf_header before get_header() : " << std::endl << buf_header << \
+        "buffer before get_header() : " << std::endl << buffer << \
     std::endl;
 
-    while ((header = get_header(&buf_header, IS_STATUS_LINE_READ)) != "") {
+    while ((header = get_header(&buffer, IS_STATUS_LINE_READ)) != "") {
         std::cout <<                                               \
             "get_header() = [" << header << "]" << \
         std::endl;
     }
 
     std::cout <<                                                          \
-        "buf_header.size() after get_header() : " << buf_header.size() << \
+        "buffer.size() after get_header() : " << buffer.size() << \
     std::endl;
     std::cout <<                                                         \
-        "buf_header after get_header() : " << std::endl << buf_header << \
+        "buffer after get_header() : " << std::endl << buffer << \
     std::endl;
-    for (std::list<char*>::iterator it = buf_header.begin();
-            it != buf_header.end();
+    for (std::list<char*>::iterator it = buffer.begin();
+            it != buffer.end();
             ++it) {
         free(*it);
     }

@@ -15,8 +15,8 @@ extern bool g_verbose;
 static void remove_client(std::list<s_socket> *clients,
         std::list<s_socket>::iterator client, ssize_t bytes_read) {
     std::string closing_cause = "";
-    std::list<char*>::iterator it_buf = client->buf_header.begin();
-    std::list<char*>::iterator ite_buf = client->buf_header.end();
+    std::list<char*>::iterator it_buf = client->buffer.begin();
+    std::list<char*>::iterator ite_buf = client->buffer.end();
 
     if (g_verbose == true) {
         if (bytes_read == -1) {
@@ -31,7 +31,7 @@ static void remove_client(std::list<s_socket> *clients,
     }
     while (it_buf != ite_buf) {
         free(*it_buf);
-        client->buf_header.erase(it_buf++);
+        client->buffer.erase(it_buf++);
     }
     close(client->client_fd);
     clients->erase(client);
@@ -44,7 +44,7 @@ static void remove_client(std::list<s_socket> *clients,
  * This function will read socket and save data read in the buffer header.
  * Return what recv return.
  */
-static ssize_t     read_socket(std::list<char*> *buf_header, int client_fd) {
+static ssize_t     read_socket(std::list<char*> *buffer, int client_fd) {
     char    *read_buffer = NULL;
     ssize_t bytes_read = 0;
 
@@ -53,7 +53,7 @@ static ssize_t     read_socket(std::list<char*> *buf_header, int client_fd) {
     ft_bzero(read_buffer, BUFF_SIZE_SOCKET + 1);
     bytes_read = recv(client_fd, read_buffer, BUFF_SIZE_SOCKET, 0);
     if (bytes_read > 0)
-        buf_header->push_back(read_buffer);
+        buffer->push_back(read_buffer);
     return (bytes_read);
 }
 
@@ -112,21 +112,21 @@ bool    read_headers(std::list<s_socket> *clients) {
             continue;
         }
         // READ DATA FROM CLIENT
-        bytes_read = read_socket(&it->buf_header, it->client_fd);
+        bytes_read = read_socket(&it->buffer, it->client_fd);
         if (bytes_read == 0 || bytes_read == -1) { // End of connection
             remove_client(clients, it++, bytes_read);
             continue;
         }
         // SAVE IF THERE A CRLF HEAD_BODY SEPARATOR READ IN BUFFER
-        it->is_header_read = is_sep_header(&it->buf_header,
+        it->is_header_read = is_sep_header(&it->buffer,
                                            it->is_status_line_read);
         is_one_req_ready |= it->is_header_read;    // At least one req read ret
         // PARSING DATA RECIEVED
-        parse_buffer(&(it->buf_header), &(it->headers), &headers_parsers,
+        parse_buffer(&(it->buffer), &(it->headers), &headers_parsers,
                      &(it->is_status_line_read));
         if (it->is_header_read == true &&
             ft_strcmp(it->headers.method.c_str(), "TRACE") != 0) {
-            cut_buffer(&(it->buf_header), 2);
+            cut_buffer(&(it->buffer), 2);
         }
         if (it->headers.error / 100 != 2)          // Read finished if error
             it->is_header_read = true;

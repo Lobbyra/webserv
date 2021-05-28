@@ -22,7 +22,7 @@ struct s_socket {
     s_ipport const   *ipport;
     c_server const   *server;
     s_request_header headers;
-    std::list<char*> buf_header;
+    std::list<char*> buffer;
 };
 
 void    reset_socket(s_socket *s);

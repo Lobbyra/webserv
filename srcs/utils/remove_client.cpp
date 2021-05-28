@@ -6,16 +6,15 @@ void remove_client(std::list<s_socket> *clients, int client_fd) {
     std::list<s_socket>::iterator       ite = clients->end();
     std::list<char*>::iterator          it_buf;
     std::list<char*>::iterator          ite_buf;
-    
 
     for (; it != ite; ++it)
         if ((*it).client_fd == client_fd)
             break;
-    it_buf = (*it).buf_header.begin();
-    ite_buf = (*it).buf_header.end();
+    it_buf = (*it).buffer.begin();
+    ite_buf = (*it).buffer.end();
     while (it_buf != ite_buf) {
         free(*it_buf);
-        (*it).buf_header.erase(it_buf++);
+        (*it).buffer.erase(it_buf++);
     }
     close((*it).client_fd);
     clients->erase(it);

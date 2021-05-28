@@ -1,6 +1,9 @@
 #include "c_callback.hpp"
+extern bool g_verbose;
 
 void                        c_callback::_check_is_body_to_large(void) {
+    if (g_verbose)
+        std::cout << "TASK : _check_is_body_to_large()" << std::endl;
     struct stat     stat;
 
     if (lstat(_tmpfile->get_filename().c_str(), &stat) != -1) {
@@ -12,26 +15,41 @@ void                        c_callback::_check_is_body_to_large(void) {
 }
 
 void                       c_callback::_read_body_post(void) {
+    if (g_verbose)
+        std::cout << "TASK : _read_body_post()" << std::endl;
     int     buf_size;
     int     ret_read;
+    int     len_buffer;
+    char    buf[4096];
+    char    *buffer;
 
+    if (this->client_buffer->empty() == false) {
+        buffer = concate_list_str(this->client_buffer);
+        len_buffer = ft_strlen(buffer);
+        free(buffer);
+        if (len_buffer >= (int)this->content_length)
+            return ;
+    }
     if (this->content_length > 4096)
         buf_size = 4096;
     else
         buf_size = this->content_length;
-    char    buf[buf_size];  
     if (*this->is_read_ready == true) {
         if ((ret_read = read(client_fd, &buf, buf_size)) >= 1) {
             _bytes_read += ret_read;
             if (_bytes_read < (int)this->content_length)
                 --_it_recipes;
         }
-        if (ret_read == 0)
+        if (ret_read == 0) {
             remove_client(this->clients, this->client_fd);
+            _exit();
+        }
     }
-}                    
+}
 
 void                       c_callback::_create_tmp_file(void) {
+    if (g_verbose)
+        std::cout << "TASK : _create_tmp_file()" << std::endl;
     char            buf[4096];
     int             status;
 

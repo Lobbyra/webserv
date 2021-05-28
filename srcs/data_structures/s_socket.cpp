@@ -20,7 +20,7 @@ std::ostream    &operator<<(std::ostream &o, s_socket const &i) {
     COLOR_WHITE_(", is_callback_created") << " = " <<            \
         std::boolalpha << COLOR_BOOL_(i.is_callback_created) <<  \
     std::endl;
-    o << COLOR_WHITE_(" buf_header") << " = " << i.buf_header;
+    o << COLOR_WHITE_(" buffer") << " = " << i.buffer;
 
     o << "}" << std::endl;
     return (o);
@@ -41,8 +41,8 @@ std::ostream    &operator<<(std::ostream& os, const std::list<s_socket>& v)
  * connection values to not break a keep-alive connection.
  */
 void    reset_socket(s_socket *s) {
-    std::list<char*>::iterator it_buf = s->buf_header.begin();
-    std::list<char*>::iterator ite_buf = s->buf_header.end();
+    std::list<char*>::iterator it_buf = s->buffer.begin();
+    std::list<char*>::iterator ite_buf = s->buffer.end();
 
     s->server = NULL;
     s->is_read_ready = false;
@@ -53,6 +53,6 @@ void    reset_socket(s_socket *s) {
     s->is_callback_created = false;
     while (it_buf != ite_buf) { // Clean header buffer
         free(*it_buf);
-        s->buf_header.erase(it_buf++);
+        s->buffer.erase(it_buf++);
     }
 }
