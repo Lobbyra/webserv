@@ -29,7 +29,7 @@ PREREQUISITE_SCRIPT = .prerequisite.sh
 SRCS_PATH = ./srcs/
 
 ROOT_FILES  = main.cpp webserv.cpp init_clients.cpp ft_select.cpp \
-			  assign_server_to_clients.cpp
+			  assign_server_to_clients.cpp similar_get_req.cpp
 
 DATA_STRUCTURES_PATH  = data_structures/
 DATA_STRUCTURES_FILES = s_request_header.cpp s_ipport.cpp s_socket.cpp
