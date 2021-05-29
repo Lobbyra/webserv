@@ -12,7 +12,7 @@ CYAN = \033[96m
 NAME = lib.a
 
 CC = clang++
-CFLAGS = -MMD -Wall -Wextra -Werror -std=c++98
+CFLAGS = -MMD -Wall -Wextra -Werror -std=c++98 -O3
 
 ifeq ($(f), f)
 	CFLAGS += -fsanitize=address -g3
