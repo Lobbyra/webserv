@@ -19,6 +19,8 @@ static int  print_usage(char const *const prog_name) {
 }
 
 int     main(int argc, const char **argv) {
+    std::list<c_server> conf;
+
     argc = 1;
     if (argv[argc] && !ft_strcmp(argv[argc], "-v"))
         g_verbose = argc++;
@@ -26,7 +28,6 @@ int     main(int argc, const char **argv) {
         argv[argc] = "config_files/ok_methods_allowed.conf";
     else if (argv[argc + 1] != NULL)
         return (print_usage(argv[0]));
-    std::list<c_server> conf;
 
     try {
         conf = parse_conf(argv[argc]);

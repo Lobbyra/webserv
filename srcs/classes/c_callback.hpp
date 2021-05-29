@@ -143,8 +143,9 @@ private:
     /* _RECIPES
      * List of functions to resolve a request.
      */
-    t_recipes                   _recipes;
-    t_recipes_it                _it_recipes;
+    bool         _is_aborted;
+    t_recipes    _recipes;
+    t_recipes_it _it_recipes;
     void _continue(void);
     void _exit(void);
 
@@ -177,6 +178,7 @@ private:
      */
     int     _chunk_size;           // == -1 if im waiting a size, > 0 else
     void    _chunk_reading(void);  // Read the size of the chunk.
+    ssize_t _last_packet_recv;
 
     /* _FD_BODY
      * File descriptor that we will be read and write in the client_fd.

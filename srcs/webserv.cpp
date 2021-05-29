@@ -43,8 +43,12 @@ void    webserv(std::list<c_server> const &conf) {
     task_queue.set_clients(clients);
     while (g_run) {
         has_new_header_ready = ft_select(clients, &similar_req);
-        if (g_verbose && clients->size() > 1)
+        if (g_verbose && clients->size() > 1) {
             std::cout << *clients << std::endl;
+            std::cout << \
+                COLOR_WHITE_("Num of callbacks = ") << task_queue.size() << \
+            std::endl;
+        }
         if (g_run == false)
             break ;
         if (has_new_header_ready == true) {
@@ -66,8 +70,7 @@ void    webserv(std::list<c_server> const &conf) {
             assign_server_to_clients(conf, clients);
             task_queue.push(clients);
             is_new_request = false;
-        }
-        if (task_queue.size() > 0)
+        } else if (task_queue.size() > 0)
             task_queue.exec_task();
         else if (g_verbose)
             std::cout << "LOG : no task to exec" << std::endl;

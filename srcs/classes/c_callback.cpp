@@ -14,6 +14,7 @@ c_callback::c_callback(s_socket *client, s_request_header *request,
     this->_host = false;
     this->_chunk_size = -1;
     this->clients = clients;
+    this->_is_aborted = false;
     this->_out_tmpfile = NULL;
     this->original_path = request->path;
     _init_s_socket(client);                 // Init client socket variables
@@ -81,8 +82,8 @@ void    c_callback::exec(void) {
             if (g_verbose)
                 std::cout << "C_CALLBACK : calling the task" << std::endl;
             (this->*(*_it_recipes))();
-            if (this->status_code / 100 == 2 ||
-                    _recipes == _init_error_request())
+            if (_is_aborted == false && (this->status_code / 100 == 2 ||
+                    _recipes == _init_error_request()))
                 ++_it_recipes;
         }
     }
@@ -98,6 +99,7 @@ bool    c_callback::is_over(void) {
  */
 void    c_callback::_exit(void) {
     _it_recipes = _recipes.end();
+    _is_aborted = true;
     return ;
 }
 

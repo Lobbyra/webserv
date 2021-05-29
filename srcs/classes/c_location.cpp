@@ -60,7 +60,7 @@ std::ostream    &operator<<(std::ostream &o, c_location const &i) {
     if (i.fastcgi_param.empty() == false)
         o << "    fastcgi_param = [\n" << i.fastcgi_param << "]" << std::endl;
     if (i.fastcgi_pass.empty() == false)
-        o << "    fastcgi_pass = [\n" << i.fastcgi_pass << "]" << std::endl;
+        o << "    fastcgi_pass = [" << i.fastcgi_pass << "]" << std::endl;
     indent_lvl--;
     return (o);
 };

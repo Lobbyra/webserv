@@ -39,47 +39,23 @@ int parse_chunk_data(std::list<char*> *buffer, int *chunk_size,
     int          ret_flag = CHUNK_MORE;
     int          chunk_data_len;
     char         *chunk_data = NULL;
-    bool         is_crlf_in_buffer;
     ssize_t      bytes_write;
     unsigned int len_to_cut;
 
     len_to_cut = find_str_buffer(buffer, "\r\n");
-    is_crlf_in_buffer = is_buffer_crlf(buffer);
-    if (len_to_cut == 0)
-        chunk_data = cut_buffer_ret(buffer, len_to_cut - 1);
-    else
-        chunk_data = cut_buffer_ret(buffer, len_to_cut);
-    if (is_crlf_in_buffer == true)
-        cut_buffer(buffer, 2);
+    chunk_data = cut_buffer_ret(buffer, len_to_cut);
+    cut_buffer(buffer, 2);
     chunk_data_len = ft_strlen(chunk_data);
-    *chunk_size -= chunk_data_len;
-    if (is_crlf_in_buffer == true) { // Mean we read all the chunk data
-        if (*chunk_size == 0) {
-            ret_flag = CHUNK_ENOUGH;
-            *chunk_size = -1;        // Reset to default value
-        } else {                     // Wrong size of chunk recieved
-            if (g_verbose == true) {
-                std::cerr << \
-                    "ERR: chunk_data: wrong size, n-enough" << std::endl;
-            }
-            ret_flag = CHUNK_ERROR;
-        }
+    if (chunk_data_len != *chunk_size) {
+        std::cerr << "ERR : bad data chunk" << std::endl;
+        ret_flag = CHUNK_ERROR;
     } else {
-        if (*chunk_size > 0)
-            ret_flag = CHUNK_MORE;
-        else {
-            if (g_verbose == true) {
-                std::cerr << \
-                    "ERR: chunk_data: wrong size, too much" << std::endl;
-            }
-            ret_flag = CHUNK_ERROR;
-        }
-    }
-    if (ret_flag != CHUNK_ERROR) {
         bytes_write = write(tmpfile_fd, chunk_data, chunk_data_len);
         if (bytes_write == 0 || bytes_write == -1)
             ret_flag = CHUNK_FATAL;
     }
+    *chunk_size = -1;
+    free(chunk_data);
     return (ret_flag);
 }
 
@@ -88,18 +64,14 @@ int parse_chunk_data(std::list<char*> *buffer, int *chunk_size,
  * If there isn't CRLF, it do nothing.
  */
 int parse_chunk_size(std::list<char*> *buffer, int *chunk_size) {
-    int          ret_flag = CHUNK_ENOUGH;
+    int          ret_flag = CHUNK_MORE;
     char         *size_line = NULL;
     unsigned int len_to_cut;
 
-    if (is_buffer_crlf(buffer) == false) { // Need data to complete size line
-        return (CHUNK_MORE);
-    } else {
-        len_to_cut = find_str_buffer(buffer, "\r\n");
-        size_line = cut_buffer_ret(buffer, len_to_cut);
-        cut_buffer(buffer, ft_strlen("\r\n"));
-    }
-    if (is_str_hex(size_line) == false) { // Wrong size line
+    len_to_cut = find_str_buffer(buffer, "\r\n");
+    size_line = cut_buffer_ret(buffer, len_to_cut);
+    cut_buffer(buffer, 2);
+    if (is_str_hex(size_line) == false) {              // Size line non hex
         std::cerr << "ERR: parse_chunk_size: size not hex" << std::endl;
         ret_flag = CHUNK_ERROR;
     } else {
@@ -107,11 +79,6 @@ int parse_chunk_size(std::list<char*> *buffer, int *chunk_size) {
     }
     if (ret_flag != CHUNK_ERROR && *chunk_size == 0) {
         ret_flag = CHUNK_END;
-    } else if (ret_flag != CHUNK_ERROR) {
-        if (buffer->size() == 0)         // Is a begining of chunk data in buf?
-            ret_flag = CHUNK_MORE;
-        else
-            ret_flag = CHUNK_ENOUGH;
     }
     return (ret_flag);
 }
@@ -123,20 +90,24 @@ int parse_chunk_size(std::list<char*> *buffer, int *chunk_size) {
  * This function will read client and put the content in the buffer gived.
  */
 int read_chunk_client(int client_fd, std::list<char*> *buffer) {
-    int     ret_flag = CHUNK_ENOUGH;
+    int     ret_flag = CHUNK_MORE;
     char    *local_buf = NULL;
     ssize_t bytes_recv;
 
     if (!(local_buf = (char*)malloc(sizeof(char) * (CHUNK_BUF_SIZE))))
         return (CHUNK_FATAL);
     ft_bzero(local_buf, CHUNK_BUF_SIZE);
+    errno = 0;
     bytes_recv = recv(client_fd, local_buf, CHUNK_BUF_SIZE - 1, 0);
     if (bytes_recv == 0 || bytes_recv == -1) {
+        std::cerr << \
+            "ERR: read_chunk_client : recv : " << bytes_recv << " " << \
+            strerror(errno) << std::endl;
         ret_flag = CHUNK_CLOSE;
         free(local_buf);
     } else {
         buffer->push_back(local_buf);
-        ret_flag = CHUNK_ENOUGH;
+        ret_flag = CHUNK_MORE;
     }
     return (ret_flag);
 }
@@ -148,7 +119,7 @@ int read_chunk_client(int client_fd, std::list<char*> *buffer) {
 void    c_callback::_chunk_reading(void) {
     if (g_verbose == true)
         std::cout << "TASK : _chunk_reading()" << std::endl;
-    int status = CHUNK_ENOUGH;
+    int status = CHUNK_MORE;
 
     if (_tmpfile == NULL)
         _tmpfile = new c_tmpfile();
@@ -166,9 +137,15 @@ void    c_callback::_chunk_reading(void) {
             return ;
         }
     }
-    while (status == CHUNK_ENOUGH) {    // Parsing while possible
+    while (is_buffer_crlf(this->client_buffer) && status != CHUNK_END) {
         if (this->_chunk_size == -1) {    // Chunk size is to read
             status = parse_chunk_size(this->client_buffer, &_chunk_size);
+            if (this->client_max_body_size != -1 &&
+                (int)_tmpfile->get_size() + _chunk_size >
+                    this->client_max_body_size) {
+                this->status_code = 413;
+                return ;
+            }
         } else {                           // We are reading the chunk data
             status = parse_chunk_data(this->client_buffer,
                                       &_chunk_size, _tmpfile->get_fd());
@@ -180,6 +157,8 @@ void    c_callback::_chunk_reading(void) {
         this->status_code = 500;
     } else if (status == CHUNK_ERROR) {
         this->status_code = 400;
+    } else if (status == CHUNK_END) {
+        _tmpfile->reset_cursor();
     }
     return ;
 }
