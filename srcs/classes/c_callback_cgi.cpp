@@ -1,5 +1,7 @@
 #include "lib.hpp"
 #include "c_callback.hpp"
+#include "read_headers.hpp"
+
 extern bool g_verbose;
 
 /* C_CALLBACK_CGI
@@ -156,6 +158,8 @@ void    c_callback::_meth_cgi_init_http(void) {
     }
 }
 
+#define CGI_BUF_SIZE 4096
+
 /* _METH_CGI_SAVE_CLIENT_IN
  * This function will save the entire client body in a tmpfile to be gived as
  * input for CGI execution. File cursor must be reset at the
@@ -166,8 +170,10 @@ void    c_callback::_meth_cgi_init_http(void) {
 void    c_callback::_meth_cgi_save_client_in(void) {
     if (g_verbose)
         std::cout << "TASK : _meth_cgi_save_client_in" << std::endl;
-    int  ret_read = 0;
-    char *buf;
+    int     cat_len;
+    char    *read_buf = NULL;
+    char    *cat_buf = NULL;
+    ssize_t bytes_read;
 
     if (_tmpfile == NULL) {
         _tmpfile = new c_tmpfile();
@@ -176,46 +182,39 @@ void    c_callback::_meth_cgi_save_client_in(void) {
         --_it_recipes;
         return ;
     }
-    if (*this->is_read_ready == true && this->content_length > 0) {
-        if (this->client_buffer->empty() == false) {
-            buf = concate_list_str(this->client_buffer);
-            ret_read = ft_strlen(buf);
-        } else {
-            if (!(buf = (char *)malloc(sizeof(char) * 4096)))
-                return ;
-            ret_read = read(client_fd, buf, 4096);
-        }
-        if (ret_read == -1) {
+    if (this->client_buffer->size() > 0) {                   // Buffer reading
+        cat_buf = cut_buffer_ret(this->client_buffer, this->content_length);
+        cat_len = ft_strlen(cat_buf);
+        if (write(_tmpfile->get_fd(), cat_buf, cat_len) < 1) {
             this->status_code = 500;
+        } else {
+            this->content_length -= cat_len;
+        }
+        free(cat_buf);
+    } else if (*this->is_read_ready == true) {               // Client reading
+        if (!(read_buf = (char*)malloc(sizeof(char) * (CGI_BUF_SIZE)))) {
+            std::cerr << "ERR: cgi_save(): malloc() failed" << std::endl;
+            status_code = 500;
             return ;
-        } else if (ret_read > 0) {
-            if (write(_tmpfile->get_fd(), buf, ret_read) < 1) {
-                this->status_code = 500;
-                return ;
-            }
-            --_it_recipes;
-        } else if (ret_read == 0) {
-            remove_client(this->clients, this->client_fd, 0);
+        }
+        ft_bzero(read_buf, CGI_BUF_SIZE);
+        if (CGI_BUF_SIZE < this->content_length)
+            bytes_read = read(this->client_fd, read_buf, CGI_BUF_SIZE);
+        else
+            bytes_read = read(this->client_fd, read_buf, this->content_length);
+        if (bytes_read == 0 || bytes_read == -1) {
+            remove_client(this->clients, this->client_fd, bytes_read);
             _exit();
+            free(read_buf);
+            return ;
+        } else {
+            this->client_buffer->push_back(read_buf);
         }
     }
-    else if (*this->is_read_ready == false) {
-        if (this->client_buffer->empty() == false) {
-            buf = concate_list_str(this->client_buffer);
-            ret_read = ft_strlen(buf);
-        }
-        if (ret_read > 0) {
-            if (write(_tmpfile->get_fd(), buf, ret_read) < 1) {
-                this->status_code = 500;
-                return ;
-            }
-        }
-        if (this->client_max_body_size != -1 &&
-                _tmpfile->get_size() > (size_t)this->client_max_body_size) {
-            this->status_code = 413;
-            return ;
-        }
-        _tmpfile->reset_cursor();
+    if (this->content_length > 0) {                         // Read again
+        --_it_recipes;
+    } else {
+        _tmpfile->reset_cursor();                           // End condition
     }
     return ;
 }

@@ -100,7 +100,7 @@ INCL_PATHS = ${SRCS_PATH}/. \
 INCL_FLAGS = ${addprefix -I, ${INCL_PATHS}}
 
 all:
-	#$@./${PREREQUISITE_SCRIPT}
+	@./${PREREQUISITE_SCRIPT}
 	@echo "👷 : If you want sanitize add f=f !"
 	@make f="$f" -C ${LIB_PATH}
 	@printf "$(BOLD)Make $(RED)$(NAME)$(EOC)"

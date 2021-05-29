@@ -27,11 +27,11 @@ fi
 
 # un-tar phpcgi
 # Archive created by: tar -czf .compressed_phpcgi/darwin_phpcgi.tar php-8.0.2
-if ! [ -e "$PHPCGI_TARGET" ]; then
-	echo "Unpacking php-cgi ..."
-	tar -xzf $PHPCGI_SRC
-	mv $PHPCGI_RES $PHPCGI_TARGET
-fi
+# if ! [ -e "$PHPCGI_TARGET" ]; then
+# 	echo "Unpacking php-cgi ..."
+# 	tar -xzf $PHPCGI_SRC
+# 	mv $PHPCGI_RES $PHPCGI_TARGET
+# fi
 
 # Replace __PWD__ by actual PWD in every config files
 FILES=($(ls $CONFIG_PATH))
