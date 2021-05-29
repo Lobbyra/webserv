@@ -34,7 +34,7 @@ static bool is_str_hex(char const *str) {
  * This function will cut from the buffer all data until a CRLF and but it
  * in the tmpfile.
  */
-static int parse_chunk_data(std::list<char*> *buffer, int *chunk_size,
+int parse_chunk_data(std::list<char*> *buffer, int *chunk_size,
                             int tmpfile_fd) {
     int          ret_flag = CHUNK_MORE;
     int          chunk_data_len;
@@ -87,7 +87,7 @@ static int parse_chunk_data(std::list<char*> *buffer, int *chunk_size,
  * Will parse the buffer to find a chunk size.
  * If there isn't CRLF, it do nothing.
  */
-static int parse_chunk_size(std::list<char*> *buffer, int *chunk_size) {
+int parse_chunk_size(std::list<char*> *buffer, int *chunk_size) {
     int          ret_flag = CHUNK_ENOUGH;
     char         *size_line = NULL;
     unsigned int len_to_cut;
@@ -122,7 +122,7 @@ static int parse_chunk_size(std::list<char*> *buffer, int *chunk_size) {
 /* READ_CHUNK_CLIENT
  * This function will read client and put the content in the buffer gived.
  */
-static int read_chunk_client(int client_fd, std::list<char*> *buffer) {
+int read_chunk_client(int client_fd, std::list<char*> *buffer) {
     int     ret_flag = CHUNK_ENOUGH;
     char    *local_buf = NULL;
     ssize_t bytes_recv;
@@ -133,11 +133,11 @@ static int read_chunk_client(int client_fd, std::list<char*> *buffer) {
     bytes_recv = recv(client_fd, local_buf, CHUNK_BUF_SIZE - 1, 0);
     if (bytes_recv == 0 || bytes_recv == -1) {
         ret_flag = CHUNK_CLOSE;
+        free(local_buf);
     } else {
         buffer->push_back(local_buf);
         ret_flag = CHUNK_ENOUGH;
     }
-    free(local_buf);
     return (ret_flag);
 }
 
@@ -167,11 +167,12 @@ void    c_callback::_chunk_reading(void) {
         }
     }
     while (status == CHUNK_ENOUGH) {    // Parsing while possible
-        if (this->_chunk_size == -1)    // Chunk size is to read
+        if (this->_chunk_size == -1) {    // Chunk size is to read
             status = parse_chunk_size(this->client_buffer, &_chunk_size);
-        else                            // We are reading the chunk data
+        } else {                           // We are reading the chunk data
             status = parse_chunk_data(this->client_buffer,
                                       &_chunk_size, _tmpfile->get_fd());
+        }
     }
     if (status == CHUNK_MORE) {
         --_it_recipes;

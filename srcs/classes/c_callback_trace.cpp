@@ -61,7 +61,6 @@ void                    c_callback::_read_client_to_tmpfile(void){
     } else {
         this->path = _tmpfile->get_filename();
         this->_resp_body = true;
-        _continue();
     }
 }
 

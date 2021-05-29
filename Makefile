@@ -57,9 +57,9 @@ PARSE_CONF_FILES	= ${addprefix ${PARSE_FUNS_PATH}, ${PARSE_FUNS_FILES}} \
 
 READ_HEADERS_PATH  = read_headers/
 READ_HEADERS_FILES = cut_buffer.cpp cut_buffer_ret.cpp find_str_buffer.cpp \
-					 flush_crlf.cpp is_sep_header.cpp get_header.cpp	   \
-					 parse_header.cpp parse_header_functions.cpp		   \
-					 parse_status_line.cpp read_headers.cpp init_maps.cpp
+					 flush_crlf.cpp get_header.cpp parse_header.cpp		   \
+					 parse_header_functions.cpp parse_status_line.cpp	   \
+					 read_headers.cpp init_maps.cpp
 
 UTILS_PATH	 = utils/
 UTILS_FILES	 = get_keys.cpp is_space.cpp get_word_it.cpp skip_it.cpp		  \

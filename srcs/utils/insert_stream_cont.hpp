@@ -10,6 +10,8 @@
 # include <vector>
 # include <iostream>
 
+# include "colors.hpp"
+
 extern int indent_lvl;
 
 template <typename Tkey, typename Tvalue>
@@ -35,6 +37,19 @@ std::ostream    &operator<<(std::ostream &o, std::map<Tkey, Tvalue> const &i)
         o << indent << *it << std::endl;
     return (o);
 };
+
+inline std::ostream& operator<<(std::ostream& os, const char *tmp) {
+    while (*tmp) {
+        if (*tmp == '\n')
+            os << COLOR_CYAN_("\\n");
+        else if (*tmp == '\r')
+            os << COLOR_CYAN_("\\r");
+        else
+            os << *tmp;
+        ++tmp;
+    }
+    return (os);
+}
 
 template < class T >
 inline std::ostream& operator<<(std::ostream& os, const std::list<T>& v)

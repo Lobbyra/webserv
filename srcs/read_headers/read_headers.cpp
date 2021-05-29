@@ -9,6 +9,26 @@
 
 extern bool g_verbose;
 
+static bool        is_sep_header(std::list<char*> *buffer) {
+    char *i_buf_parts = NULL;
+    std::string crlf_save = "";
+    std::list<char*>::iterator it = buffer->begin();
+    std::list<char*>::iterator ite = buffer->end();
+
+    while (it != ite && crlf_save != "\r\n\r\n") {
+        i_buf_parts = *it;
+        while (*i_buf_parts && crlf_save != "\r\n\r\n") {
+            if (*i_buf_parts == '\r' || *i_buf_parts == '\n')
+                crlf_save += *i_buf_parts;
+            else
+                crlf_save.clear();
+            ++i_buf_parts;
+        }
+        ++it;
+    }
+    return (crlf_save == "\r\n\r\n");
+}
+
 /* REMOVE_CLIENT
  * This function will remove the client gived from the list of client cause of
  * EOF/connection closed or recv return an error.
@@ -53,6 +73,11 @@ static ssize_t     read_socket(std::list<char*> *buffer, int client_fd) {
         return (NULL);
     ft_bzero(read_buffer, BUFF_SIZE_SOCKET + 1);
     bytes_read = recv(client_fd, read_buffer, BUFF_SIZE_SOCKET, 0);
+    if (g_verbose == true) {
+        std::cout << \
+            "[" << client_fd << "] recv : [" << read_buffer << "]"
+        << std::endl;
+    }
     if (bytes_read > 0)
         buffer->push_back(read_buffer);
     return (bytes_read);
@@ -119,16 +144,14 @@ bool    read_headers(std::list<s_socket> *clients) {
             continue;
         }
         // SAVE IF THERE A CRLF HEAD_BODY SEPARATOR READ IN BUFFER
-        it->is_header_read = is_sep_header(&it->buffer,
-                                           it->is_status_line_read);
+        it->is_header_read = is_sep_header(&it->buffer);
         is_one_req_ready |= it->is_header_read;    // At least one req read ret
         // PARSING DATA RECIEVED
-        parse_buffer(&(it->buffer), &(it->headers), &headers_parsers,
+        if (it->is_header_read == true && it->headers.method != "TRACE")
+            parse_buffer(&(it->buffer), &(it->headers), &headers_parsers,
                      &(it->is_status_line_read));
-        if (it->is_header_read == true &&
-            ft_strcmp(it->headers.method.c_str(), "TRACE") != 0) {
+        if (it->is_header_read == true && it->headers.method == "TRACE")
             cut_buffer(&(it->buffer), 2);
-        }
         if (it->headers.error / 100 != 2)          // Read finished if error
             it->is_header_read = true;
 

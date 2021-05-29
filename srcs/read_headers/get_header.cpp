@@ -11,8 +11,7 @@
  */
 #define CRLF "\r\n"
 
-std::string get_header(std::list<char*> *buffer,
-                       bool is_status_line_read) {
+std::string get_header(std::list<char*> *buffer, bool is_status_line_read) {
     char         *str_tmp = NULL;
     std::string  final_header = "";
     unsigned int header_len = 0;

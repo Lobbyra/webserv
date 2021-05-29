@@ -59,8 +59,8 @@ void    webserv(std::list<c_server> const &conf) {
                     it != clients->end(); ++it) {
                 if (g_verbose == true && it->is_header_read == true &&
                         it->is_callback_created == false) {
-                    std::cerr << "client : " << it->client_fd << std::endl;
-                    std::cerr << it->headers << std::endl;
+                    std::cout << "client : " << it->client_fd << std::endl;
+                    std::cout << it->headers << std::endl;
                 }
             }
             assign_server_to_clients(conf, clients);

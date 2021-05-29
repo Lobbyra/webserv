@@ -33,7 +33,6 @@ int     parse_header(std::string line,
  * Functions used to cut/flush/check buffer content/
  */
 bool    flush_crlf(std::list<char*> *buffer);
-bool    is_sep_header(std::list<char*> *buffer, bool is_status_line_read);
 
 void    cut_buffer(std::list<char*> *buffer, unsigned int len);
 
