@@ -50,6 +50,11 @@ c_callback::~c_callback(void) {
     }
     if (_fd_body != 0)
         close(_fd_body);
+    if (this->status_code / 100 != 2) {
+        remove_client(this->clients, this->client_fd, -1);
+    } else {
+        reset_socket(this->client);
+    }
     return ;
 }
 

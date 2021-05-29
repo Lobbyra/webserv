@@ -1,1 +1,0 @@
-export CONTENT_LENGTH=0 ; export GATEWAY_INTERFACE=CGI/1.1 ; export PATH_INFO=/ ; export PATH_TRANSLATED=/tmp/www/ ; export REMOTE_ADDR=2.0.172.194 ; export REQUEST_METHOD=GET ; export REQUEST_URI=/ ; export SERVER_NAME=localhost ; export SERVER_PORT=80 ; export SERVER_PROTOCOL=HTTP/1.1 ; export SERVER_SOFTWARE=drunkserv

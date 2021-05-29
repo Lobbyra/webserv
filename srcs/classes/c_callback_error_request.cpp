@@ -2,8 +2,6 @@
 extern bool g_verbose;
 
 bool                    c_callback::_if_error_page_exist(void) {
-    if (g_verbose)
-        std::cout << "TASK : _if_error_page_exist()" << std::endl;
     std::string                 path_error_page;
     t_error_page::iterator      it;
     struct stat                 stat;
@@ -42,7 +40,6 @@ std::list<c_callback::t_task_f>        c_callback::_init_error_request(void) {
     std::list<t_task_f> tasks;
 
     tasks.push_back(&c_callback::_gen_error_header_and_body);
-//    tasks.push_back(&c_callback::_read_body);
     tasks.push_back(&c_callback::_send_respons);
     return (tasks);
 }

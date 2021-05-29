@@ -67,7 +67,10 @@ void    webserv(std::list<c_server> const &conf) {
             task_queue.push(clients);
             is_new_request = false;
         }
-        task_queue.exec_task();
+        if (task_queue.size() > 0)
+            task_queue.exec_task();
+        else if (g_verbose)
+            std::cout << "LOG : no task to exec" << std::endl;
     }
     set_reuse_port(clients);
     delete clients;

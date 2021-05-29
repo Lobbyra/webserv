@@ -23,6 +23,8 @@ class    c_task_queue {
 
     void    set_clients(std::list<s_socket> *clients);
 
+    size_t  size(void) const;
+
  private:
     std::queue<c_callback*> _tasks;
     std::list<s_socket>     *_clients;

@@ -13,23 +13,21 @@ c_task_queue::~c_task_queue() {
     return ;
 }
 
+size_t   c_task_queue::size(void) const {
+    return (_tasks.size());
+}
+
 // Will execute the last task in the queue and remove it if the recipe is done
 void    c_task_queue::exec_task(void) {
-    c_callback *front;
-
     if (g_verbose)
         std::cout << "C_TASK_QUEUE : exec_task()" << std::endl;
-    if (_tasks.size() == 0)
-        return;
-    front = _tasks.front();
-    front->exec();
 
-    if (front->is_over() == true) {
-        reset_socket(front->client);
-        delete front;
-    } else
-        _tasks.push(front);
-    _tasks.pop();
+    _tasks.front()->exec();
+    if (_tasks.front()->is_over() == true)
+        delete _tasks.front();             // Ended task deletion
+    else
+        _tasks.push(_tasks.front());       // Push executed task to call back
+    _tasks.pop();                          // Delete task executed
 }
 
 // Add a new request in c_callback form in the queue
