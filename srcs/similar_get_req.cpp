@@ -4,8 +4,13 @@ static bool    check_old_respons_is_valid(s_socket client,
                     struct s_similar_get_req *similar_req) {
     struct stat         stat;
 
-    if (lstat(similar_req->path_respons.c_str(), &stat) == -1)
-        std::cerr << "Error: lstat check_old_respons_is_valid()" << std::endl;
+    errno = 0;
+    if (lstat(similar_req->path_respons.c_str(), &stat) == -1) {
+        std::cerr <<                                                          \
+            "Error: lstat check_old_respons_is_valid() : " << strerror(errno) \
+        << std::endl;
+        return (false);
+    }
     if (similar_req->last_state_change != stat.st_ctime)
         return (false);
     if (ft_strcmp(client.headers.host.c_str(), similar_req->host.c_str()) != 0)
@@ -16,7 +21,7 @@ static bool    check_old_respons_is_valid(s_socket client,
 }
 
 static void     send_same_request(s_socket *client,
-                    struct s_similar_get_req *similar_req) {
+                                  s_similar_get_req *similar_req) {
     if (send(client->client_fd, similar_req->respons.c_str(),
         similar_req->respons.length(), 0) < 1) {
         std::cerr << "Error: Respons to client" << std::endl;
@@ -24,7 +29,8 @@ static void     send_same_request(s_socket *client,
     reset_socket(client);
 }
 
-void    similar_get_req_manager(t_socketlst *clients, struct s_similar_get_req *similar_req) {
+void    similar_get_req_manager(t_socketlst *clients,
+                                s_similar_get_req *similar_req) {
     t_socketlst::iterator       it;
     t_socketlst::iterator       ite;
 

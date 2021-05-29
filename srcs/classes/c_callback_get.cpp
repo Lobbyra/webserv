@@ -31,32 +31,40 @@ void                c_callback::_meth_get_request_is_valid(void) {
     std::string     tmp_path;
     this->path.insert(0, this->root);
 
-    if (this->method == "GET")                      // Response have header ?
+    if (this->method == "GET")                      // Response have body?
         _resp_body = true;
     tmp_path = this->path;
-    if (lstat(this->path.c_str(), &stat) == -1) {   // Path exist?
+    errno = 0;
+    if (lstat(this->path.c_str(), &stat) == -1) {   // Path exist? (DIR|FILE)
+        std::cerr <<                                        \
+            "ERR: get first lstat : " << strerror(errno) << \
+        std::endl;
         this->status_code = 404;
-    } else if ((stat.st_mode & S_IRUSR) == false) { // Do we have rights on it?
-        if (g_verbose)
-            std::cout << "Error: no reading rights" << std::endl;
-        this->status_code = 403;
-        this->content_length_h = 0;
-    } else {                                        // Ok it exist and allowed
-        if (S_ISDIR(stat.st_mode)) {
-            this->path = _find_index_if_exist();
-            if (this->path != tmp_path) {           // Index found
-                return ;
-            } else if (this->autoindex == "on") {   // Do we have autoindex ?
-                _dir_listening_page = gen_listening(this->path);
-                _resp_body = false;
-                content_length_h = lststr_len(_dir_listening_page, "\r\n");
-            } else {                                // No solution to get a dir
-                this->status_code = 404;
-            }
-        } else {
-            this->content_length_h = stat.st_size;
+        return ;
+    }
+    if (S_ISDIR(stat.st_mode) == true) {
+        this->path = _find_index_if_exist();
+        if (this->path == tmp_path && this->autoindex == "on") { // Index not found
+            _dir_listening_page = gen_listening(this->path);
+            _resp_body = false;
+            content_length_h = lststr_len(_dir_listening_page, "\r\n");
+            return ;
+        } else if (this->path == tmp_path) {
+            this->status_code = 404;
+            return ;
         }
     }
+    if (lstat(this->path.c_str(), &stat) == -1) {   // Path exist? (FILE)
+        this->status_code = 404;
+        return ;
+    } else if ((stat.st_mode & S_IRUSR) == false) { // Do we have rights on it?
+        if (g_verbose) {
+            std::cout << "Error: no reading rights" << std::endl;
+            this->status_code = 403;
+            return ;
+        }
+    }
+    this->content_length_h = stat.st_size;
     _continue();
 }
 
@@ -65,7 +73,7 @@ std::list<c_callback::t_task_f>     c_callback::_init_recipe_get(void) {
 
     tasks.push_back(&c_callback::_meth_get_request_is_valid);
     tasks.push_back(&c_callback::_gen_resp_headers);
-//    tasks.push_back(&c_callback::_read_body);
+    //    tasks.push_back(&c_callback::_read_body);
     tasks.push_back(&c_callback::_send_respons);
     tasks.push_back(&c_callback::_send_respons_body);
     return tasks;
