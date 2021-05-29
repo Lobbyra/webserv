@@ -27,6 +27,12 @@ int    parse_header(std::string line,
     std::string     sep(":");
 
     prefix = get_word(line, line.begin(), sep);
+    if (prefix == "Transfer-Encoding" || prefix == "Content-Length") {
+        if (*((bool*)(*header_ptrs)["trans_mode_saw"]) == false)
+            *((bool*)(*header_ptrs)["trans_mode_saw"]) = true;
+        else
+            return (1);
+    }
     if (header_parsers->find(prefix) != header_parsers->end()) {
         if ((check_if_host_exist(prefix, (*header_ptrs)[prefix]) == 1))
             return (1);

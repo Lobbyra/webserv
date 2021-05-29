@@ -22,6 +22,7 @@ std::map<std::string, void*>     init_header_ptrs(s_request_header *headers) {
     str_ptrs_map["Content-Length"] = &(headers->content_length);
     str_ptrs_map["Accept-Language"] = &(headers->accept_language);
     str_ptrs_map["Transfer-Encoding"] = &(headers->transfer_encoding);
+    str_ptrs_map["trans_mode_saw"] = &(headers->is_transfer_mode_saw);
     return (str_ptrs_map);
 }
 

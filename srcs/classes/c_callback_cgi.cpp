@@ -156,6 +156,13 @@ void    c_callback::_meth_cgi_init_http(void) {
     }
 }
 
+/* _METH_CGI_SAVE_CLIENT_IN
+ * This function will save the entire client body in a tmpfile to be gived as
+ * input for CGI execution. File cursor must be reset at the
+ * end of body reading.
+ * End of body is gived by content-length cause this task isn't called if the
+ * request is chunked.
+ */
 void    c_callback::_meth_cgi_save_client_in(void) {
     if (g_verbose)
         std::cout << "TASK : _meth_cgi_save_client_in" << std::endl;

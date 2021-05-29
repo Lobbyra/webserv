@@ -94,10 +94,9 @@ bool    ft_select(t_socketlst *const clients, struct s_similar_get_req *similar_
             continue ;
         s_socket nclient = *it;
 
+        reset_socket(&nclient);
         nclient.client_fd = accept(nclient.entry_socket, \
                             &nclient.client_addr, &socklen);
-        nclient.is_read_ready = false;
-        nclient.is_write_ready = false;
         nclient.similar_req = similar_req;
         if (errno != 0)
             ft_error("accept");

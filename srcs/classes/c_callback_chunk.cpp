@@ -58,13 +58,22 @@ static int parse_chunk_data(std::list<char*> *buffer, int *chunk_size,
             ret_flag = CHUNK_ENOUGH;
             *chunk_size = -1;        // Reset to default value
         } else {                     // Wrong size of chunk recieved
+            if (g_verbose == true) {
+                std::cerr << \
+                    "ERR: chunk_data: wrong size, n-enough" << std::endl;
+            }
             ret_flag = CHUNK_ERROR;
         }
     } else {
         if (*chunk_size > 0)
             ret_flag = CHUNK_MORE;
-        else
+        else {
+            if (g_verbose == true) {
+                std::cerr << \
+                    "ERR: chunk_data: wrong size, too much" << std::endl;
+            }
             ret_flag = CHUNK_ERROR;
+        }
     }
     if (ret_flag != CHUNK_ERROR) {
         bytes_write = write(tmpfile_fd, chunk_data, chunk_data_len);
@@ -91,6 +100,7 @@ static int parse_chunk_size(std::list<char*> *buffer, int *chunk_size) {
         cut_buffer(buffer, ft_strlen("\r\n"));
     }
     if (is_str_hex(size_line) == false) { // Wrong size line
+        std::cerr << "ERR: parse_chunk_size: size not hex" << std::endl;
         ret_flag = CHUNK_ERROR;
     } else {
         *chunk_size = (int)hextodec(size_line);

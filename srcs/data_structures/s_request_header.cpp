@@ -53,4 +53,5 @@ void    reset_header(s_request_header *h) {
     h->transfer_encoding = "";
     h->accept_charset.clear();
     h->accept_language.clear();
+    h->is_transfer_mode_saw = false;
 };
