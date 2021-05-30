@@ -37,7 +37,8 @@ void    c_task_queue::push(std::list<s_socket> *clients) {
     std::list<s_socket>::iterator ite_clients = clients->end();
 
     while (it_clients != ite_clients) {
-        if (it_clients->is_header_read && !it_clients->is_callback_created) {
+        if (it_clients->is_header_read && !it_clients->is_callback_created &&
+                it_clients->is_cache_resp == false) {
             cb_temp = new c_callback(&(*it_clients),
                     &(it_clients->headers), clients);
             it_clients->is_callback_created = true;

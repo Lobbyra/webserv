@@ -145,6 +145,11 @@ bool    read_headers(std::list<s_socket> *clients) {
         }
         // SAVE IF THERE A CRLF HEAD_BODY SEPARATOR READ IN BUFFER
         it->is_header_read = is_sep_header(&it->buffer);
+        if (g_verbose == true && it->is_header_read == true) {
+            std::cout << \
+                "[" << it->client_fd << "]" << " : header fully read" << \
+            std::endl;
+        }
         is_one_req_ready |= it->is_header_read;    // At least one req read ret
         // PARSING DATA RECIEVED
         if (it->is_header_read == true && it->headers.method != "TRACE") {

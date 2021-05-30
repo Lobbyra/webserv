@@ -80,6 +80,7 @@ int parse_chunk_size(std::list<char*> *buffer, int *chunk_size) {
     if (ret_flag != CHUNK_ERROR && *chunk_size == 0) {
         ret_flag = CHUNK_END;
     }
+    free(size_line);
     return (ret_flag);
 }
 
@@ -123,8 +124,9 @@ void    c_callback::_chunk_reading(void) {
 
     if (_tmpfile == NULL)
         _tmpfile = new c_tmpfile();
-    if ((this->client_buffer->size() == 0 && this->is_read_ready == false) ||
-            _tmpfile->is_write_ready() == false) {
+    if (((is_buffer_crlf(this->client_buffer) == false &&
+                *(this->is_read_ready) == false)) ||
+                _tmpfile->is_write_ready() == false) {
         --_it_recipes;
         return ;
     }

@@ -19,22 +19,24 @@ struct s_similar_get_req {
 };
 
 struct s_socket {
-    int                 client_fd;
-    int                 entry_socket;
-    bool                is_read_ready;
-    bool                is_write_ready;
-    bool                is_header_read;
-    bool                is_status_line_read;
-    bool                is_callback_created;
-    sockaddr            client_addr;
-    s_ipport const      *ipport;
-    c_server const      *server;
-    s_request_header    headers;
-    std::list<char*>    buffer;
-    s_similar_get_req   *similar_req;
+    int               client_fd;
+    int               entry_socket;
+    bool              is_cache_resp;
+    bool              is_read_ready;
+    bool              is_write_ready;
+    bool              is_header_read;
+    bool              is_status_line_read;
+    bool              is_callback_created;
+    sockaddr          client_addr;
+    s_ipport const    *ipport;
+    c_server const    *server;
+    s_request_header  headers;
+    std::list<char*>  buffer;
+    s_similar_get_req *similar_req;
 };
 
 void    reset_socket(s_socket *s);
+void    reset_similar(s_similar_get_req *simi);
 
 std::ostream    &operator<<(std::ostream &o, s_socket const &i);
 std::ostream    &operator<<(std::ostream& os, const std::list<s_socket>& v);

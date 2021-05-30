@@ -18,15 +18,20 @@ bool    read_headers(std::list<s_socket> *clients);
 
 void    webserv(std::list<c_server> const &conf);
 
-bool    ft_select(t_socketlst *const clients, struct s_similar_get_req *similar_req);
+bool    ft_select(std::list<s_socket> *const clients,
+                  s_similar_get_req *similar_req);
 
-void    similar_get_req_manager(t_socketlst *clients, struct s_similar_get_req *similar_req);
+void    similar_get_req_sender(std::list<s_socket> *clients,
+                                s_similar_get_req *similar_req);
+void    similar_get_req_checker(std::list<s_socket> *clients,
+                                s_similar_get_req *similar_req);
 
-void    init_clients(std::list<c_server> const &conf, t_socketlst *clients);
+void    init_clients(std::list<c_server> const &conf,
+                     std::list<s_socket> *clients);
 
-std::list<s_request_header>     parse_request(t_socketlst *const clients);
+std::list<s_request_header> parse_request(std::list<s_socket> *const clients);
 
-void    assign_server_to_clients(std::list<c_server> const &conf, \
-                                 t_socketlst *const clients);
+void    assign_server_to_clients(std::list<c_server> const &conf,
+                                 std::list<s_socket> *const clients);
 
 #endif

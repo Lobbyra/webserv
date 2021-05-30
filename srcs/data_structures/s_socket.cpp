@@ -46,6 +46,7 @@ void    reset_socket(s_socket *s) {
 
     s->server = NULL;
     s->is_read_ready = false;
+    s->is_cache_resp = false;
     s->is_write_ready = false;
     s->is_header_read = false;
     reset_header(&(s->headers));
@@ -55,4 +56,11 @@ void    reset_socket(s_socket *s) {
         free(*it_buf);
         s->buffer.erase(it_buf++);
     }
+}
+
+void    reset_similar(s_similar_get_req *simi) {
+    simi->host = "";
+    simi->ipport = NULL;
+    simi->respons = "";
+    simi->path_respons = "";
 }

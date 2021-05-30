@@ -27,12 +27,13 @@ void    webserv(std::list<c_server> const &conf) {
     bool                        has_new_header_ready;
     t_socketlst                 *clients;
     c_task_queue                task_queue;
+    s_similar_get_req           similar_req;
     std::list<s_request_header> requests;
-    struct s_similar_get_req    similar_req;
 
     is_new_request = false;
     has_new_header_ready = false;
     clients = new t_socketlst;
+    reset_similar(&similar_req);
     try {
         init_clients(conf, clients);
     }
@@ -45,9 +46,6 @@ void    webserv(std::list<c_server> const &conf) {
         has_new_header_ready = ft_select(clients, &similar_req);
         if (g_verbose && clients->size() > 1) {
             std::cout << *clients << std::endl;
-            std::cout << \
-                COLOR_WHITE_("Num of callbacks = ") << task_queue.size() << \
-            std::endl;
         }
         if (g_run == false)
             break ;
@@ -55,8 +53,9 @@ void    webserv(std::list<c_server> const &conf) {
             is_new_request = read_headers(clients);
             has_new_header_ready = false;
         }
-        if (similar_req.host.empty() == false) {
-           similar_get_req_manager(clients, &similar_req);
+        if (similar_req.host.empty() == false) {        // If a cache is ready
+            similar_get_req_sender(clients, &similar_req);
+            similar_get_req_checker(clients, &similar_req);
         }
         if (is_new_request == true) {
             for (std::list<s_socket>::iterator it = clients->begin();

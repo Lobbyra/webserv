@@ -66,7 +66,7 @@ static int update_socketlst(t_socketlst *const lst, fd_set *r_set,
 /*
  * Return if a new header is ready to be read
  */
-bool    ft_select(t_socketlst *const clients, struct s_similar_get_req *similar_req) {
+bool    ft_select(t_socketlst *const clients, s_similar_get_req *similar_req) {
     fd_set  r_fdset, w_fdset;
     struct timeval time = {2, 0};
     int     updated_flag;
@@ -75,7 +75,6 @@ bool    ft_select(t_socketlst *const clients, struct s_similar_get_req *similar_
     init_fdsets(clients, &r_fdset, &w_fdset);
     select(socket_max(clients) + 1, &r_fdset, &w_fdset, NULL, &time);
     updated_flag = update_socketlst(clients, &r_fdset, &w_fdset);
-
     if (errno == EAGAIN || errno == EINTR || (updated_flag & 1) == false) {
         // std::cout << "*silence*" << std::endl;
         errno = 0;
@@ -94,9 +93,9 @@ bool    ft_select(t_socketlst *const clients, struct s_similar_get_req *similar_
             continue ;
         s_socket nclient = *it;
 
-        reset_socket(&nclient);
         nclient.client_fd = accept(nclient.entry_socket, \
                             &nclient.client_addr, &socklen);
+        reset_socket(&nclient);
         nclient.similar_req = similar_req;
         if (errno != 0)
             ft_error("accept");

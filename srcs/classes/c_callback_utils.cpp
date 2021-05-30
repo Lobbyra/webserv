@@ -144,11 +144,11 @@ void                    c_callback::_fd_is_ready_to_send(void) {
  * Open the requested file, read the file, and send line by line
  */
 void                    c_callback::_send_respons_body(void) {
+    if (g_verbose)
+        std::cout << "TASK : _send_respons_body()" << std::endl;
     char            buf[BUFFER_READ];
     int             bytes_read;
     int             ret;
-    if (g_verbose)
-        std::cout << "TASK : _send_respons_body()" << std::endl;
 
     if (_resp_body != true) {
         return ;
@@ -165,22 +165,21 @@ void                    c_callback::_send_respons_body(void) {
             return ;
         }
     }
-    if (is_fd_read_ready(_fd_body) != true || // Client and file ready?
-            *this->is_write_ready != true ) {
+    if (is_fd_read_ready(_fd_body) == false || // Client and file ready?
+            *this->is_write_ready == false ) {
         --_it_recipes;
         return ;
     }
     ft_bzero(buf, BUFFER_READ);
     bytes_read = read(_fd_body, buf, BUFFER_READ);
     if (bytes_read > 0) {
-        if ((ret = send(client_fd, buf, bytes_read, 0)) == -1) {
+        if ((ret = send(client_fd, buf, bytes_read, 0)) < 1) {
             std::cerr << "_send_respons_body : send() failed" << std::endl;
             this->status_code = 500;
             --_it_recipes;
             return ;
         }
-        if (ft_strcmp(this->method.c_str(), "GET") == 0 &&
-        ft_strcmp(this->original_path.c_str(), "/") == 0) {
+        if (this->method == "GET" && this->original_path == "/") {
             this->client->similar_req->respons.append(buf);
         }
         // std::cout << "return body: " << ret << std::endl;
@@ -201,11 +200,13 @@ void                    c_callback::_send_respons_body(void) {
  * Send the respons from the server to the client
  */
 void                    c_callback::_send_respons(void) {
-    int     ret;
     if (g_verbose) {
         std::cout << "TASK : _send_respons()" << std::endl;
         std::cout << _resp_headers.c_str() << std::endl;
     }
+    int         ret;
+    struct stat stat;
+
     if (*(this->is_write_ready) == false) {
         _it_recipes--;
         return ;
@@ -214,9 +215,7 @@ void                    c_callback::_send_respons(void) {
         std::cerr << "Error: Respons to client" << std::endl;
         this->status_code = 500;
     }
-    if (ft_strcmp(this->method.c_str(), "GET") == 0 &&
-        ft_strcmp(this->original_path.c_str(), "/") == 0) {
-            struct stat         stat;
+    if (this->method == "GET" && this->original_path == "/") {
             this->client->similar_req->host = this->host;
             this->client->similar_req->path_respons = this->path;
 
