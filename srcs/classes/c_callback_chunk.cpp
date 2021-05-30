@@ -14,6 +14,8 @@ extern bool g_verbose;
 #define CHUNK_ENOUGH 1
 #define CHUNK_END    2
 
+#define CHUNK_BUF_SIZE 4096
+
 /* IS_STR_HEX
  * Return false is string in parameter does not contain only hex chars. Return
  * true else.
@@ -84,7 +86,6 @@ int parse_chunk_size(std::list<char*> *buffer, int *chunk_size) {
     return (ret_flag);
 }
 
-#define CHUNK_BUF_SIZE 4096
 #include <iostream>
 
 /* READ_CHUNK_CLIENT
@@ -95,11 +96,11 @@ int read_chunk_client(int client_fd, std::list<char*> *buffer) {
     char    *local_buf = NULL;
     ssize_t bytes_recv;
 
-    if (!(local_buf = (char*)malloc(sizeof(char) * (CHUNK_BUF_SIZE))))
+    if (!(local_buf = (char*)malloc(sizeof(char) * (CHUNK_BUF_SIZE + 1))))
         return (CHUNK_FATAL);
-    ft_bzero(local_buf, CHUNK_BUF_SIZE);
+    ft_bzero(local_buf, CHUNK_BUF_SIZE + 1);
     errno = 0;
-    bytes_recv = recv(client_fd, local_buf, CHUNK_BUF_SIZE - 1, 0);
+    bytes_recv = recv(client_fd, local_buf, CHUNK_BUF_SIZE, 0);
     if (bytes_recv == 0 || bytes_recv == -1) {
         std::cerr << \
             "ERR: read_chunk_client : recv : " << bytes_recv << " " << \

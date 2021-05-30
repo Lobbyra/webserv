@@ -1,5 +1,7 @@
 #include <list>
 
+#include <stdlib.h>
+
 /* IS_BUFFER_CRLF
  * This function will return true if the buffer contain a CRLF.
  */

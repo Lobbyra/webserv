@@ -286,7 +286,7 @@ void    c_callback::_meth_cgi_launch(void) {
 void    c_callback::_meth_cgi_wait(void) {
     if (g_verbose)
         std::cout << "TASK : _meth_cgi_wait" << std::endl;
-    int status;
+    int   status;
     pid_t dead;
 
     errno = 0;
@@ -294,9 +294,6 @@ void    c_callback::_meth_cgi_wait(void) {
     if (dead == -1) {
         std::cerr << "error : waitpid() : " << strerror(errno) << std::endl;
         this->status_code = 500;
-        delete _tmpfile;
-        _tmpfile = NULL;
-        delete _out_tmpfile;
         return ;
     } else if (dead == _pid) {
         _out_tmpfile->reset_cursor();
@@ -334,29 +331,34 @@ void    c_callback::_meth_cgi_send_http(void) {
     return ;
 }
 
+#define CGI_SEN_BUF_SIZE 16000
+
 void    c_callback::_meth_cgi_send_resp(void) {
     if (g_verbose)
         std::cout << "TASK : _meth_cgi_send_resp" << std::endl;
     int     buf_size;
+    char    buf[CGI_SEN_BUF_SIZE];
     ssize_t bytes_send;
-    char   buf[4096];
 
     if (_out_tmpfile->is_read_ready() == false ||
             *this->is_write_ready == false) {
         --_it_recipes;
         return ;
     }
-    if ((buf_size = read(_out_tmpfile->get_fd(), buf, 4096)) == -1) {
+    if ((buf_size = read(_out_tmpfile->get_fd(), buf, CGI_SEN_BUF_SIZE)) == -1) {
+        std::cerr << "ERR: cgi_send : read error" << std::endl;
         this->status_code = 500;
         return ;
     }
-    if ((bytes_send = send(this->client_fd, buf, buf_size, 0)) == -1) {
-        this->status_code = 500;
+    if (buf_size > 0 &&
+            (bytes_send = send(this->client_fd, buf, buf_size, 0)) < 1) {
+        std::cerr << "ERR: cgi_send : send error" << std::endl;
+        remove_client(this->clients, this->client_fd, -1);
+        _exit();
         return ;
     }
     if (buf_size > 0) { // Is still content to read?
         --_it_recipes;
         return ;
     }
-    delete _out_tmpfile;
 }

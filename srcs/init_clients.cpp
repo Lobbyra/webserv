@@ -29,7 +29,7 @@ static int  makeSocketfd(const s_ipport &ipport) {
         throw std::logic_error("setsockopt");
     if ((bind(newSocket, (sockaddr *)&servaddr, sizeof(servaddr))) < 0)
         throw std::logic_error(std::string("bind: ") + strerror(errno));
-    if ((listen(newSocket, 10)) < 0)
+    if ((listen(newSocket, 1000)) < 0)
         throw std::logic_error("listen");
     return (newSocket);
 }

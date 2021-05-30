@@ -51,6 +51,10 @@ c_callback::~c_callback(void) {
     }
     if (_fd_body != 0)
         close(_fd_body);
+    if (_out_tmpfile != NULL) {
+        delete _out_tmpfile;
+        _out_tmpfile = NULL;
+    }
     if (this->status_code / 100 != 2) {
         remove_client(this->clients, this->client_fd, -1);
     } else {

@@ -13,7 +13,6 @@ void        c_callback::_meth_put_open_fd(void) {
 
     errno = 0;
     this->path.insert(0, this->root);
-    std::cout << "PATH: " << this->path << std::endl;
     if (lstat(this->path.c_str(), &stat) == 0 && // File exist and not a dir
             S_ISDIR(stat.st_mode) == false) {
         this->status_code = 204;
