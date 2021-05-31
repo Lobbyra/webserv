@@ -20,7 +20,8 @@ std::ostream    &operator<<(std::ostream &o, s_socket const &i) {
     COLOR_WHITE_(", is_callback_created") << " = " <<            \
         std::boolalpha << COLOR_BOOL_(i.is_callback_created) <<  \
     std::endl;
-//    o << COLOR_WHITE_(" buffer") << " = " << i.buffer;
+    // o << COLOR_WHITE_(" buffer") << " = " << i.buffer;
+    // o << COLOR_WHITE_(" len_buf_parts") << " = " << i.len_buf_parts;
 
     o << "}" << std::endl;
     return (o);
@@ -52,6 +53,7 @@ void    reset_socket(s_socket *s) {
     reset_header(&(s->headers));
     s->is_status_line_read = false;
     s->is_callback_created = false;
+    s->len_buf_parts.clear();
     while (it_buf != ite_buf) { // Clean header buffer
         free(*it_buf);
         s->buffer.erase(it_buf++);

@@ -65,7 +65,8 @@ static void remove_client(std::list<s_socket> *clients,
  * This function will read socket and save data read in the buffer header.
  * Return what recv return.
  */
-static ssize_t     read_socket(std::list<char*> *buffer, int client_fd) {
+static ssize_t     read_socket(std::list<char*> *buffer, int client_fd,
+        std::list<ssize_t> *len_buf_parts) {
     char    *read_buffer = NULL;
     ssize_t bytes_read = 0;
 
@@ -78,8 +79,10 @@ static ssize_t     read_socket(std::list<char*> *buffer, int client_fd) {
             "[" << client_fd << "] recv : [" << read_buffer << "]"
         << std::endl;
     }
-    if (bytes_read > 0)
+    if (bytes_read > 0) {
         buffer->push_back(read_buffer);
+        len_buf_parts->push_back(bytes_read);
+    }
     return (bytes_read);
 }
 
@@ -88,19 +91,19 @@ static ssize_t     read_socket(std::list<char*> *buffer, int client_fd) {
  * given.
  */
 static void parse_buffer(std::list<char*> *buffer, s_request_header *headers,
-                    std::map<std::string, f_request_header> *headers_parsers,
-                    bool *is_status_line_read) {
+                std::map<std::string, f_request_header> *headers_parsers,
+                bool *is_status_line_read, std::list<ssize_t> *len_buf_parts) {
     std::string                  header_to_parse;
     std::map<std::string, void*> headers_ptrs;
 
-    header_to_parse = get_header(buffer, *is_status_line_read);
+    header_to_parse = get_header(buffer, *is_status_line_read, len_buf_parts);
     if (header_to_parse != "")
         headers_ptrs = init_header_ptrs(headers);
     while (header_to_parse != "" && headers->error / 100 == 2) {
         if (*is_status_line_read == false) {            // Status line parsing
             parse_status_line(header_to_parse, &headers_ptrs);
             *is_status_line_read = true;
-            if (ft_strcmp(headers->method.c_str(), "TRACE") == 0) {
+            if (headers->method == "TRACE") {
                 headers->host = "tmp";
                 return ;
             }
@@ -111,7 +114,8 @@ static void parse_buffer(std::list<char*> *buffer, s_request_header *headers,
             }
             headers->saved_headers.push_back(header_to_parse);
         }
-        header_to_parse = get_header(buffer, is_status_line_read);
+        header_to_parse = get_header(buffer, is_status_line_read,
+                                    len_buf_parts);
     }
     return ;
 }
@@ -138,7 +142,8 @@ bool    read_headers(std::list<s_socket> *clients) {
             continue;
         }
         // READ DATA FROM CLIENT
-        bytes_read = read_socket(&it->buffer, it->client_fd);
+        bytes_read = read_socket(&it->buffer, it->client_fd,
+                &(it->len_buf_parts));
         if (bytes_read == 0 || bytes_read == -1) { // End of connection
             remove_client(clients, it++, bytes_read);
             continue;
@@ -154,11 +159,11 @@ bool    read_headers(std::list<s_socket> *clients) {
         // PARSING DATA RECIEVED
         if (it->is_header_read == true && it->headers.method != "TRACE") {
             parse_buffer(&(it->buffer), &(it->headers), &headers_parsers,
-                     &(it->is_status_line_read));
-            cut_buffer(&(it->buffer), 2);
+                     &(it->is_status_line_read), &(it->len_buf_parts));
+            cut_buffer(&(it->buffer), 2, &(it->len_buf_parts));
         }
         if (it->is_header_read == true && it->headers.method == "TRACE")
-            cut_buffer(&(it->buffer), 2);
+            cut_buffer(&(it->buffer), 2, &(it->len_buf_parts));
         if (it->headers.error / 100 != 2)          // Read finished if error
             it->is_header_read = true;
 

@@ -6,7 +6,8 @@
 /* FLUSH_CRLF
  * This function will remove starting '\r' & '\n' of the buffer.
  */
-bool    flush_crlf(std::list<char*> *buffer) {
+bool    flush_crlf(std::list<char*> *buffer,
+        std::list<ssize_t> *len_buf_parts) {
     char         *i_buf_parts = NULL;
     unsigned int len_to_flush = 0;
     std::list<char*>::iterator    it = buffer->begin();
@@ -22,7 +23,7 @@ bool    flush_crlf(std::list<char*> *buffer) {
             break;
         ++it;
     }
-    cut_buffer(buffer, len_to_flush);
+    cut_buffer(buffer, len_to_flush, len_buf_parts);
     return (len_to_flush > 0);
 }
 

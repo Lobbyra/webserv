@@ -26,7 +26,7 @@ void                       c_callback::_read_body_post(void) {
 
     if (this->client_buffer->empty() == false) {
         buffer = cut_buffer_ret(this->client_buffer,
-                                (int)this->content_length);
+                (int)this->content_length, &(this->client->len_buf_parts));
         _bytes_read = ft_strlen(buffer);
         free(buffer);
     }

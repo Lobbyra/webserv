@@ -10,29 +10,35 @@
  * we want to remove from the buffer.
  * String must be allocated in heap.
  */
-static void del_nodes(std::list<char*> *buffer, unsigned int &len) {
+static void del_nodes(std::list<char*> *buffer, unsigned int &len,
+        std::list<ssize_t> *len_buf_parts) {
     while (buffer->size() > 0 && len > ft_strlen(buffer->front())) {
         len -= ft_strlen(buffer->front());
         free(buffer->front());
         buffer->pop_front();
+        len_buf_parts->pop_front();
     }
 }
 
 /* CUT_BUFFER
  * This function will cut n chars from the start of the buffer.
  */
-void    cut_buffer(std::list<char*> *buffer, unsigned int len) {
+void    cut_buffer(std::list<char*> *buffer, unsigned int len,
+        std::list<ssize_t> *len_buf_parts) {
     char *sub_string = NULL;
     unsigned int sub_str_len;
 
-    del_nodes(buffer, len);
+    del_nodes(buffer, len, len_buf_parts);
     if (buffer->size() > 0) {
-        sub_str_len = ft_strlen(buffer->front()) - len;
+        sub_str_len = len_buf_parts->front() - len;
         sub_string = ft_substr(buffer->front(), len, sub_str_len);
         free(buffer->front());
         buffer->pop_front();
-        if (ft_strlen(sub_string) > 0)
+        len_buf_parts->pop_front();
+        if (ft_strlen(sub_string) > 0) {
             buffer->push_front(sub_string);
+            len_buf_parts->push_front(sub_str_len);
+        }
         else
             free(sub_string);
     }

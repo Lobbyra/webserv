@@ -19,20 +19,21 @@ struct s_similar_get_req {
 };
 
 struct s_socket {
-    int               client_fd;
-    int               entry_socket;
-    bool              is_cache_resp;
-    bool              is_read_ready;
-    bool              is_write_ready;
-    bool              is_header_read;
-    bool              is_status_line_read;
-    bool              is_callback_created;
-    sockaddr          client_addr;
-    s_ipport const    *ipport;
-    c_server const    *server;
-    s_request_header  headers;
-    std::list<char*>  buffer;
-    s_similar_get_req *similar_req;
+    int                client_fd;
+    int                entry_socket;
+    bool               is_cache_resp;
+    bool               is_read_ready;
+    bool               is_write_ready;
+    bool               is_header_read;
+    bool               is_status_line_read;
+    bool               is_callback_created;
+    sockaddr           client_addr;
+    s_ipport const     *ipport;
+    c_server const     *server;
+    s_request_header   headers;
+    std::list<char*>   buffer;
+    s_similar_get_req  *similar_req;
+    std::list<ssize_t> len_buf_parts; // Save each len of each buff string
 };
 
 void    reset_socket(s_socket *s);

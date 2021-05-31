@@ -32,12 +32,46 @@ static bool is_str_hex(char const *str) {
     return (true);
 }
 
+/* IS_CRLF_PART_FIRST()
+ * This function return true if the first string in the buffer contain at least
+ * one char of CRLF.
+ */
+static bool is_crlf_part_first(std::list<char*> *buffer) {
+    char        *i_buf_part;
+    std::string crlf = "\r\n";
+    std::string str_comp_tmp;
+    std::list<char*>::iterator it = buffer->begin();
+    std::list<char*>::iterator ite = buffer->end();
+    std::list<char*>::iterator it_first = buffer->end();
+
+    str_comp_tmp.reserve(crlf.length());
+    while (it != ite && str_comp_tmp != crlf) {
+        i_buf_part = *it;
+        while (*i_buf_part && str_comp_tmp != crlf) {
+            if (*i_buf_part == '\r' || *i_buf_part == '\n') {
+                if (str_comp_tmp.size() == 0 && *i_buf_part == '\r')
+                    it_first = it;
+                str_comp_tmp += *i_buf_part;
+            } else if (str_comp_tmp.size() != 0) {
+                str_comp_tmp.clear();
+                if (it != buffer->begin())
+                    return (false);
+            }
+            ++i_buf_part;
+        }
+        ++it;
+        if (str_comp_tmp.empty() == true)
+            return (false);
+    }
+    return (str_comp_tmp == crlf && it_first == buffer->begin());
+}
+
 /* PARSE_CHUNK_DATA
  * This function will cut from the buffer all data until a CRLF and but it
  * in the tmpfile.
  */
 int parse_chunk_data(std::list<char*> *buffer, int *chunk_size,
-                            int tmpfile_fd) {
+                        int tmpfile_fd, std::list<ssize_t> *len_buf_parts) {
     int          ret_flag = CHUNK_MORE;
     int          chunk_data_len;
     char         *chunk_data = NULL;
@@ -45,8 +79,8 @@ int parse_chunk_data(std::list<char*> *buffer, int *chunk_size,
     unsigned int len_to_cut;
 
     len_to_cut = find_str_buffer(buffer, "\r\n");
-    chunk_data = cut_buffer_ret(buffer, len_to_cut);
-    cut_buffer(buffer, 2);
+    chunk_data = cut_buffer_ret(buffer, len_to_cut, len_buf_parts);
+    cut_buffer(buffer, 2, len_buf_parts);
     chunk_data_len = ft_strlen(chunk_data);
     if (chunk_data_len != *chunk_size) {
         std::cerr << "ERR : bad data chunk" << std::endl;
@@ -65,14 +99,15 @@ int parse_chunk_data(std::list<char*> *buffer, int *chunk_size,
  * Will parse the buffer to find a chunk size.
  * If there isn't CRLF, it do nothing.
  */
-int parse_chunk_size(std::list<char*> *buffer, int *chunk_size) {
+int parse_chunk_size(std::list<char*> *buffer, int *chunk_size,
+        std::list<ssize_t> *len_buf_parts) {
     int          ret_flag = CHUNK_MORE;
     char         *size_line = NULL;
     unsigned int len_to_cut;
 
     len_to_cut = find_str_buffer(buffer, "\r\n");
-    size_line = cut_buffer_ret(buffer, len_to_cut);
-    cut_buffer(buffer, 2);
+    size_line = cut_buffer_ret(buffer, len_to_cut, len_buf_parts);
+    cut_buffer(buffer, 2, len_buf_parts);
     if (is_str_hex(size_line) == false) {              // Size line non hex
         std::cerr << "ERR: parse_chunk_size: size not hex" << std::endl;
         ret_flag = CHUNK_ERROR;
@@ -91,7 +126,8 @@ int parse_chunk_size(std::list<char*> *buffer, int *chunk_size) {
 /* READ_CHUNK_CLIENT
  * This function will read client and put the content in the buffer gived.
  */
-int read_chunk_client(int client_fd, std::list<char*> *buffer) {
+int read_chunk_client(int client_fd, std::list<char*> *buffer,
+        std::list<ssize_t> *len_buf_parts) {
     int     ret_flag = CHUNK_MORE;
     char    *local_buf = NULL;
     ssize_t bytes_recv;
@@ -109,6 +145,7 @@ int read_chunk_client(int client_fd, std::list<char*> *buffer) {
         free(local_buf);
     } else {
         buffer->push_back(local_buf);
+        len_buf_parts->push_back(bytes_recv);
         ret_flag = CHUNK_MORE;
     }
     return (ret_flag);
@@ -133,7 +170,8 @@ void    c_callback::_chunk_reading(void) {
     }
     if (this->client_buffer->size() == 0 ||
             is_buffer_crlf(this->client_buffer) == false) {
-        status = read_chunk_client(this->client_fd, this->client_buffer);
+        status = read_chunk_client(this->client_fd, this->client_buffer,
+                                   &(this->client->len_buf_parts));
         if (status == CHUNK_CLOSE) {
             remove_client(this->clients, this->client_fd, 0);
             _exit();
@@ -142,7 +180,8 @@ void    c_callback::_chunk_reading(void) {
     }
     while (is_buffer_crlf(this->client_buffer) && status != CHUNK_END) {
         if (this->_chunk_size == -1) {    // Chunk size is to read
-            status = parse_chunk_size(this->client_buffer, &_chunk_size);
+            status = parse_chunk_size(this->client_buffer, &_chunk_size,
+                    &(this->client->len_buf_parts));
             if (this->client_max_body_size != -1 &&
                 (int)_tmpfile->get_size() + _chunk_size >
                     this->client_max_body_size) {
@@ -150,8 +189,8 @@ void    c_callback::_chunk_reading(void) {
                 return ;
             }
         } else {                           // We are reading the chunk data
-            status = parse_chunk_data(this->client_buffer,
-                                      &_chunk_size, _tmpfile->get_fd());
+            status = parse_chunk_data(this->client_buffer, &_chunk_size,
+                        _tmpfile->get_fd(), &(this->client->len_buf_parts));
         }
     }
     if (status == CHUNK_MORE) {

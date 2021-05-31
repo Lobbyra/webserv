@@ -183,7 +183,8 @@ void    c_callback::_meth_cgi_save_client_in(void) {
         return ;
     }
     if (this->client_buffer->size() > 0) {                   // Buffer reading
-        cat_buf = cut_buffer_ret(this->client_buffer, this->content_length);
+        cat_buf = cut_buffer_ret(this->client_buffer, this->content_length,
+                &(this->client->len_buf_parts));
         cat_len = ft_strlen(cat_buf);
         if (write(_tmpfile->get_fd(), cat_buf, cat_len) < 1) {
             this->status_code = 500;
@@ -209,6 +210,7 @@ void    c_callback::_meth_cgi_save_client_in(void) {
             return ;
         } else {
             this->client_buffer->push_back(read_buf);
+            this->client->len_buf_parts.push_back(bytes_read);
         }
     }
     if (this->content_length > 0) {                         // Read again

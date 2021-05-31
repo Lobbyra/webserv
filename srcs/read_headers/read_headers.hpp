@@ -32,15 +32,19 @@ int     parse_header(std::string line,
 /* - BUFFER MANAGMENT TOOLS -
  * Functions used to cut/flush/check buffer content/
  */
-bool    flush_crlf(std::list<char*> *buffer);
+bool    flush_crlf(std::list<char*> *buffer,
+        std::list<ssize_t> *len_buf_parts);
 
-void    cut_buffer(std::list<char*> *buffer, unsigned int len);
+void    cut_buffer(std::list<char*> *buffer, unsigned int len,
+        std::list<ssize_t> *len_buf_parts);
 
-char    *cut_buffer_ret(std::list<char*> *buffer, unsigned int len);
+char    *cut_buffer_ret(std::list<char*> *buffer, unsigned int len,
+        std::list<ssize_t> *len_buf_parts);
 
 unsigned int find_str_buffer(std::list<char*> *buffer, std::string to_find);
 
-std::string get_header(std::list<char*> *buffer, bool is_status_line_read);
+std::string get_header(std::list<char*> *buffer, bool is_status_line_read,
+        std::list<ssize_t> *len_buf_parts);
 /* -                        - */
 
 #endif

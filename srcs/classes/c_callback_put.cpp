@@ -72,7 +72,7 @@ void    c_callback::_meth_put_write_body(void) {
     }
     if (this->client_buffer->empty() == false) {
         buffer = cut_buffer_ret(this->client_buffer,
-                                (int)this->content_length);
+                    (int)this->content_length, &(this->client->len_buf_parts));
         _bytes_read = ft_strlen(buffer);
         if (this->client_max_body_size != -1 &&
             _bytes_read > (int)this->client_max_body_size) {
