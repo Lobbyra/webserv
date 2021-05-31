@@ -1,0 +1,5 @@
+HTTP/1.1 400 Bad Request
+Server: Drunkserv v6.66
+Date: Mon, 31 May 2021 11:16:59 CEST
+Content-Length: 161
+Connection: close

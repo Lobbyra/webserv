@@ -1,0 +1,5 @@
+HTTP/1.1 505 HTTP Version Not Supported
+Server: Drunkserv v6.66
+Date: Mon, 31 May 2021 11:11:48 CEST
+Content-Length: 191
+Connection: close

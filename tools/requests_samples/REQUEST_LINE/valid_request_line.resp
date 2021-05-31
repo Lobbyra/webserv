@@ -1,0 +1,7 @@
+HTTP/1.1 200 OK
+Server: Drunkserv v6.66
+Date: Mon, 31 May 2021 11:10:35 CEST
+Content-Length: 20
+Connection: keep-alive
+
+! Default website !
