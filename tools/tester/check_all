@@ -39,7 +39,7 @@ function check_all() {
             continue
         fi
 
-        printf "${YELLOW}%35s${EOC}\n" $method
+        printf "${YELLOW}\t\t\t%s${EOC}\n" $method
 
         dir="${req_dir}/${method}"
         files=($(ls $dir/*.req))
