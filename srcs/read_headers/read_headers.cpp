@@ -29,36 +29,6 @@ static bool        is_sep_header(std::list<char*> *buffer) {
     return (crlf_save == "\r\n\r\n");
 }
 
-/* REMOVE_CLIENT
- * This function will remove the client gived from the list of client cause of
- * EOF/connection closed or recv return an error.
- */
-static void remove_client(std::list<s_socket> *clients,
-        std::list<s_socket>::iterator client, ssize_t bytes_read) {
-    std::string closing_cause = "";
-    std::list<char*>::iterator it_buf = client->buffer.begin();
-    std::list<char*>::iterator ite_buf = client->buffer.end();
-
-    if (g_verbose == true) {
-        if (bytes_read == -1) {
-            closing_cause = "read error.";
-        } else if (bytes_read == 0) {
-            closing_cause = "client closed the connection.";
-        }
-        std::cout <<                                                       \
-            "[" << client->client_fd << "] Connection closed due to : " << \
-            closing_cause <<                                               \
-        std::endl;
-    }
-    while (it_buf != ite_buf) {
-        free(*it_buf);
-        client->buffer.erase(it_buf++);
-    }
-    close(client->client_fd);
-    clients->erase(client);
-    return ;
-}
-
 #define BUFF_SIZE_SOCKET 1024
 
 /* READ_SOCKET
@@ -145,7 +115,7 @@ bool    read_headers(std::list<s_socket> *clients) {
         bytes_read = read_socket(&it->buffer, it->client_fd,
                 &(it->len_buf_parts));
         if (bytes_read == 0 || bytes_read == -1) { // End of connection
-            remove_client(clients, it++, bytes_read);
+            remove_client(clients, (it++)->client_fd, bytes_read);
             continue;
         }
         // SAVE IF THERE A CRLF HEAD_BODY SEPARATOR READ IN BUFFER
