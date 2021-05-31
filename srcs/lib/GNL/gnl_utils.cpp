@@ -1,6 +1,8 @@
 #include "get_next_line.h"
 #include <iostream>
 
+bool		is_fd_read_ready(int fd);
+
 t_gnl		*ft_lstnew_gnl(int fd)
 {
 	t_gnl	*newNode;
@@ -13,7 +15,8 @@ t_gnl		*ft_lstnew_gnl(int fd)
 		free(newNode);
 		return (NULL);
 	}
-	if ((newNode->max = read(fd, newNode->tab, BUFFER_SIZE)) < 0)
+	if (is_fd_read_ready(fd) == false ||
+		(newNode->max = read(fd, newNode->tab, BUFFER_SIZE)) < 0)
 	{
 		free(newNode->tab);
 		newNode->tab = NULL;
