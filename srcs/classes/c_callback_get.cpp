@@ -60,9 +60,9 @@ void                c_callback::_meth_get_request_is_valid(void) {
     } else if ((stat.st_mode & S_IRUSR) == false) { // Do we have rights on it?
         if (g_verbose) {
             std::cout << "Error: no reading rights" << std::endl;
-            this->status_code = 403;
-            return ;
         }
+        this->status_code = 403;
+            return ;
     }
     this->content_length_h = stat.st_size;
 }
