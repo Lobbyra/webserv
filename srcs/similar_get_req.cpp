@@ -6,7 +6,6 @@ static bool    check_old_respons_is_valid(s_socket &client,
                                           s_similar_get_req *similar_req) {
     struct stat stat;
 
-    errno = 0;
     if (client.ipport != similar_req->ipport)
         return (false);
     if (client.headers.host != similar_req->host)
