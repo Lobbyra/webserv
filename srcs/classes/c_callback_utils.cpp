@@ -179,7 +179,7 @@ void                    c_callback::_send_respons_body(void) {
             --_it_recipes;
             return ;
         }
-        if (this->method == "GET" && this->original_path == "/") {
+        if (this->method == "GET") {
             this->client->similar_req->respons.append(buf);
         }
         // std::cout << "return body: " << ret << std::endl;
@@ -215,9 +215,10 @@ void                    c_callback::_send_respons(void) {
         std::cerr << "Error: Respons to client" << std::endl;
         this->status_code = 500;
     }
-    if (this->method == "GET" && this->original_path == "/") {
+    if (this->method == "GET") {
             this->client->similar_req->host = this->host;
             this->client->similar_req->path_respons = this->path;
+            this->client->similar_req->original_path = this->original_path;
 
             if (lstat(this->path.c_str(), &stat) == -1)
                 std::cerr << "Error: lstat _send_respons()" << std::endl;

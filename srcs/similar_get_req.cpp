@@ -47,7 +47,8 @@ void    similar_get_req_checker(std::list<s_socket> *clients,
                 it->client_fd == 0 || it->is_header_read == false)
             continue ;
         if (it->is_callback_created == false && it->is_write_ready == true &&
-                it->headers.method == "GET" && it->headers.path == "/"     &&
+                it->headers.method == "GET"                                &&
+                it->headers.path == similar_req->original_path             &&
                 it->headers.error == 200                                   &&
                 check_old_respons_is_valid((*it), similar_req) == true     &&
                 it->ipport == similar_req->ipport                          &&
