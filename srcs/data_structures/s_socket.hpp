@@ -14,6 +14,7 @@ struct s_similar_get_req {
     std::string     host;
     std::string     respons;
     std::string     path_respons;
+    std::string     original_path;
     s_ipport const  *ipport;
     time_t          last_state_change;
 };
