@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env zsh
 
 CONFIG_PATH=./config_files
 PHPCGI_TARGET=tools/php-cgi
@@ -11,15 +11,21 @@ function ft_escape_backslash () {
 }
 
 if [ "$OSTYPE" = "linux-gnu" ]; then
+	PHPCGI_SRC="./tools/.compressed_phpcgi/linux_phpcgi.tar"
+	CGI42="tools/42_testers/ubuntu_cgi_tester"
+
 	function sedreplace () {
+		2="$(ft_escape_backslash $2)"
 		sed s/"$1"/"$2"/g $3 -i
 	}
-	PHPCGI_SRC="./tools/.compressed_phpcgi/linux_phpcgi.tar"
 else # On macOS
+	PHPCGI_SRC="./tools/.compressed_phpcgi/darwin_phpcgi.tar"
+	CGI42="tools/42_testers/cgi_tester"
+
 	function sedreplace () {
+		2="$(ft_escape_backslash $2)"
 		sed -i "" s/"$1"/"$2"/g $3
 	}
-	PHPCGI_SRC="./tools/.compressed_phpcgi/darwin_phpcgi.tar"
 	if [ -e $SIEGE_CONF ]; then
 		sedreplace "^connection \= close" "connection \= keep-alive" $SIEGE_CONF
 	fi
@@ -35,9 +41,8 @@ fi
 
 # Replace __PWD__ by actual PWD in every config files
 FILES=($(ls $CONFIG_PATH))
-NEWPWD=$(ft_escape_backslash $PWD)
-NEWPHPBIN=$(ft_escape_backslash "$PWD/$PHPBIN_PATH")
 for file in ${FILES[@]}; do
-	sedreplace __PWD__ "$NEWPWD" "$CONFIG_PATH/$file"
-	sedreplace __PHP__ "$NEWPHPBIN" "$CONFIG_PATH/$file"
+	sedreplace __PWD__ "$PWD" "$CONFIG_PATH/$file"
+	sedreplace __PHP__ "$PWD/$PHPBIN_PATH" "$CONFIG_PATH/$file"
+	sedreplace __42CGI__ "$CGI42" "$CONFIG_PATH/$file"
 done
