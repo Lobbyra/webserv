@@ -72,6 +72,10 @@ void                       c_callback::_create_tmp_file(void) {
         write(_tmpfile->get_fd(), buf, status);
         --_it_recipes;
     }
+    if (status <= 0) {
+        remove_client(this->clients, this->client_fd, status);
+        _exit();
+    }
 }
 
 std::list<c_callback::t_task_f>     c_callback::_init_recipe_post(void) {
