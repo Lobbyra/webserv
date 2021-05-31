@@ -157,13 +157,10 @@ bool    read_headers(std::list<s_socket> *clients) {
         }
         is_one_req_ready |= it->is_header_read;    // At least one req read ret
         // PARSING DATA RECIEVED
-        if (it->is_header_read == true && it->headers.method != "TRACE") {
+        if (it->is_header_read == true) {
             parse_buffer(&(it->buffer), &(it->headers), &headers_parsers,
                      &(it->is_status_line_read), &(it->len_buf_parts));
-            cut_buffer(&(it->buffer), 2, &(it->len_buf_parts));
         }
-        if (it->is_header_read == true && it->headers.method == "TRACE")
-            cut_buffer(&(it->buffer), 2, &(it->len_buf_parts));
         if (it->headers.error / 100 != 2)          // Read finished if error
             it->is_header_read = true;
 
