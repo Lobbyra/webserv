@@ -79,7 +79,7 @@ void    c_callback::_meth_put_write_body(void) {
             this->status_code = 413;
             return ;
         }
-        if (write(_fd_to_write, buffer, _bytes_read) == -1) {
+        if (write(_fd_to_write, buffer, _bytes_read) <= 0) {
             if (transfer_encoding == "chunked") {
                 delete _tmpfile;
                 _tmpfile = NULL;
@@ -107,7 +107,7 @@ void    c_callback::_meth_put_write_body(void) {
                     this->status_code = 413;
             return ;
         }
-        if (write(_fd_to_write, buffer, _bytes_read) == -1) {
+        if (write(_fd_to_write, buffer, _bytes_read) <= 0) {
             if (transfer_encoding == "chunked") {
                 delete _tmpfile;
                 _tmpfile = NULL;

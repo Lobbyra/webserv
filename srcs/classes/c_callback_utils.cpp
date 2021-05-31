@@ -83,7 +83,6 @@ void    c_callback::_read_body(void) {
         return ;
     if (g_verbose)
         std::cout << "TASK : _read_body()" << std::endl;
-    errno = 0;
     if (*this->is_read_ready == false) {
         return ;
     } else {
@@ -93,7 +92,6 @@ void    c_callback::_read_body(void) {
         else if (status == -1) {
             status_code = 500;
             --_it_recipes;
-            std::cerr << "error: _read_body() " << strerror(errno) << std::endl;
         }
     }
 }

@@ -53,7 +53,8 @@ void                    c_callback::_read_client_to_tmpfile(void){
            _host = true;
         buf = concate_list_str(this->client_buffer);
         bytes_read = ft_strlen(buf);
-        write(_tmpfile->get_fd(), buf, bytes_read);
+        if (write(_tmpfile->get_fd(), buf, bytes_read) < 1)
+            std::cerr << "error: _read_client_to_tmpfile | write()" <<std::endl;
         free(buf);
     }
     if (_host == false) {

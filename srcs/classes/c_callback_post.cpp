@@ -69,7 +69,8 @@ void                       c_callback::_create_tmp_file(void) {
     if (*this->is_read_ready == false)
         --_it_recipes;
     if ((status = read(client_fd, &buf, 4096)) >= 1) {
-        write(_tmpfile->get_fd(), buf, status);
+        if (write(_tmpfile->get_fd(), buf, status) <= 0)
+            std::cerr << "error: _create_tmp_file() | write()" << std::endl;
         --_it_recipes;
     }
     if (status <= 0) {
