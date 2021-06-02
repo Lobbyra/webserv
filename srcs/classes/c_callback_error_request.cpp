@@ -6,9 +6,11 @@ bool                    c_callback::_if_error_page_exist(void) {
     t_error_page::iterator      it;
     struct stat                 stat;
 
+    std::cout << "ERROR PAGE 00" << std::endl;
     it = this->error_page.find(this->status_code);
     if (it != this->error_page.end()) {
         path_error_page.insert(0, (*it).second);
+        std::cout << "PATH ERR:" << path_error_page << std::endl;
         if (lstat(path_error_page.c_str(), &stat) == 0)
             if (S_ISREG(stat.st_mode)) {
                 this->path = path_error_page;
@@ -16,6 +18,7 @@ bool                    c_callback::_if_error_page_exist(void) {
                 return (true);
             }
     }
+    std::cout << "ERROR PAGE 01" << std::endl;
     return (false);
 }
 
@@ -35,10 +38,16 @@ void                    c_callback::_gen_error_header_and_body(void) {
     }
 }
 
+void                    c_callback::_send_error_page(void) {
+    if (_resp_body == true)
+        _send_respons_body();
+}
+
 std::list<c_callback::t_task_f>        c_callback::_init_error_request(void) {
     std::list<t_task_f> tasks;
 
     tasks.push_back(&c_callback::_gen_error_header_and_body);
     tasks.push_back(&c_callback::_send_respons);
+    tasks.push_back(&c_callback::_send_error_page);
     return (tasks);
 }

@@ -159,6 +159,7 @@ private:
      * Generate headers in string form including status line in _headers
      */
     void  _gen_error_header_and_body(void);
+    void  _send_error_page(void);
     void  _gen_resp_headers(void);
     std::string _resp_headers;
 
