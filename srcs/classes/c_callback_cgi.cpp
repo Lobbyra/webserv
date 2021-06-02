@@ -327,8 +327,10 @@ void    c_callback::_meth_cgi_send_http(void) {
     }
     if (http_content) {
         if (send(this->client_fd, http_content, ft_strlen(http_content), 0)
-                == -1) {
-            this->status_code = 500;
+                < 1) {
+            std::cerr << "ERR: _meth_cgi_send_http : send" << std::endl;
+            remove_client(this->clients, this->client_fd, -1);
+            _exit();
         }
         free(http_content);
     }
@@ -350,7 +352,8 @@ void    c_callback::_meth_cgi_send_resp(void) {
         --_it_recipes;
         return ;
     }
-    if ((buf_size = read(_out_tmpfile->get_fd(), buf, CGI_SEN_BUF_SIZE)) == -1) {
+    if ((buf_size = read(_out_tmpfile->get_fd(), buf, CGI_SEN_BUF_SIZE))
+            < 1) {
         std::cerr << "ERR: cgi_send : read error" << std::endl;
         this->status_code = 500;
         return ;

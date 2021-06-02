@@ -66,37 +66,6 @@ static bool is_crlf_part_first(std::list<char*> *buffer) {
     return (str_comp_tmp == crlf && it_first == buffer->begin());
 }
 
-/* PARSE_CHUNK_DATA
- * This function will cut from the buffer all data until a CRLF and but it
- * in the tmpfile.
- */
-/*
-int parse_chunk_data(std::list<char*> *buffer, int *chunk_size,
-                        int tmpfile_fd, std::list<ssize_t> *len_buf_parts) {
-    int          ret_flag = CHUNK_MORE;
-    int          chunk_data_len;
-    char         *chunk_data = NULL;
-    ssize_t      bytes_write;
-    unsigned int len_to_cut;
-
-    len_to_cut = find_str_buffer(buffer, "\r\n");
-    chunk_data = cut_buffer_ret(buffer, len_to_cut, len_buf_parts);
-    cut_buffer(buffer, 2, len_buf_parts);
-    chunk_data_len = ft_strlen(chunk_data);
-    if (chunk_data_len != *chunk_size) {
-        std::cerr << "ERR : bad data chunk" << std::endl;
-        ret_flag = CHUNK_ERROR;
-    } else {
-        bytes_write = write(tmpfile_fd, chunk_data, chunk_data_len);
-        if (bytes_write == 0 || bytes_write == -1)
-            ret_flag = CHUNK_FATAL;
-    }
-    *chunk_size = -1;
-    free(chunk_data);
-    return (ret_flag);
-}
-*/
-
 int parse_chunk_data(std::list<char*> *buffer, int *chunk_size,
                     c_tmpfile *tmpfile, std::list<ssize_t> *len_buf_parts) {
     int          ret_flag = CHUNK_ENOUGH;
@@ -190,12 +159,10 @@ int read_chunk_client(int client_fd, std::list<char*> *buffer,
     if (!(local_buf = (char*)malloc(sizeof(char) * (CHUNK_BUF_SIZE + 1))))
         return (CHUNK_FATAL);
     ft_bzero(local_buf, CHUNK_BUF_SIZE + 1);
-    errno = 0;
     bytes_recv = recv(client_fd, local_buf, CHUNK_BUF_SIZE, 0);
     if (bytes_recv == 0 || bytes_recv == -1) {
         std::cerr << \
-            "ERR: read_chunk_client : recv : " << bytes_recv << " " << \
-            strerror(errno) << std::endl;
+            "ERR: read_chunk_client : recv : " << bytes_recv << std::endl;
         ret_flag = CHUNK_CLOSE;
         free(local_buf);
     } else {

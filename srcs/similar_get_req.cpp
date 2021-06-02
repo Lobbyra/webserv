@@ -23,11 +23,12 @@ void    similar_get_req_sender(std::list<s_socket> *clients,
     std::list<s_socket>::iterator ite = clients->end();
 
     for (; it != ite; ++it) {
-        if (it->is_cache_resp == false)
+        if (it->is_cache_resp == false || it->is_write_ready == false)
             continue ;
-        if (g_verbose == true)
-        std::cout << "LOG: cache_sender: " << \
+        if (g_verbose == true) {
+            std::cout << "LOG: cache_sender: " << \
             "[" << it->client_fd << "] : cache response" << std::endl;
+        }
         if (send(it->client_fd, resp, resp_len, 0) < 1) {
             std::cerr << "ERR: cache_sender: Respons to client" << std::endl;
         }
@@ -54,6 +55,10 @@ void    similar_get_req_checker(std::list<s_socket> *clients,
                 it->headers.host == similar_req->host                      &&
                 similar_req->last_state_change == stat.st_ctime) {
             it->is_cache_resp = true;
+        }
+        if (it->is_cache_resp == true && g_verbose == true) {
+            std::cout << "LOG: cache_checker: " << \
+            "[" << it->client_fd << "] : cache response" << std::endl;
         }
     }
 }
