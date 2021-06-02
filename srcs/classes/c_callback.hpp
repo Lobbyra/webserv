@@ -214,8 +214,6 @@ private:
     int      _bytes_write;               // bytes already write in target file
 
     // POST RECIPE
-    void    _create_tmp_file(void);
-    void    _check_is_body_to_large(void);
     void    _read_body_post(void);
     int     _bytes_read;
 
