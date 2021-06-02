@@ -179,7 +179,10 @@ void    c_callback::_init_request_header(s_request_header *request) {
     this->accept_charset = request->accept_charset;
     this->content_length = request->content_length;
     this->accept_language = request->accept_language;
-    this->transfer_encoding = request->transfer_encoding;
+    if (ft_strcmp(request->transfer_encoding.c_str(), "chunk") != 0)
+        this->status_code = 400;
+    else
+        this->transfer_encoding = request->transfer_encoding;
     return ;
 }
 
