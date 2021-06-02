@@ -13,7 +13,7 @@ rm -f /tmp/chunk
 j=0
 while (( $j < 5000 ))
 do
-    echo -n "eeeeeeeeee" >> /tmp/chunk
+    echo -n "zzzzzzzzzz" >> /tmp/chunk
     ((j++))
 done
 
@@ -27,7 +27,7 @@ printf "\r\n"                           >> /tmp/my_ego.db
 echo "- body creation -"
 # BODY CREATION
 i=0
-while (( $i < 1000 ))
+while (( $i < 2000 ))
 do
     printf "C350\r\n" >> /tmp/my_ego.db
     cat /tmp/chunk >> /tmp/my_ego.db
@@ -37,4 +37,4 @@ done
 printf "0\r\n" >> /tmp/my_ego.db
 
 echo "- request sending creation -"
-cat /tmp/my_ego.db | nc localhost 8080 > log
+cat /tmp/my_ego.db | nc localhost 8080 | head

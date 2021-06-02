@@ -41,7 +41,7 @@ void                       c_callback::_read_body_post(void) {
     else
         buf_size = this->content_length;
     if (*this->is_read_ready == true) {
-        if ((ret_read = read(client_fd, &buf, buf_size)) >= 1) {
+        if ((ret_read = recv(client_fd, &buf, buf_size, 0)) >= 1) {
             _bytes_read += ret_read;
             if (_bytes_read < (int)this->content_length)
                 --_it_recipes;
@@ -51,7 +51,9 @@ void                       c_callback::_read_body_post(void) {
             return ;
             }
         }
-        if (ret_read <= 0) {
+        if (ret_read == 0 || ret_read == -1) {
+            std::cerr << "ERR: read_body_post : recv : " << ret_read << \
+                std::endl;
             remove_client(this->clients, this->client_fd, 0);
             _exit();
         }

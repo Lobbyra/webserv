@@ -204,6 +204,9 @@ void    c_callback::_meth_cgi_save_client_in(void) {
         else
             bytes_read = read(this->client_fd, read_buf, this->content_length);
         if (bytes_read == 0 || bytes_read == -1) {
+            std::cerr << \
+                "ERR: bytes_read : read client error : " << bytes_read << \
+            std::endl;
             remove_client(this->clients, this->client_fd, bytes_read);
             _exit();
             free(read_buf);
@@ -232,7 +235,7 @@ static int launch_panic(char **envp, char **args, char *bin_path) {
 }
 
 void    c_callback::_meth_cgi_launch(void) {
-    if (g_verbose)
+    if (g_verbose == true)
         std::cout << "_meth_cgi_launch" << std::endl;
     char *bin_path = NULL;
     char **envp = NULL;
@@ -286,7 +289,7 @@ void    c_callback::_meth_cgi_launch(void) {
 }
 
 void    c_callback::_meth_cgi_wait(void) {
-    if (g_verbose)
+    if (g_verbose == true)
         std::cout << "TASK : _meth_cgi_wait" << std::endl;
     int   status;
     pid_t dead;
@@ -308,7 +311,7 @@ void    c_callback::_meth_cgi_wait(void) {
 }
 
 void    c_callback::_meth_cgi_send_http(void) {
-    if (g_verbose)
+    if (g_verbose == true)
         std::cout << "TASK : _meth_cgi_send_http" << std::endl;
     char *http_content = NULL;
 
@@ -333,10 +336,10 @@ void    c_callback::_meth_cgi_send_http(void) {
     return ;
 }
 
-#define CGI_SEN_BUF_SIZE 16000
+#define CGI_SEN_BUF_SIZE 4000
 
 void    c_callback::_meth_cgi_send_resp(void) {
-    if (g_verbose)
+    if (g_verbose == true)
         std::cout << "TASK : _meth_cgi_send_resp" << std::endl;
     int     buf_size;
     char    buf[CGI_SEN_BUF_SIZE];

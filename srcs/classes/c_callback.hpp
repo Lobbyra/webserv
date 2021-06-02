@@ -178,7 +178,6 @@ private:
      */
     int     _chunk_size;           // == -1 if im waiting a size, > 0 else
     void    _chunk_reading(void);  // Read the size of the chunk.
-    ssize_t _last_packet_recv;
 
     /* _FD_BODY
      * File descriptor that we will be read and write in the client_fd.

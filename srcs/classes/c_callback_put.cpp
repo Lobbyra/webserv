@@ -59,6 +59,7 @@ void    c_callback::_meth_put_write_body(void) {
         std::cout << "TASK : _meth_put_write_body()" << std::endl;
     char buf[4096];
     char *buffer;
+    ssize_t ret_read;
 
     if (this->transfer_encoding == "chunked") {     // [IN]  Tmpfile ready?
         if (_tmpfile->is_read_ready() == false) {
@@ -79,11 +80,7 @@ void    c_callback::_meth_put_write_body(void) {
             this->status_code = 413;
             return ;
         }
-        if (write(_fd_to_write, buffer, _bytes_read) <= 0) {
-            if (transfer_encoding == "chunked") {
-                delete _tmpfile;
-                _tmpfile = NULL;
-            }
+        if (write(_fd_to_write, buffer, _bytes_read) == -1) {
             std::cerr << "_meth_put_write_body : write() failed" << std::endl;
             free(buffer);
             this->status_code = 500;
@@ -97,21 +94,22 @@ void    c_callback::_meth_put_write_body(void) {
         --_it_recipes;
         return ;
     }
-    if (*this->is_read_ready == true) {
-        if (_bytes_read += read(_put_fd_in, &buf, 4096) <= 0) {
+    if (*this->is_read_ready == true &&
+            _bytes_read < (int)this->content_length) {
+        ret_read = read(_put_fd_in, buf, 4096);
+        if (ret_read == -1 || ret_read == 0) {
+            std::cerr << \
+                "ERR: put_write_body : read : " << ret_read << std::endl;
             remove_client(this->clients, this->client_fd, _bytes_read);
             _exit();
         }
+        _bytes_read += ret_read;
         if (this->client_max_body_size != -1 &&
                     _bytes_read > (int)this->client_max_body_size) {
                     this->status_code = 413;
             return ;
         }
-        if (write(_fd_to_write, buffer, _bytes_read) <= 0) {
-            if (transfer_encoding == "chunked") {
-                delete _tmpfile;
-                _tmpfile = NULL;
-            }
+        if (write(_fd_to_write, buffer, _bytes_read) == -1) {
             std::cerr << "_meth_put_write_body : write() failed" << std::endl;
             this->status_code = 500;
             return ;

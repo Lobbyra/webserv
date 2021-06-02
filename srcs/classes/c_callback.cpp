@@ -56,7 +56,7 @@ c_callback::~c_callback(void) {
         _out_tmpfile = NULL;
     }
     if (this->status_code / 100 != 2) {
-        remove_client(this->clients, this->client_fd, -1);
+        remove_client(this->clients, this->client_fd, this->status_code);
     } else {
         reset_socket(this->client);
     }
@@ -75,6 +75,16 @@ c_callback::~c_callback(void) {
 void    c_callback::exec(void) {
     if (g_verbose)
         std::cout << "C_CALLBACK : exec()" << std::endl;
+    std::list<s_socket>::iterator it = this->clients->begin();
+    std::list<s_socket>::iterator ite = this->clients->end();
+
+    while (it != ite) {
+        if (&(*it) == this->client)
+            break;
+        ++it;
+    }
+    if (it == ite)
+        _exit();
     if (this->is_over() == false) {
         if (this->status_code / 100 != 2 &&
                 _recipes != _init_error_request()) {

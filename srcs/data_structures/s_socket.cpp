@@ -20,8 +20,8 @@ std::ostream    &operator<<(std::ostream &o, s_socket const &i) {
     COLOR_WHITE_(", is_callback_created") << " = " <<            \
         std::boolalpha << COLOR_BOOL_(i.is_callback_created) <<  \
     std::endl;
-    // o << COLOR_WHITE_(" buffer") << " = " << i.buffer;
-    // o << COLOR_WHITE_(" len_buf_parts") << " = " << i.len_buf_parts;
+  //  o << COLOR_WHITE_(" buffer") << " = " << i.buffer;
+//    o << COLOR_WHITE_(" len_buf_parts") << " = " << i.len_buf_parts;
 
     o << "}" << std::endl;
     return (o);

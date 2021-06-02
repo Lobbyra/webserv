@@ -70,6 +70,7 @@ static bool is_crlf_part_first(std::list<char*> *buffer) {
  * This function will cut from the buffer all data until a CRLF and but it
  * in the tmpfile.
  */
+/*
 int parse_chunk_data(std::list<char*> *buffer, int *chunk_size,
                         int tmpfile_fd, std::list<ssize_t> *len_buf_parts) {
     int          ret_flag = CHUNK_MORE;
@@ -94,6 +95,52 @@ int parse_chunk_data(std::list<char*> *buffer, int *chunk_size,
     free(chunk_data);
     return (ret_flag);
 }
+*/
+
+int parse_chunk_data(std::list<char*> *buffer, int *chunk_size,
+                    c_tmpfile *tmpfile, std::list<ssize_t> *len_buf_parts) {
+    int          ret_flag = CHUNK_ENOUGH;
+    int          chunk_data_len;
+    char         *chunk_data = NULL;
+    ssize_t      bytes_write = 1;
+
+    while (is_crlf_part_first(buffer) == false &&
+            tmpfile->is_write_ready() == true && bytes_write > 0) {
+        bytes_write = write(tmpfile->get_fd(), buffer->front(),
+                            len_buf_parts->front());
+        free(buffer->front());
+        *chunk_size -= len_buf_parts->front();
+        buffer->pop_front();
+        len_buf_parts->pop_front();
+    }
+    if (is_crlf_part_first(buffer) == true && *chunk_size >= 0 &&
+            tmpfile->is_write_ready() == true && bytes_write > 0) {
+        chunk_data_len = find_str_buffer(buffer, "\r\n");
+        if (chunk_data_len > 0) {
+            chunk_data = cut_buffer_ret(buffer, chunk_data_len, len_buf_parts);
+            bytes_write = write(tmpfile->get_fd(), chunk_data, chunk_data_len);
+            free(chunk_data);
+            *chunk_size -= chunk_data_len;
+        }
+        cut_buffer(buffer, 2, len_buf_parts);
+    }
+    if (bytes_write == -1 || bytes_write == 0) {
+        std::cerr << \
+            "ERR: chunk_data : write failed : " << *chunk_size << \
+        std::endl;
+        ret_flag = CHUNK_FATAL;
+    }
+    if (*chunk_size != 0) {
+        std::cerr << \
+            "ERR: chunk_data : wrong chunk_len : " << *chunk_size << \
+        std::endl;
+        ret_flag = CHUNK_ERROR;
+    }
+    *chunk_size = -1;
+    return (ret_flag);
+}
+
+bool g_fb;
 
 /* PARSE_CHUNK_SIZE
  * Will parse the buffer to find a chunk size.
@@ -101,10 +148,17 @@ int parse_chunk_data(std::list<char*> *buffer, int *chunk_size,
  */
 int parse_chunk_size(std::list<char*> *buffer, int *chunk_size,
         std::list<ssize_t> *len_buf_parts) {
-    int          ret_flag = CHUNK_MORE;
+    int          ret_flag = CHUNK_ENOUGH;
     char         *size_line = NULL;
     unsigned int len_to_cut;
 
+    if (**(buffer->begin()) == '0') {
+        if (find_str_buffer(buffer, "\r\n\r\n") == 1 ||
+                (g_fb && find_str_buffer(buffer, "\r\n\r")))
+            return (CHUNK_END);
+        else if (find_str_buffer(buffer, "\r\n") == 1)
+            return (CHUNK_ENOUGH);
+    }
     len_to_cut = find_str_buffer(buffer, "\r\n");
     size_line = cut_buffer_ret(buffer, len_to_cut, len_buf_parts);
     cut_buffer(buffer, 2, len_buf_parts);
@@ -114,9 +168,10 @@ int parse_chunk_size(std::list<char*> *buffer, int *chunk_size,
     } else {
         *chunk_size = (int)hextodec(size_line);
     }
-    if (ret_flag != CHUNK_ERROR && *chunk_size == 0) {
-        ret_flag = CHUNK_END;
-    }
+    if (*chunk_size == 100)
+        g_fb = true;
+    else
+        g_fb = false;
     free(size_line);
     return (ret_flag);
 }
@@ -128,7 +183,7 @@ int parse_chunk_size(std::list<char*> *buffer, int *chunk_size,
  */
 int read_chunk_client(int client_fd, std::list<char*> *buffer,
         std::list<ssize_t> *len_buf_parts) {
-    int     ret_flag = CHUNK_MORE;
+    int     ret_flag = CHUNK_ENOUGH;
     char    *local_buf = NULL;
     ssize_t bytes_recv;
 
@@ -146,7 +201,6 @@ int read_chunk_client(int client_fd, std::list<char*> *buffer,
     } else {
         buffer->push_back(local_buf);
         len_buf_parts->push_back(bytes_recv);
-        ret_flag = CHUNK_MORE;
     }
     return (ret_flag);
 }
@@ -158,49 +212,50 @@ int read_chunk_client(int client_fd, std::list<char*> *buffer,
 void    c_callback::_chunk_reading(void) {
     if (g_verbose == true)
         std::cout << "TASK : _chunk_reading()" << std::endl;
-    int status = CHUNK_MORE;
+    int status = CHUNK_ENOUGH;
 
     if (_tmpfile == NULL)
         _tmpfile = new c_tmpfile();
     if (((is_buffer_crlf(this->client_buffer) == false &&
-                *(this->is_read_ready) == false)) ||
-                _tmpfile->is_write_ready() == false) {
+            *(this->is_read_ready) == false)) ||
+            _tmpfile->is_write_ready() == false) {
         --_it_recipes;
         return ;
     }
-    if (this->client_buffer->size() == 0 ||
-            is_buffer_crlf(this->client_buffer) == false) {
+    if (is_buffer_crlf(this->client_buffer) == false) {
         status = read_chunk_client(this->client_fd, this->client_buffer,
                                    &(this->client->len_buf_parts));
         if (status == CHUNK_CLOSE) {
             remove_client(this->clients, this->client_fd, 0);
             _exit();
             return ;
+        } else if (status == CHUNK_FATAL) {
+            this->status_code = 500;
+            return ;
         }
     }
-    while (is_buffer_crlf(this->client_buffer) && status != CHUNK_END) {
-        if (this->_chunk_size == -1) {    // Chunk size is to read
-            status = parse_chunk_size(this->client_buffer, &_chunk_size,
-                    &(this->client->len_buf_parts));
-            if (this->client_max_body_size != -1 &&
-                (int)_tmpfile->get_size() + _chunk_size >
-                    this->client_max_body_size) {
-                this->status_code = 413;
-                return ;
-            }
-        } else {                           // We are reading the chunk data
-            status = parse_chunk_data(this->client_buffer, &_chunk_size,
-                        _tmpfile->get_fd(), &(this->client->len_buf_parts));
-        }
-    }
-    if (status == CHUNK_MORE) {
+    if (is_buffer_crlf(this->client_buffer) == false) {
         --_it_recipes;
+        return ;
+    }
+    if (_chunk_size == -1) {     // Parse chunk size
+        status = parse_chunk_size(this->client_buffer, &_chunk_size,
+                            &(this->client->len_buf_parts));
+    } else {                           // Read chunk data
+        status = parse_chunk_data(this->client_buffer, &_chunk_size, _tmpfile,
+                            &(this->client->len_buf_parts));
+    }
+    if (this->client_max_body_size != -1 &&
+            (int)_tmpfile->get_size() > this->client_max_body_size) {
+        this->status_code = 413;
     } else if (status == CHUNK_FATAL) {
         this->status_code = 500;
     } else if (status == CHUNK_ERROR) {
         this->status_code = 400;
     } else if (status == CHUNK_END) {
         _tmpfile->reset_cursor();
+    } else {
+        --_it_recipes;
     }
     return ;
 }

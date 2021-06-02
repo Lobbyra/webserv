@@ -87,6 +87,7 @@ static void parse_buffer(std::list<char*> *buffer, s_request_header *headers,
         header_to_parse = get_header(buffer, is_status_line_read,
                                     len_buf_parts);
     }
+    cut_buffer(buffer, 2, len_buf_parts);
     return ;
 }
 
@@ -115,6 +116,8 @@ bool    read_headers(std::list<s_socket> *clients) {
         bytes_read = read_socket(&it->buffer, it->client_fd,
                 &(it->len_buf_parts));
         if (bytes_read == 0 || bytes_read == -1) { // End of connection
+            std::cerr << \
+                "ERR: read_headers : bytes_read : " << bytes_read << std::endl;
             remove_client(clients, (it++)->client_fd, bytes_read);
             continue;
         }

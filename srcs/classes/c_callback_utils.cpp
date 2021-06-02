@@ -144,7 +144,7 @@ void                    c_callback::_fd_is_ready_to_send(void) {
 void                    c_callback::_send_respons_body(void) {
     if (g_verbose)
         std::cout << "TASK : _send_respons_body()" << std::endl;
-    char            buf[BUFFER_READ];
+    char            buf[BUFFER_READ + 1];
     int             bytes_read;
     int             ret;
 
@@ -168,7 +168,7 @@ void                    c_callback::_send_respons_body(void) {
         --_it_recipes;
         return ;
     }
-    ft_bzero(buf, BUFFER_READ);
+    ft_bzero(buf, BUFFER_READ + 1);
     bytes_read = read(_fd_body, buf, BUFFER_READ);
     if (bytes_read > 0) {
         if ((ret = send(client_fd, buf, bytes_read, 0)) < 1) {
@@ -213,7 +213,7 @@ void                    c_callback::_send_respons(void) {
         std::cerr << "Error: Respons to client" << std::endl;
         this->status_code = 500;
     }
-    if (this->method == "GET") {
+    if (this->method == "GET" && this->status_code == 200) {
             this->client->similar_req->host = this->host;
             this->client->similar_req->path_respons = this->path;
             this->client->similar_req->original_path = this->original_path;
