@@ -51,3 +51,4 @@ log
 tags
 tools/42_testers/YoupiBanane/file_should_exist_after
 tools/php-cgi
+tools/docker_nginx/config_files/*.conf
