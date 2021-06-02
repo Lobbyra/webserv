@@ -12,8 +12,9 @@ char    *lststr_to_str(std::list<std::string> const &lst, std::string sep) {
         concatenate += *it;
         concatenate += sep;
     }
-    if (concatenate.size() > 0)
-        concatenate.erase(concatenate.end() - sep.size(), sep.end());
+    if (concatenate.size() > 0) {
+        concatenate.erase(concatenate.end() - sep.size(), concatenate.end());
+    }
     return (strcont_to_str(concatenate));
 }
 

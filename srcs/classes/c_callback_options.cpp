@@ -1,6 +1,7 @@
 #include "c_callback.hpp"
 
 void                c_callback::_gen_resp_header_options(void) {
+    char        *tmp = NULL;
     std::string str_methods;
 
     this->status_code = 200;
@@ -8,8 +9,11 @@ void                c_callback::_gen_resp_header_options(void) {
     size_t i = _resp_headers.find("\n");
     if (i != 0)
         i++;
-    if (methods.empty() == false)
-        str_methods = lststr_to_str(this->methods, ", ");
+    if (methods.empty() == false) {
+        tmp = lststr_to_str(this->methods, ", ");
+        str_methods = tmp;
+        free(tmp);
+    }
     str_methods.insert(0, "Allow: ");
     str_methods.insert(str_methods.length(), "\r\n");
     _resp_headers.insert(i, str_methods);
