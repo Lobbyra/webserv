@@ -338,8 +338,66 @@ void    c_callback::_meth_cgi_send_http(void) {
     return ;
 }
 
-#define CGI_SEN_BUF_SIZE 4000
+#define CGI_SEND_SIZE 50000
 
+void    c_callback::_meth_cgi_send_resp(void) {
+    if (g_verbose == true)
+        std::cout << "TASK : _meth_cgi_send_resp" << std::endl;
+    int     buf_size;
+    char    *buf;
+    ssize_t bytes_send;
+
+    if (_is_outfile_read == false) { // outfile reading
+        if (_out_tmpfile->is_read_ready() == false) {
+            --_it_recipes;
+            return ;
+        } else {
+            if (!(buf = (char*)malloc(sizeof(char) * (CGI_SEND_SIZE)))) {
+                std::cerr << "ERR: cgi send resp: malloc() fail" << std::endl;
+                this->status_code = 500;
+                return ;
+            }
+            ft_bzero(buf, CGI_SEND_SIZE);
+            if ((buf_size = read(_out_tmpfile->get_fd(), buf, CGI_SEND_SIZE))
+                    == -1) {
+                std::cerr << \
+                "ERR: cgi_send : read error : " << buf_size << std::endl;
+                this->status_code = 500;
+                return ;
+            }
+            std::cout << buf_size << std::endl;
+            if (buf_size == 0) {
+                _is_outfile_read = true;
+                free(buf);
+            }
+            else {
+                _sending_buffer.push_back(buf);
+                _len_send_buffer.push_back(buf_size);
+            }
+        }
+    }
+    if (*(this->is_write_ready) == true && _sending_buffer.size() > 0) {
+        if (_sending_buffer.size() == 0) { // Nothing to right in client
+            --_it_recipes;
+            return ;
+        }
+        if ((bytes_send = send(this->client_fd, _sending_buffer.front(),
+                               _len_send_buffer.front(), 0)) < 1) {
+            std::cerr << "ERR: cgi_send : send error" << std::endl;
+            remove_client(this->clients, this->client_fd, -1);
+            _exit();
+            return ;
+        }
+        std::cout << bytes_send << std::endl;
+        cut_buffer(&(this->_sending_buffer), bytes_send,
+                    &(this->_len_send_buffer));
+    }
+    if (_sending_buffer.size() > 0 || _is_outfile_read == false) {
+        --_it_recipes;
+    }
+    return ;
+}
+/*
 void    c_callback::_meth_cgi_send_resp(void) {
     if (g_verbose == true)
         std::cout << "TASK : _meth_cgi_send_resp" << std::endl;
@@ -371,3 +429,4 @@ void    c_callback::_meth_cgi_send_resp(void) {
         return ;
     }
 }
+*/

@@ -226,8 +226,11 @@ private:
     bool    _host;
 
     // GGI RECIPE
+    bool                   _is_outfile_read;
     pid_t                  _pid; // pid of CGI child
     c_tmpfile              *_out_tmpfile;
+    std::list<char*>       _sending_buffer;
+    std::list<ssize_t>     _len_send_buffer;
     std::list<std::string> cgi_env_variables;
 
     void    _meth_cgi_init_meta(void); // Init specific var of CGI
