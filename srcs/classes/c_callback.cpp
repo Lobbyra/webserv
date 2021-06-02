@@ -8,11 +8,12 @@ c_callback::c_callback(void) {
 c_callback::c_callback(s_socket *client, s_request_header *request,
                        std::list<s_socket> *clients) {
     this->_fd_body = 0;
-    this->_tmpfile = NULL;
-    this->_bytes_write = 0;
-    this->_bytes_read = 0;
     this->_host = false;
+    this->_tmpfile = NULL;
+    this->_bytes_read = 0;
+    this->_is_cgi = false;
     this->_chunk_size = -1;
+    this->_bytes_write = 0;
     this->clients = clients;
     this->_is_aborted = false;
     this->_out_tmpfile = NULL;
@@ -58,7 +59,7 @@ c_callback::~c_callback(void) {
     }
     if (this->status_code / 100 != 2) {
         remove_client(this->clients, this->client_fd, this->status_code);
-    } else {
+    } else if (_is_aborted == false) {
         reset_socket(this->client);
     }
     for (std::list<char*>::iterator it = _sending_buffer.begin();

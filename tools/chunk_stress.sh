@@ -35,6 +35,7 @@ do
     ((i++))
 done
 printf "0\r\n" >> /tmp/my_ego.db
+printf "\r\n" >> /tmp/my_ego.db
 
 echo "- request sending creation -"
 cat /tmp/my_ego.db | nc localhost 8080 | head

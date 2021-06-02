@@ -66,6 +66,51 @@ static bool is_crlf_part_first(std::list<char*> *buffer) {
     return (str_comp_tmp == crlf && it_first == buffer->begin());
 }
 
+/* PARSE_CHUNK_DATA
+ * This two functions are the same, they just don't write on the same fd.
+ */
+int parse_chunk_data(std::list<char*> *buffer, int *chunk_size, int pipe_fd,
+                     std::list<ssize_t> *len_buf_parts) {
+    int          ret_flag = CHUNK_ENOUGH;
+    int          chunk_data_len;
+    char         *chunk_data = NULL;
+    ssize_t      bytes_write = 1;
+
+    while (is_crlf_part_first(buffer) == false && bytes_write > 0) {
+        bytes_write = write(pipe_fd, buffer->front(),
+                            len_buf_parts->front());
+        free(buffer->front());
+        *chunk_size -= len_buf_parts->front();
+        buffer->pop_front();
+        len_buf_parts->pop_front();
+    }
+    if (is_crlf_part_first(buffer) == true && *chunk_size >= 0 &&
+            bytes_write > 0) {
+        chunk_data_len = find_str_buffer(buffer, "\r\n");
+        if (chunk_data_len > 0) {
+            chunk_data = cut_buffer_ret(buffer, chunk_data_len, len_buf_parts);
+            bytes_write = write(pipe_fd, chunk_data, chunk_data_len);
+            free(chunk_data);
+            *chunk_size -= chunk_data_len;
+        }
+        cut_buffer(buffer, 2, len_buf_parts);
+    }
+    if (bytes_write == -1 || bytes_write == 0) {
+        std::cerr << \
+            "ERR: chunk_data : write failed : " << *chunk_size << \
+        std::endl;
+        ret_flag = CHUNK_FATAL;
+    }
+    if (*chunk_size != 0) {
+        std::cerr << \
+            "ERR: chunk_data : wrong chunk_len : " << *chunk_size << \
+        std::endl;
+        ret_flag = CHUNK_ERROR;
+    }
+    *chunk_size = -1;
+    return (ret_flag);
+}
+
 int parse_chunk_data(std::list<char*> *buffer, int *chunk_size,
                     c_tmpfile *tmpfile, std::list<ssize_t> *len_buf_parts) {
     int          ret_flag = CHUNK_ENOUGH;
@@ -208,9 +253,12 @@ void    c_callback::_chunk_reading(void) {
     if (_chunk_size == -1) {     // Parse chunk size
         status = parse_chunk_size(this->client_buffer, &_chunk_size,
                             &(this->client->len_buf_parts));
-    } else {                           // Read chunk data
+    } else if (_is_cgi == false) {                           // Read chunk data
         status = parse_chunk_data(this->client_buffer, &_chunk_size, _tmpfile,
                             &(this->client->len_buf_parts));
+    } else {
+        status = parse_chunk_data(this->client_buffer, &_chunk_size,
+                            _pipe_io[1], &(this->client->len_buf_parts));
     }
     if (this->client_max_body_size != -1 &&
             (int)_tmpfile->get_size() > this->client_max_body_size) {

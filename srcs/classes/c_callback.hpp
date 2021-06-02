@@ -227,6 +227,8 @@ private:
     bool    _host;
 
     // GGI RECIPE
+    int                    _pipe_io[2];
+    bool                   _is_cgi;
     bool                   _is_outfile_read;
     pid_t                  _pid; // pid of CGI child
     c_tmpfile              *_out_tmpfile;
