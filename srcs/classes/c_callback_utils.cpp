@@ -178,7 +178,7 @@ void                    c_callback::_send_respons_body(void) {
             return ;
         }
         if (this->method == "GET") {
-            this->client->similar_req->respons.append(buf);
+            this->client->similar_req->respons.append(buf, bytes_read);
         }
         // std::cout << "return body: " << ret << std::endl;
         if (bytes_read > 0 && bytes_read == BUFFER_READ)

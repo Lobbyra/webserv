@@ -116,8 +116,6 @@ bool    read_headers(std::list<s_socket> *clients) {
         bytes_read = read_socket(&it->buffer, it->client_fd,
                 &(it->len_buf_parts));
         if (bytes_read == 0 || bytes_read == -1) { // End of connection
-            std::cerr << \
-                "ERR: read_headers : bytes_read : " << bytes_read << std::endl;
             remove_client(clients, (it++)->client_fd, bytes_read);
             continue;
         }

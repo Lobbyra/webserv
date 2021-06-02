@@ -37,20 +37,15 @@ static int  makeSocketfd(const s_ipport &ipport) {
 static s_socket makeSocket(const c_server *server) {
     s_socket newSocket;
 
-    newSocket.client_fd = 0;
-    newSocket.entry_socket = 0;
-    newSocket.is_read_ready = false;
-    newSocket.is_write_ready = false;
-    newSocket.is_callback_created = false;
-    newSocket.is_status_line_read = false;
-    newSocket.is_header_read = false;
-    ft_bzero(&newSocket.client_addr, sizeof(sockaddr));
     newSocket.ipport = NULL;
     newSocket.server = NULL;
-    newSocket.headers.error = 200;
-    newSocket.headers.content_length = 0;
+    newSocket.client_fd = 0;
+    newSocket.entry_socket = 0;
+    ft_bzero(&newSocket.client_addr, sizeof(sockaddr));
     newSocket.entry_socket = makeSocketfd(server->listen);
     newSocket.ipport = &server->listen;
+
+    reset_socket(&newSocket);
     return (newSocket);
 }
 
