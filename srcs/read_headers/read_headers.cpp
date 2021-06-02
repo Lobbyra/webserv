@@ -52,6 +52,8 @@ static ssize_t     read_socket(std::list<char*> *buffer, int client_fd,
     if (bytes_read > 0) {
         buffer->push_back(read_buffer);
         len_buf_parts->push_back(bytes_read);
+    } else {
+        free(read_buffer);
     }
     return (bytes_read);
 }

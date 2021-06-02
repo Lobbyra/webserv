@@ -7,6 +7,11 @@ c_callback::c_callback(void) {
 
 c_callback::c_callback(s_socket *client, s_request_header *request,
                        std::list<s_socket> *clients) {
+    if (g_verbose == true) {
+        std::cout <<                                                         \
+            "LOG: c_callback: construction [" << client->client_fd << "]" << \
+        std::endl;
+    }
     this->_fd_body = 0;
     this->_host = false;
     this->_tmpfile = NULL;
@@ -47,6 +52,11 @@ c_callback::c_callback(s_socket *client, s_request_header *request,
 // }
 
 c_callback::~c_callback(void) {
+    if (g_verbose == true) {
+        std::cout <<                                                      \
+            "LOG: c_callback: destruction [" << this->client_fd << "]" << \
+        std::endl;
+    }
     if (_tmpfile != NULL) {
         delete _tmpfile;
         _tmpfile = NULL;

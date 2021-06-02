@@ -5,6 +5,8 @@
 #include <string>
 #include <list>
 
+#include <unistd.h>
+
 #include "s_request_header.hpp"
 
 /* - HEADER PARSING FUNCTIONS -
