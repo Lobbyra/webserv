@@ -177,8 +177,10 @@ void                    c_callback::_send_respons_body(void) {
             --_it_recipes;
             return ;
         }
-        if (this->method == "GET") {
+        if (this->method == "GET" &&
+            this->client->similar_req->client_priority == this->client_fd) {
             this->client->similar_req->respons.append(buf);
+            this->client->similar_req->client_priority = 0;
         }
         // std::cout << "return body: " << ret << std::endl;
         if (bytes_read > 0 && bytes_read == BUFFER_READ)
@@ -214,6 +216,8 @@ void                    c_callback::_send_respons(void) {
         this->status_code = 500;
     }
     if (this->method == "GET" && this->status_code == 200) {
+            if (this->client->similar_req->client_priority == 0)
+                this->client->similar_req->client_priority = this->client_fd;
             this->client->similar_req->host = this->host;
             this->client->similar_req->path_respons = this->path;
             this->client->similar_req->original_path = this->original_path;

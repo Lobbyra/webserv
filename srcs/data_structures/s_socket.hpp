@@ -11,6 +11,7 @@
 #include "s_request_header.hpp"
 
 struct s_similar_get_req {
+    int             client_priority;
     std::string     host;
     std::string     respons;
     std::string     path_respons;

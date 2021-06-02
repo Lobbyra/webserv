@@ -61,6 +61,7 @@ void    reset_socket(s_socket *s) {
 }
 
 void    reset_similar(s_similar_get_req *simi) {
+    simi->client_priority = 0;
     simi->host = "";
     simi->ipport = NULL;
     simi->respons = "";
