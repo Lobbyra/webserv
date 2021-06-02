@@ -338,7 +338,7 @@ void    c_callback::_meth_cgi_send_http(void) {
     return ;
 }
 
-#define CGI_SEN_BUF_SIZE 10000
+#define CGI_SEN_BUF_SIZE 4000
 
 void    c_callback::_meth_cgi_send_resp(void) {
     if (g_verbose == true)
