@@ -338,7 +338,7 @@ void    c_callback::_meth_cgi_send_http(void) {
     return ;
 }
 
-#define CGI_SEN_BUF_SIZE 4000
+#define CGI_SEN_BUF_SIZE 10000
 
 void    c_callback::_meth_cgi_send_resp(void) {
     if (g_verbose == true)
@@ -352,9 +352,10 @@ void    c_callback::_meth_cgi_send_resp(void) {
         --_it_recipes;
         return ;
     }
+    errno = 0;
     if ((buf_size = read(_out_tmpfile->get_fd(), buf, CGI_SEN_BUF_SIZE))
-            < 1) {
-        std::cerr << "ERR: cgi_send : read error" << std::endl;
+            == -1) {
+        std::cerr << "ERR: cgi_send : read error : " << buf_size << std::endl;
         this->status_code = 500;
         return ;
     }
