@@ -16,6 +16,7 @@ c_callback::c_callback(s_socket *client, s_request_header *request,
     this->clients = clients;
     this->_is_aborted = false;
     this->_out_tmpfile = NULL;
+    this->_is_outfile_read = false;
     this->original_path = request->path;
     _init_s_socket(client);                 // Init client socket variables
     _init_request_header(request);          // Init request headers
@@ -59,6 +60,10 @@ c_callback::~c_callback(void) {
         remove_client(this->clients, this->client_fd, this->status_code);
     } else {
         reset_socket(this->client);
+    }
+    for (std::list<char*>::iterator it = _sending_buffer.begin();
+            it != _sending_buffer.end(); ++it) {
+        free(*it);
     }
     return ;
 }

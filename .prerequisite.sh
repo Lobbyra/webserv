@@ -1,6 +1,7 @@
 #!/usr/bin/env zsh
 
-CONFIG_PATH=./config_files
+CONFIG_PATH=config_files
+TEMPLATE_CONF_PATH=$CONFIG_PATH/.template
 PHPCGI_TARGET=tools/php-cgi
 PHPCGI_RES=php-8.0.2
 PHPBIN_PATH="$PHPCGI_TARGET/sapi/cgi/php-cgi"
@@ -40,8 +41,12 @@ fi
 # fi
 
 # Replace __PWD__ by actual PWD in every config files
-FILES=($(ls $CONFIG_PATH))
+FILES=($(ls $TEMPLATE_CONF_PATH))
 for file in ${FILES[@]}; do
+	if ! [ -e "$CONFIG_PATH/$file" ]; then
+		cp "$TEMPLATE_CONF_PATH/$file" "$CONFIG_PATH/$file"
+	fi
+
 	sedreplace __PWD__ "$PWD" "$CONFIG_PATH/$file"
 	sedreplace __PHP__ "$PWD/$PHPBIN_PATH" "$CONFIG_PATH/$file"
 	sedreplace __42CGI__ "$CGI42" "$CONFIG_PATH/$file"
