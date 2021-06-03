@@ -171,10 +171,10 @@ void                    c_callback::_send_respons_body(void) {
     ft_bzero(buf, BUFFER_READ + 1);
     bytes_read = read(_fd_body, buf, BUFFER_READ);
     if (bytes_read > 0) {
-        if ((ret = send(client_fd, buf, bytes_read, 0)) < 1) {
+        if ((ret = send(client_fd, buf, bytes_read, MSG_NOSIGNAL)) < 1) {
             std::cerr << "_send_respons_body : send() failed" << std::endl;
-            this->status_code = 500;
-            --_it_recipes;
+            remove_client(this->clients, this->client_fd, ret);
+            _exit();
             return ;
         }
         if (this->method == "GET" &&
@@ -211,7 +211,8 @@ void                    c_callback::_send_respons(void) {
         _it_recipes--;
         return ;
     }
-    if ((ret = send(client_fd, _resp_headers.c_str(), _resp_headers.length(), 0)) < 1) {
+    if ((ret = send(client_fd, _resp_headers.c_str(),
+                    _resp_headers.length(), MSG_NOSIGNAL)) < 1) {
         std::cerr << "Error: Respons to client" << std::endl;
         this->status_code = 500;
     }

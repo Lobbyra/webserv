@@ -4,6 +4,7 @@ void                    c_callback::_meth_delete_request_is_valid(void) {
     struct stat         stat;
     this->path.insert(0, this->root);
 
+    ft_bzero(&stat, sizeof(struct stat));
     if (!lstat(this->path.c_str(), &stat)) {
         if (S_ISREG(stat.st_mode))
             status_code = 204;

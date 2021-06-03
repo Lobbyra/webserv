@@ -12,6 +12,7 @@ void        c_callback::_meth_put_open_fd(void) {
     struct stat stat;
 
     errno = 0;
+    ft_bzero(&stat, sizeof(struct stat));
     this->path.insert(0, this->root);
     if (lstat(this->path.c_str(), &stat) == 0 && // File exist and not a dir
             S_ISDIR(stat.st_mode) == false) {
@@ -78,17 +79,21 @@ void    c_callback::_meth_put_write_body(void) {
         if (this->client_max_body_size != -1 &&
             _bytes_read > (int)this->client_max_body_size) {
             this->status_code = 413;
+            close(_fd_to_write);
             return ;
         }
         if (write(_fd_to_write, buffer, _bytes_read) == -1) {
             std::cerr << "_meth_put_write_body : write() failed" << std::endl;
             free(buffer);
             this->status_code = 500;
+            close(_fd_to_write);
             return ;
         }
         free(buffer);
-        if (_bytes_read == (int)this->content_length)
+        if (_bytes_read == (int)this->content_length) {
+            close(_fd_to_write);
             return ;
+        }
     }
     if (*this->is_read_ready == false) {
         --_it_recipes;
@@ -101,17 +106,20 @@ void    c_callback::_meth_put_write_body(void) {
             std::cerr << \
                 "ERR: put_write_body : read : " << ret_read << std::endl;
             remove_client(this->clients, this->client_fd, _bytes_read);
+            close(_fd_to_write);
             _exit();
         }
         _bytes_read += ret_read;
         if (this->client_max_body_size != -1 &&
                     _bytes_read > (int)this->client_max_body_size) {
-                    this->status_code = 413;
+            this->status_code = 413;
+            close(_fd_to_write);
             return ;
         }
         if (write(_fd_to_write, buffer, _bytes_read) == -1) {
             std::cerr << "_meth_put_write_body : write() failed" << std::endl;
             this->status_code = 500;
+            close(_fd_to_write);
             return ;
         }
         if (_bytes_read < (int)this->content_length) {
@@ -119,6 +127,7 @@ void    c_callback::_meth_put_write_body(void) {
             return ;
         }
     }
+    close(_fd_to_write);
 }
 
 std::list<c_callback::t_task_f>         c_callback::_init_recipe_put(void){

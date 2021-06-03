@@ -325,8 +325,8 @@ void    c_callback::_meth_cgi_send_http(void) {
         std::cerr << e.what() << std::endl;
     }
     if (http_content) {
-        if (send(this->client_fd, http_content, ft_strlen(http_content), 0)
-                < 1) {
+        if (send(this->client_fd, http_content, ft_strlen(http_content),
+                    MSG_NOSIGNAL) < 1) {
             std::cerr << "ERR: _meth_cgi_send_http : send" << std::endl;
             remove_client(this->clients, this->client_fd, -1);
             _exit();
@@ -380,7 +380,7 @@ void    c_callback::_meth_cgi_send_resp(void) {
             return ;
         }
         if ((bytes_send = send(this->client_fd, _sending_buffer.front(),
-                               _len_send_buffer.front(), 0)) < 1) {
+                            _len_send_buffer.front(), MSG_NOSIGNAL)) < 1) {
             std::cerr << "ERR: cgi_send : send error" << std::endl;
             remove_client(this->clients, this->client_fd, -1);
             _exit();
@@ -395,36 +395,3 @@ void    c_callback::_meth_cgi_send_resp(void) {
     close(_pipe_io[0]);
     return ;
 }
-/*
-void    c_callback::_meth_cgi_send_resp(void) {
-    if (g_verbose == true)
-        std::cout << "TASK : _meth_cgi_send_resp" << std::endl;
-    int     buf_size;
-    char    buf[CGI_SEN_BUF_SIZE];
-    ssize_t bytes_send;
-
-    if (_out_tmpfile->is_read_ready() == false ||
-            *this->is_write_ready == false) {
-        --_it_recipes;
-        return ;
-    }
-    errno = 0;
-    if ((buf_size = read(_out_tmpfile->get_fd(), buf, CGI_SEN_BUF_SIZE))
-            == -1) {
-        std::cerr << "ERR: cgi_send : read error : " << buf_size << std::endl;
-        this->status_code = 500;
-        return ;
-    }
-    if (buf_size > 0 &&
-            (bytes_send = send(this->client_fd, buf, buf_size, 0)) < 1) {
-        std::cerr << "ERR: cgi_send : send error" << std::endl;
-        remove_client(this->clients, this->client_fd, -1);
-        _exit();
-        return ;
-    }
-    if (buf_size > 0) { // Is still content to read?
-        --_it_recipes;
-        return ;
-    }
-}
-*/
