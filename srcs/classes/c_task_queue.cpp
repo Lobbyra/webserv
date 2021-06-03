@@ -10,6 +10,10 @@ c_task_queue::c_task_queue(c_task_queue const &src) {
 }
 
 c_task_queue::~c_task_queue() {
+    while (_tasks.empty() == false) {
+        delete _tasks.front();
+        _tasks.pop();
+    }
     return ;
 }
 
