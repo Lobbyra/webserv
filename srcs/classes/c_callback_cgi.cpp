@@ -11,19 +11,14 @@ extern bool g_verbose;
 std::list<c_callback::t_task_f> c_callback::_init_recipe_cgi(void) {
     std::list<t_task_f> recipe;
 
-    if (pipe(_pipe_io) == 1) {
-        std::cerr << "ERR: init_cgi: pipe()" << std::endl;
-        this->status_code = 500;
-    }
-    _is_cgi = true;
     recipe.push_back(&c_callback::_meth_cgi_init_meta);
     recipe.push_back(&c_callback::_meth_cgi_init_http);
-    recipe.push_back(&c_callback::_meth_cgi_launch);
     if (this->transfer_encoding == "chunked") {
         recipe.push_back(&c_callback::_chunk_reading);
     } else {
         recipe.push_back(&c_callback::_meth_cgi_save_client_in);
     }
+    recipe.push_back(&c_callback::_meth_cgi_launch);
     recipe.push_back(&c_callback::_meth_cgi_wait);
     recipe.push_back(&c_callback::_meth_cgi_send_http);
     recipe.push_back(&c_callback::_meth_cgi_send_resp);
@@ -180,11 +175,17 @@ void    c_callback::_meth_cgi_save_client_in(void) {
     char    *cat_buf = NULL;
     ssize_t bytes_read;
 
+    if (_tmpfile == NULL)
+        _tmpfile = new c_tmpfile();
+    if (_tmpfile->is_write_ready() == false) {
+        --_it_recipes;
+        return ;
+    }
     if (this->client_buffer->size() > 0) {                   // Buffer reading
         cat_buf = cut_buffer_ret(this->client_buffer, this->content_length,
                 &(this->client->len_buf_parts));
         cat_len = ft_strlen(cat_buf);
-        if (write(_pipe_io[1], cat_buf, cat_len) < 1) {
+        if (write(_tmpfile->get_fd(), cat_buf, cat_len) < 1) {
             this->status_code = 500;
         } else {
             this->content_length -= cat_len;
@@ -217,7 +218,7 @@ void    c_callback::_meth_cgi_save_client_in(void) {
     if (this->content_length > 0) {                         // Read again
         --_it_recipes;
     } else {
-        close(_pipe_io[1]);
+        _tmpfile->reset_cursor();
     }
     return ;
 }
@@ -249,16 +250,15 @@ void    c_callback::_meth_cgi_launch(void) {
         return;
     }
     if ((_pid = fork()) == 0) { // CHILD
-        close(_pipe_io[1]);
         if ((bin_path = ft_strdup(this->fastcgi_pass.c_str())) == NULL)
             exit(launch_panic(envp, args, bin_path));
         if ((envp = lststr_to_strs(this->cgi_env_variables)) == NULL)
             exit(launch_panic(envp, args, bin_path));
+        lst_args.push_back(bin_path);
         if ((args = lststr_to_strs(lst_args)) == NULL)
             exit(launch_panic(envp, args, bin_path));
-        lst_args.push_back(bin_path);
         // TODO : DESTROY C_TASK_QUEUE
-        if (dup2(_pipe_io[0], 0) == -1 ||
+        if (dup2(_tmpfile->get_fd(), 0) == -1 ||
                 dup2(_out_tmpfile->get_fd(), 1) == -1) {
             std::cerr << \
                 "cgi_launch : dup2 : " << strerror(errno) << \
@@ -272,6 +272,7 @@ void    c_callback::_meth_cgi_launch(void) {
             std::endl << std::flush;
             exit(launch_panic(envp, args, bin_path));
         }
+        close(_tmpfile->get_fd());
         if (execve(bin_path, args, envp) == -1) {
             std::cerr <<                                       \
                 "cgi_launch : execve : " << strerror(errno) << \
@@ -293,7 +294,6 @@ void    c_callback::_meth_cgi_wait(void) {
     pid_t dead;
 
     errno = 0;
-    close(_pipe_io[1]);
     dead = waitpid(_pid, &status, WNOHANG);
     if (dead == -1) {
         std::cerr << "error : waitpid() : " << strerror(errno) << std::endl;
@@ -391,7 +391,7 @@ void    c_callback::_meth_cgi_send_resp(void) {
     }
     if (_sending_buffer.size() > 0 || _is_outfile_read == false) {
         --_it_recipes;
+        return ;
     }
-    close(_pipe_io[0]);
     return ;
 }

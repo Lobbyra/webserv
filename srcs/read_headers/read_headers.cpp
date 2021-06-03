@@ -114,6 +114,7 @@ bool    read_headers(std::list<s_socket> *clients) {
             ++it;
             continue;
         }
+        usleep(100); // Avoid too fast reading
         // READ DATA FROM CLIENT
         bytes_read = read_socket(&it->buffer, it->client_fd,
                 &(it->len_buf_parts));

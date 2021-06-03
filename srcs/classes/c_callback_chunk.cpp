@@ -154,8 +154,6 @@ int parse_chunk_data(std::list<char*> *buffer, int *chunk_size,
     return (ret_flag);
 }
 
-bool g_fb;
-
 /* PARSE_CHUNK_SIZE
  * Will parse the buffer to find a chunk size.
  * If there isn't CRLF, it do nothing.
@@ -167,8 +165,7 @@ int parse_chunk_size(std::list<char*> *buffer, int *chunk_size,
     unsigned int len_to_cut;
 
     if (**(buffer->begin()) == '0') {
-        if (find_str_buffer(buffer, "\r\n\r\n") == 1 ||
-                (g_fb && find_str_buffer(buffer, "\r\n\r")))
+        if (find_str_buffer(buffer, "\r\n\r") == 1)
             return (CHUNK_END);
         else if (find_str_buffer(buffer, "\r\n") == 1)
             return (CHUNK_ENOUGH);
@@ -182,10 +179,6 @@ int parse_chunk_size(std::list<char*> *buffer, int *chunk_size,
     } else {
         *chunk_size = (int)hextodec(size_line);
     }
-    if (*chunk_size == 100)
-        g_fb = true;
-    else
-        g_fb = false;
     free(size_line);
     return (ret_flag);
 }
@@ -234,7 +227,10 @@ void    c_callback::_chunk_reading(void) {
         --_it_recipes;
         return ;
     }
-    if (is_buffer_crlf(this->client_buffer) == false) {
+    if (*this->is_read_ready == true &&
+            (is_buffer_crlf(this->client_buffer) == false ||
+            (is_buffer_crlf(this->client_buffer) == true &&
+            find_str_buffer(this->client_buffer, "\r\n\r") == false))) {
         status = read_chunk_client(this->client_fd, this->client_buffer,
                                    &(this->client->len_buf_parts));
         if (status == CHUNK_CLOSE) {
@@ -253,12 +249,9 @@ void    c_callback::_chunk_reading(void) {
     if (_chunk_size == -1) {     // Parse chunk size
         status = parse_chunk_size(this->client_buffer, &_chunk_size,
                             &(this->client->len_buf_parts));
-    } else if (_is_cgi == false) {                           // Read chunk data
+    } else {                           // Read chunk data
         status = parse_chunk_data(this->client_buffer, &_chunk_size, _tmpfile,
                             &(this->client->len_buf_parts));
-    } else {
-        status = parse_chunk_data(this->client_buffer, &_chunk_size,
-                            _pipe_io[1], &(this->client->len_buf_parts));
     }
     if (this->client_max_body_size != -1 &&
             (int)_tmpfile->get_size() > this->client_max_body_size) {
