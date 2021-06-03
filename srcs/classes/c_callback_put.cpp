@@ -82,12 +82,13 @@ void    c_callback::_meth_put_write_body(void) {
             close(_fd_to_write);
             return ;
         }
-        if (write(_fd_to_write, buffer, _bytes_read) == -1) {
-            std::cerr << "_meth_put_write_body : write() failed" << std::endl;
-            free(buffer);
-            this->status_code = 500;
-            close(_fd_to_write);
-            return ;
+        if (_bytes_read != 0) {
+            if (write(_fd_to_write, buffer, _bytes_read) <= 0) {
+                std::cerr << "_meth_put_write_body : write() failed" << std::endl;
+                free(buffer);
+                this->status_code = 500;
+                return ;
+            }
         }
         free(buffer);
         if (_bytes_read == (int)this->content_length) {
@@ -116,7 +117,7 @@ void    c_callback::_meth_put_write_body(void) {
             close(_fd_to_write);
             return ;
         }
-        if (write(_fd_to_write, buffer, _bytes_read) == -1) {
+        if (write(_fd_to_write, buffer, _bytes_read) <= 0) {
             std::cerr << "_meth_put_write_body : write() failed" << std::endl;
             this->status_code = 500;
             close(_fd_to_write);
