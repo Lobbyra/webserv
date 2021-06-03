@@ -1,4 +1,4 @@
-POST / HTTP/1.1
+POST /youpi.bla HTTP/1.1
 Host: example.com
 Transfer-Encoding: chunked
 

@@ -82,7 +82,9 @@ function check_one() {
     cp -rf $www_src_path/* $www_path
     $www_path/run.sh $www_path
 
-    > $tmpfile nc $3 $2 < $1
+    nc $3 $2 < $1 > $tmpfile &
+    sleep 0.5
+    pkill nc &> /dev/null
 
     custom_statusline="$(head -n1 $tmpfile)"
     true_statusline="$(head -n1 $file_resp)"
