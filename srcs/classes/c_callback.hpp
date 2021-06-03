@@ -31,6 +31,11 @@
 # include "s_request_header.hpp"
 # include "../lib/GNL/get_next_line.h"
 
+#ifndef __APPLE__
+# define MSG_NOSIGNAL 0
+# define __APPLE__ 0
+#endif
+
 class	c_callback
 {
 public:
