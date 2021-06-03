@@ -22,12 +22,14 @@ void    c_task_queue::exec_task(void) {
     if (g_verbose)
         std::cout << "C_TASK_QUEUE : exec_task()" << std::endl;
 
-    _tasks.front()->exec();
-    if (_tasks.front()->is_over() == true)
-        delete _tasks.front();             // Ended task deletion
-    else
-        _tasks.push(_tasks.front());       // Push executed task to call back
-    _tasks.pop();                          // Delete task executed
+    for (unsigned int i = 0; i < _tasks.size(); ++i) {
+        _tasks.front()->exec();
+        if (_tasks.front()->is_over() == true)
+            delete _tasks.front();             // Ended task deletion
+        else
+            _tasks.push(_tasks.front());       // Push executed task to call back
+        _tasks.pop();                          // Delete task executed
+    }
 }
 
 // Add a new request in c_callback form in the queue
