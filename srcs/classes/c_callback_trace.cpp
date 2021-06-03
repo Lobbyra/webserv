@@ -42,6 +42,8 @@ void                    c_callback::_read_client_to_tmpfile(void){
     char            *buf;
     int             bytes_read;
 
+    if (_bytes_read == (int)this->content_length)
+        return;
     if (*(this->is_read_ready) == false) {
         _it_recipes--;
         return ;

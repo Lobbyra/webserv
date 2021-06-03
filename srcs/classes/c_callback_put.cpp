@@ -91,10 +91,10 @@ void    c_callback::_meth_put_write_body(void) {
             }
         }
         free(buffer);
-        if (_bytes_read == (int)this->content_length) {
-            close(_fd_to_write);
-            return ;
-        }
+    }
+    if (_bytes_read == (int)this->content_length) {
+        close(_fd_to_write);
+        return ;
     }
     if (*this->is_read_ready == false) {
         --_it_recipes;
