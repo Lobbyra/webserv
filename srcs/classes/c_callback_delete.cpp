@@ -9,7 +9,7 @@ void                    c_callback::_meth_delete_request_is_valid(void) {
         if (S_ISREG(stat.st_mode))
             status_code = 204;
         else if (S_ISDIR(stat.st_mode))
-            status_code = 200;
+            status_code = 204;
     }
     else
         this->status_code = 404;
