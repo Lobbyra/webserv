@@ -27,6 +27,10 @@ static int  makeSocketfd(const s_ipport &ipport) {
         throw std::logic_error("inet_addr: Invalid IP");
     if (setsockopt(newSocket, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)))
         throw std::logic_error("setsockopt");
+    #ifdef __APPLE__
+        if (setsockopt(newSocket, SOL_SOCKET, SO_NOSIGPIPE, &opt, sizeof(opt)))
+            throw std::logic_error("setsockopt");
+    #endif
     if ((bind(newSocket, (sockaddr *)&servaddr, sizeof(servaddr))) < 0)
         throw std::logic_error(std::string("bind: ") + strerror(errno));
     if ((listen(newSocket, 1000)) < 0)
