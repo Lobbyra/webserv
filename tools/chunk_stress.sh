@@ -3,7 +3,7 @@
 echo "- existing file deletion -"
 
 printf "DELETE /my_ego.db HTTP/1.1\r\n"  > /tmp/delete
-printf "Host: example.com\r\n"          >> /tmp/delete
+printf "Host: example.com\r\n\r\n"          >> /tmp/delete
 
 cat /tmp/delete | nc localhost 8080
 
