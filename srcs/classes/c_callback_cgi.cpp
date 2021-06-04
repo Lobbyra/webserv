@@ -99,6 +99,9 @@ void    c_callback::_meth_cgi_init_meta(void) {
         tmp += fastcgi_param["REMOTE_IDENT"];
         this->cgi_env_variables.push_back(tmp);
     }
+    // REDIRECT_STATUS                                     // PHP MANDATORY VAR
+    tmp = "REDIRECT_STATUS=200";
+    this->cgi_env_variables.push_back(tmp);
     // REQUEST_METHOD
     tmp = "REQUEST_METHOD=";
     tmp += this->method;
@@ -185,7 +188,8 @@ void    c_callback::_meth_cgi_save_client_in(void) {
         cat_buf = cut_buffer_ret(this->client_buffer, this->content_length,
                 &(this->client->len_buf_parts));
         cat_len = ft_strlen(cat_buf);
-        if (write(_tmpfile->get_fd(), cat_buf, cat_len) < 1) {
+        if (cat_len > 0 && write(_tmpfile->get_fd(), cat_buf, cat_len) < 1) {
+            std::cerr << "ERR: cgi save in : write failed : " << std::endl;
             this->status_code = 500;
         } else {
             this->content_length -= cat_len;
@@ -255,6 +259,7 @@ void    c_callback::_meth_cgi_launch(void) {
         if ((envp = lststr_to_strs(this->cgi_env_variables)) == NULL)
             exit(launch_panic(envp, args, bin_path));
         lst_args.push_back(bin_path);
+        lst_args.push_back(this->root + this->path);
         if ((args = lststr_to_strs(lst_args)) == NULL)
             exit(launch_panic(envp, args, bin_path));
         // TODO : DESTROY C_TASK_QUEUE
@@ -277,6 +282,7 @@ void    c_callback::_meth_cgi_launch(void) {
             std::cerr <<                                       \
                 "cgi_launch : execve : " << strerror(errno) << \
             std::endl << std::flush;
+            write(1, "Status: 500\r\n\r\n", 15);
             exit(launch_panic(envp, args, bin_path));
         }
     } else if (_pid == -1) { // ERROR
@@ -301,9 +307,6 @@ void    c_callback::_meth_cgi_wait(void) {
         return ;
     } else if (dead == _pid) {
         _out_tmpfile->reset_cursor();
-        if (WEXITSTATUS(status) != 0) {
-            this->status_code = 500;
-        }
     } else if (dead == 0) {
         --_it_recipes;
     }
@@ -322,7 +325,7 @@ void    c_callback::_meth_cgi_send_http(void) {
         http_content = cgitohttp(_out_tmpfile);
     } catch (std::exception &e) {
         this->status_code = 500;
-        std::cerr << e.what() << std::endl;
+        std::cerr << "ERR: cgitohttp failed" << std::endl;
     }
     if (http_content) {
         if (send(this->client_fd, http_content, ft_strlen(http_content),
