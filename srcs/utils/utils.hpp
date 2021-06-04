@@ -75,6 +75,6 @@ std::string get_err_page(int code);
 std::string get_status_msg(int code);
 std::string get_status_line(int code);
 
-char *cgitohttp(c_tmpfile *tmpfile);
+char *cgitohttp(c_tmpfile *tmpfile, size_t *status_code);
 
 #endif

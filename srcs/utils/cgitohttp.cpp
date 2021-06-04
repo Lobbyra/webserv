@@ -16,8 +16,7 @@
 
 #define KEY_STATUS "Status: "
 
-static std::string get_status(int fd) {
-    int         code = 0;
+static std::string get_status(int fd, size_t *status_code) {
     char        *line = NULL;
     std::string status_line = "";
 
@@ -25,9 +24,9 @@ static std::string get_status(int fd) {
         throw std::logic_error("cgitohttp(): [1] : get_next failed");
     } else if (line &&
             ft_strncmp(line, KEY_STATUS, ft_strlen(KEY_STATUS)) == 0) {
-        code = ft_atoi(line + ft_strlen(KEY_STATUS));
-        if (get_status_msg(code) != "") {
-            status_line = get_status_line(code);
+        *status_code = (size_t)ft_atoi(line + ft_strlen(KEY_STATUS));
+        if (get_status_msg(*status_code) != "") {
+            status_line = get_status_line(*status_code);
             status_line += "\r\n";
         }
     }
@@ -70,12 +69,14 @@ static std::string get_content_len(size_t tmpfile_size, int fd) {
     return (http_content);
 }
 
-char    *cgitohttp(c_tmpfile *tmpfile) {
+char    *cgitohttp(c_tmpfile *tmpfile, size_t *status_code) {
     std::string http_content = "";
 
-    http_content += get_status(tmpfile->get_fd());
-    if (http_content == "") {
+    http_content += get_status(tmpfile->get_fd(), status_code);
+    if (*status_code / 100 != 2)
         return (NULL);
+    if (http_content == "") {
+        http_content += "HTTP/1.1 200 OK\r\n";
     }
     tmpfile->reset_cursor();
     get_next(tmpfile->get_fd(), NULL, "\r\n\r\n", GNL_FLUSH); // Flush GNL buffer

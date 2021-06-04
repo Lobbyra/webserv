@@ -321,12 +321,7 @@ void    c_callback::_meth_cgi_send_http(void) {
             _out_tmpfile->is_read_ready() == false) {
         --_it_recipes;
     }
-    try {
-        http_content = cgitohttp(_out_tmpfile);
-    } catch (std::exception &e) {
-        this->status_code = 500;
-        std::cerr << "ERR: cgitohttp failed" << std::endl;
-    }
+    http_content = cgitohttp(_out_tmpfile, &(this->status_code));
     if (http_content) {
         if (send(this->client_fd, http_content, ft_strlen(http_content),
                     MSG_NOSIGNAL) < 1) {
@@ -335,8 +330,8 @@ void    c_callback::_meth_cgi_send_http(void) {
             _exit();
         }
         free(http_content);
+        _out_tmpfile->reset_cursor();
     }
-    _out_tmpfile->reset_cursor();
     return ;
 }
 
