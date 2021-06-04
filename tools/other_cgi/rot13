@@ -5,13 +5,29 @@ import codecs
 
 CRLF = "\r\n"
 
-def rot13():
-    print("Status: 200 OK", "Content-Type: text/html; charset=utf-8", CRLF,
-          sep=CRLF, end="")
-    lines = [line.rstrip('\n') for line in sys.stdin]
-    lines = [codecs.encode(line, "rot-13") for line in lines]
+"""
+If a parameter is passed, it is used as the input
+Else, uses stdin
+"""
 
-    for line in lines:
+def get_content() -> list:
+    if len(sys.argv) >= 3:
+        print("Too many arguments")
+        exit(1)
+    elif len(sys.argv) == 2 and sys.argv[1].endswith(".rot"):
+        with open(sys.argv[1], "r") as file:
+            srcs = [line.rstrip('\n') for line in file]
+    else:
+        srcs = [line.rstrip('\n') for line in sys.stdin]
+    res = [codecs.encode(line, "rot-13") for line in srcs]
+    return res
+
+def rot13():
+    content = get_content()
+
+    print("Status: 200", "Content-Type: text/html; charset=utf-8", CRLF,
+          sep=CRLF, end="")
+    for line in content:
         print(line)
 
 if __name__ == "__main__":
