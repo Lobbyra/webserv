@@ -114,8 +114,6 @@ private:
     void    _init_server_hpp(c_server const *server);
     void    _server_init_route(std::list<c_location> location);
 
-    void    _read_body(void);
-
     std::list<c_location>::iterator    _server_find_route(
                                          std::list<c_location>::iterator &it,
                                          std::list<c_location>::iterator &ite);

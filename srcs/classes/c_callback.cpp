@@ -249,11 +249,12 @@ std::list<c_location>::iterator        c_callback::_server_find_route(
             size_t found = this->path.find_last_of(".");
              if (found != std::string::npos) {
                 tmp_string.insert(0, this->path, found, this->path.length());
+
                 if ((ft_strncmp(tmp_string.c_str(), (*it).route.c_str(),
                         tmp_string.length())) == 0 &&
                         (tmp_string.length() == (*it).route.length())) {
                     it_find = it;
-                    tmp_string = this->path;
+                    // tmp_string = this->path;
                     break ;
                 }
             }

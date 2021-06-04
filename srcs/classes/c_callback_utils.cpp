@@ -74,28 +74,6 @@ static void grh_add_headers(std::list<std::string> &headers, c_callback &cb) {
         headers.push_back("Last-Modified: " + cb.last_modified_h);
 }
 
-void    c_callback::_read_body(void) {
-    int                             status;
-    char                            buf[1024];
-    std::list<s_socket>::iterator   it, ite;
-
-    if (this->method == "PUT")
-        return ;
-    if (g_verbose)
-        std::cout << "TASK : _read_body()" << std::endl;
-    if (*this->is_read_ready == false) {
-        return ;
-    } else {
-        status = read(client_fd, buf, 1024);
-        if (status > 0 && status == 1024)
-            --_it_recipes;
-        else if (status == -1) {
-            status_code = 500;
-            --_it_recipes;
-        }
-    }
-}
-
 void    c_callback::_gen_resp_headers(void) {
     if (g_verbose)
         std::cout << "TASK : _gen_resp_headers()" << std::endl;
