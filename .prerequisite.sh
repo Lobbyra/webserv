@@ -11,6 +11,7 @@ function ft_escape_backslash () {
 }
 
 function copy_server () {
+	mkdir -p $SERVER_TARGET
 	cp -rf $SERVER_SOURCE/* $SERVER_TARGET
 	$SERVER_TARGET/run.sh $SERVER_TARGET
 }
