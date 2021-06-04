@@ -2,9 +2,6 @@
 
 CONFIG_PATH=config_files
 TEMPLATE_CONF_PATH=$CONFIG_PATH/.template
-PHPCGI_TARGET=tools/php-cgi
-PHPCGI_RES=php-8.0.2
-PHPBIN_PATH="$PHPCGI_TARGET/sapi/cgi/php-cgi"
 SIEGE_CONF="$HOME/.siege/siege.conf"
 
 function ft_escape_backslash () {
@@ -12,7 +9,7 @@ function ft_escape_backslash () {
 }
 
 if [ "$OSTYPE" = "linux-gnu" ]; then
-	PHPCGI_SRC="./tools/.compressed_phpcgi/linux_phpcgi.tar"
+	PHPBIN_PATH="tools/other_cgi/linux_phpcgi"
 	CGI42="tools/42_testers/ubuntu_cgi_tester"
 
 	function sedreplace () {
@@ -20,7 +17,7 @@ if [ "$OSTYPE" = "linux-gnu" ]; then
 		sed s/"$1"/"$2"/g $3 -i
 	}
 else # On macOS
-	PHPCGI_SRC="./tools/.compressed_phpcgi/darwin_phpcgi.tar"
+	PHPBIN_PATH="tools/other_cgi/darwin_phpcgi"
 	CGI42="tools/42_testers/cgi_tester"
 
 	function sedreplace () {
@@ -32,14 +29,6 @@ else # On macOS
 	fi
 fi
 
-# un-tar phpcgi
-# Archive created by: tar -czf .compressed_phpcgi/darwin_phpcgi.tar php-8.0.2
-# if ! [ -e "$PHPCGI_TARGET" ]; then
-# 	echo "Unpacking php-cgi ..."
-# 	tar -xzf $PHPCGI_SRC
-# 	mv $PHPCGI_RES $PHPCGI_TARGET
-# fi
-
 # Replace __PWD__ by actual PWD in every config files
 FILES=($(ls $TEMPLATE_CONF_PATH))
 for file in ${FILES[@]}; do
@@ -48,6 +37,6 @@ for file in ${FILES[@]}; do
 	fi
 
 	sedreplace __PWD__ "$PWD" "$CONFIG_PATH/$file"
-	sedreplace __PHP__ "$PWD/$PHPBIN_PATH" "$CONFIG_PATH/$file"
+	sedreplace __PHP__ "$PHPBIN_PATH" "$CONFIG_PATH/$file"
 	sedreplace __42CGI__ "$CGI42" "$CONFIG_PATH/$file"
 done
