@@ -23,7 +23,6 @@ ifeq ($(f), f)
 	CFLAGS += -fsanitize=address -g3
 endif
 
-SERVER = /tmp/www
 PREREQUISITE_SCRIPT = .prerequisite.sh
 
 SRCS_PATH = ./srcs/
@@ -109,7 +108,7 @@ all:
 
 -include ${MMD_FILES}
 
-$(NAME): ${LIBS} ${OBJS} ${SERVER} | ${OBJS_PATHS}
+$(NAME): ${LIBS} ${OBJS} | ${OBJS_PATHS}
 	@echo ""
 	@${CC} ${CFLAGS} ${INCL_FLAGS} -o ${NAME} ${OBJS} ${LIBS}
 
@@ -130,10 +129,6 @@ ${OBJS_PATH}%.o: ${SRCS_PATH}%.cpp | ${OBJS_PATHS}
 
 ${LIB_PATH}${LIB_A}:
 	@make f="$f" -C ${LIB_PATH}
-
-${SERVER}:
-	@cp -rf ./tools/docker_nginx/www $@
-	@$@/run.sh $@
 
 clean:
 	@make -C ${LIB_PATH} fclean
