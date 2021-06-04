@@ -7,6 +7,8 @@
 #                               Initialization                                 #
 # ============================================================================ #
 
+export SHLVL=2
+
 if [ "$SHLVL" = "1" ]; then
     source ./launch
 fi
