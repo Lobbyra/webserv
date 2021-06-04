@@ -35,6 +35,7 @@ void        c_callback::_meth_put_open_fd(void) {
         this->status_code = 500;
         return ;
     }
+    fcntl(_fd_to_write, F_SETFL, O_NONBLOCK);
 }
 
 /* _METH_PUT_CHOOSE_IN

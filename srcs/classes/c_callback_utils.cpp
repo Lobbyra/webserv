@@ -132,6 +132,7 @@ void                    c_callback::_send_respons_body(void) {
     if (_fd_body == 0) {                      // Open requested file
         errno = 0;
         _fd_body = open(this->path.c_str(), O_RDONLY);
+        fcntl(_fd_body, F_SETFL, O_NONBLOCK);
         if (_fd_body == -1) {
             std::cerr <<                                                  \
                 "ERR : _SEND_RESP_BODY : open() : " << strerror(errno) << \
