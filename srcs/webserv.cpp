@@ -28,13 +28,14 @@ void    webserv(std::list<c_server> const &conf) {
     bool                        is_new_request;
     bool                        has_new_header_ready;
     t_socketlst                 *clients;
-    c_task_queue                task_queue;
+    c_task_queue                *task_queue;
     s_similar_get_req           similar_req;
     std::list<s_request_header> requests;
 
     is_new_request = false;
     has_new_header_ready = false;
     clients = new t_socketlst;
+    task_queue = new c_task_queue();
     reset_similar(&similar_req);
     try {
         init_clients(conf, clients);
@@ -43,7 +44,7 @@ void    webserv(std::list<c_server> const &conf) {
         std::cerr << "init_clients: " << e.what() << std::endl;
         g_run = false;
     }
-    task_queue.set_clients(clients);
+    task_queue->set_clients(clients);
     while (g_run) {
         has_new_header_ready = ft_select(clients, &similar_req);
         if (g_verbose && clients->size() > 1) {
@@ -69,13 +70,14 @@ void    webserv(std::list<c_server> const &conf) {
                 }
             }
             assign_server_to_clients(conf, clients);
-            task_queue.push(clients);
+            task_queue->push(clients);
             is_new_request = false;
-        } else if (task_queue.size() > 0)
-            task_queue.exec_task();
+        } else if (task_queue->size() > 0)
+            task_queue->exec_task();
         else if (g_verbose)
             std::cout << "LOG : no task to exec" << std::endl;
     }
     set_reuse_port(clients);
+    delete task_queue;
     delete clients;
 }
