@@ -3,9 +3,16 @@
 CONFIG_PATH=config_files
 TEMPLATE_CONF_PATH=$CONFIG_PATH/.template
 SIEGE_CONF="$HOME/.siege/siege.conf"
+SERVER_TARGET="/tmp/www"
+SERVER_SOURCE="tools/docker_nginx/www"
 
 function ft_escape_backslash () {
 	echo $* | sed s/\\//\\\\\\//g
+}
+
+function copy_server () {
+	cp -rf $SERVER_SOURCE/* $SERVER_TARGET
+	$SERVER_TARGET/run.sh $SERVER_TARGET
 }
 
 if [ "$OSTYPE" = "linux-gnu" ]; then
@@ -28,6 +35,8 @@ else # On macOS
 		sedreplace "^connection \= close" "connection \= keep-alive" $SIEGE_CONF
 	fi
 fi
+
+copy_server
 
 # Replace __PWD__ by actual PWD in every config files
 FILES=($(ls $TEMPLATE_CONF_PATH))
