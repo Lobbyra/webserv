@@ -164,7 +164,9 @@ bool    c_callback::_method_allow(void) {
 }
 
 void    c_callback::_init_meth_functions(void) {
-    if (this->host.empty() == true && this->status_code != 505) {
+    if (this->status_code / 100 != 2)
+        return ;
+    if (this->host.empty() == true) {
         this->status_code = 400;
         return ;
     }

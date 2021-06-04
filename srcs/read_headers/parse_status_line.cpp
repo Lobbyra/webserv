@@ -86,6 +86,7 @@ void    parse_status_line(std::string line,
     std::list<std::string>  lst_prefix = init_meth_names();
     std::list<std::string>::iterator it = lst_prefix.begin();
     std::list<std::string>::iterator ite = lst_prefix.end();
+    size_t *error_code = static_cast<size_t *>((*header_ptrs)["Error"]);
 
     prefix = get_word(line, line.begin(), sep);
     while (it != ite) {
@@ -97,5 +98,11 @@ void    parse_status_line(std::string line,
         }
         ++it;
     }
-    check_request_line(*header_ptrs);
+    if (it == ite && prefix.empty() == false) {
+        std::cout << "PREFIX:" << prefix << "|" << prefix.empty() << std::endl;
+        *error_code = 405;
+    } else if (it == ite && prefix.empty() == true) {
+        *error_code = 400;
+    } else
+        check_request_line(*header_ptrs);
 }
