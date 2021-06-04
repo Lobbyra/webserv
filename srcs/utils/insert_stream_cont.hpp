@@ -38,6 +38,7 @@ std::ostream    &operator<<(std::ostream &o, std::map<Tkey, Tvalue> const &i)
     return (o);
 };
 
+/*
 inline std::ostream& operator<<(std::ostream& os, const char *tmp) {
     while (*tmp) {
         if (*tmp == '\n')
@@ -50,6 +51,7 @@ inline std::ostream& operator<<(std::ostream& os, const char *tmp) {
     }
     return (os);
 }
+*/
 
 template < class T >
 inline std::ostream& operator<<(std::ostream& os, const std::list<T>& v)
