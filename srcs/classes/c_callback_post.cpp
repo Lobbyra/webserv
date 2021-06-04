@@ -43,6 +43,7 @@ void                       c_callback::_read_body_post(void) {
                 std::endl;
             remove_client(this->clients, this->client_fd, 0);
             _exit();
+            return ;
         }
     }
 }

@@ -193,7 +193,9 @@ void                    c_callback::_send_respons(void) {
     if ((ret = send(client_fd, _resp_headers.c_str(),
                     _resp_headers.length(), MSG_NOSIGNAL)) < 1) {
         std::cerr << "Error: Respons to client" << std::endl;
-        this->status_code = 500;
+        remove_client(this->clients, this->client_fd, ret);
+        _exit();
+        return ;
     }
     if (this->method == "GET" && this->status_code == 200) {
             if (this->client->similar_req->client_priority == 0)

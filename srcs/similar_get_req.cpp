@@ -31,6 +31,9 @@ void    similar_get_req_sender(std::list<s_socket> *clients,
         }
         if (send(it->client_fd, resp, resp_len, 0) < 1) {
             std::cerr << "ERR: cache_sender: Respons to client" << std::endl;
+            close(it->client_fd);
+            clients->erase(it++);
+            continue ;
         }
         reset_socket(&(*it));
     }
