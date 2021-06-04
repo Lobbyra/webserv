@@ -282,8 +282,12 @@ void    c_callback::_meth_cgi_launch(void) {
             std::cerr <<                                       \
                 "cgi_launch : execve : " << strerror(errno) << \
             std::endl << std::flush;
-            write(1, "Status: 500\r\n\r\n", 15);
-            exit(launch_panic(envp, args, bin_path));
+            if (write(1, "Status: 500\r\n\r\n", 15) != 15) {
+                std::cerr << "cgi_launch : execve : write failed" << std::endl;
+                exit(launch_panic(envp, args, bin_path));
+            } else {
+                exit(launch_panic(envp, args, bin_path));
+            }
         }
     } else if (_pid == -1) { // ERROR
         std::cerr << \
