@@ -83,7 +83,7 @@ function check_one() {
     $www_path/run.sh $www_path
 
     nc $3 $2 < $1 > $tmpfile &
-    sleep 0.5
+    sleep 0.3
     pkill nc &> /dev/null
 
     custom_statusline="$(head -n1 $tmpfile)"
@@ -94,7 +94,7 @@ function check_one() {
     res=$(is_equal "$custom_statusline" "$true_statusline")
     pline $testname $res
 
-    if [ "$res" = "1" ]; then
+    if [ "$res" != "0" ]; then
         pdiff "HAVE" "$RED" "$custom_statusline"
         pdiff "EXPECT" "$GREEN" "$true_statusline"
     fi
