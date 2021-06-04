@@ -98,11 +98,10 @@ void    parse_status_line(std::string line,
         }
         ++it;
     }
-    if (it == ite && prefix.empty() == false) {
-        std::cout << "PREFIX:" << prefix << "|" << prefix.empty() << std::endl;
+    if (it == ite && prefix.empty() == false)
         *error_code = 405;
-    } else if (it == ite && prefix.empty() == true) {
+    else if (it == ite && prefix.empty() == true)
         *error_code = 400;
-    } else
+    else
         check_request_line(*header_ptrs);
 }
