@@ -19,6 +19,7 @@ function copy_server () {
 if [ "$OSTYPE" = "linux-gnu" ]; then
 	PHPBIN_PATH="tools/other_cgi/linux_phpcgi"
 	CGI42="tools/42_testers/ubuntu_cgi_tester"
+    ROT="tools/other_cgi/linux_rot13"
 
 	function sedreplace () {
 		2="$(ft_escape_backslash $2)"
@@ -27,6 +28,7 @@ if [ "$OSTYPE" = "linux-gnu" ]; then
 else # On macOS
 	PHPBIN_PATH="tools/other_cgi/darwin_phpcgi"
 	CGI42="tools/42_testers/cgi_tester"
+    ROT="tools/other_cgi/darwin_rot13"
 
 	function sedreplace () {
 		2="$(ft_escape_backslash $2)"
@@ -49,4 +51,5 @@ for file in ${FILES[@]}; do
 	sedreplace __PWD__ "$PWD" "$CONFIG_PATH/$file"
 	sedreplace __PHP__ "$PHPBIN_PATH" "$CONFIG_PATH/$file"
 	sedreplace __42CGI__ "$CGI42" "$CONFIG_PATH/$file"
+	sedreplace __ROT__ "$ROT" "$CONFIG_PATH/$file"
 done
