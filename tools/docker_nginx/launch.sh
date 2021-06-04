@@ -75,7 +75,7 @@ fi
 # ============================================================================ #
 
 if [ -z "$1" ]; then
-    1="config_files/ok_basic_put.conf"
+    1="config_files/.nginx.conf"
 fi
 
 if [ -f $1 ]; then
