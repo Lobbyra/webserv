@@ -39,6 +39,9 @@ int     main(int argc, const char **argv) {
     }
     ft_signalhandler_enable();
     webserv(conf);
+    close(0);
+    close(1);
+    close(2);
     return (0);
 }
 

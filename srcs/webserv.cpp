@@ -12,8 +12,10 @@ static void set_reuse_port(t_socketlst const *const lst) {
 
     std::cout << "\r[STOP] Closing " << lst->size() << " sockets." << std::endl;
     for (; it != ite; ++it) {
-        if (it->client_fd != 0)
+        if (it->client_fd != 0) {
+            close(it->client_fd);
             continue;
+        }
         fd = it->entry_socket;
         if (setsockopt(fd, SOL_SOCKET, SO_REUSEPORT, &opt, sizeof(opt)) ||
             setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)))
