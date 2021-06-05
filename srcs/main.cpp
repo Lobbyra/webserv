@@ -25,7 +25,7 @@ int     main(int argc, const char **argv) {
     if (argv[argc] && !ft_strcmp(argv[argc], "-v"))
         g_verbose = argc++;
     if (argv[argc] == NULL)
-        argv[argc] = "config_files/methods_allowed.conf";
+        argv[argc] = "config_files/webserv.conf";
     else if (argv[argc + 1] != NULL)
         return (print_usage(argv[0]));
 
