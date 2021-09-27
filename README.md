@@ -1,4 +1,4 @@
-# [OLD] Webserv
+# Webserv
 
 ![](https://i.imgur.com/i3nsMxC.jpg)
 
