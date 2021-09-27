@@ -1,6 +1,6 @@
 # Webserv
 
-*Credit :* @mli42, @Jean-xavierr
+*Credit:*
 [@mli42](https://github.com/mli42) [@Jean-xavierr](https://github.com/Jean-xavierr) [@lobbyra](https://github.com/lobbyra)
 
 ![](https://i.imgur.com/i3nsMxC.jpg)
